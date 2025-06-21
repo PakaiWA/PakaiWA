@@ -1,5 +1,6 @@
 # pakaiwa
 [![Go Reference](https://pkg.go.dev/badge/github.com/pakaiwa/pakaiwa.svg)](https://pkg.go.dev/github.com/pakaiwa/pakaiwa)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FPakaiWA%2FPakaiWA.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FPakaiWA%2FPakaiWA?ref=badge_shield)
 
 pakaiwa is a Go library for the WhatsApp web multidevice API.
 
@@ -88,3 +89,7 @@ Things that are not yet implemented:
 | `util/ptr/ptr.go`                            | [mautrix/go-util](https://github.com/mautrix/go-util/tree/main/ptr)        | MPL-2.0        | -               | Tidak dimodifikasi | 1de030f   |
 | `util/retryafter/retryafter.go`              | [mautrix/go-util](https://github.com/mautrix/go-util/tree/main/retryafter) | MPL-2.0        | -               | Tidak dimodifikasi | 1de030f   |
 | `util/retryafter/retryafter_test.go`         | [mautrix/go-util](https://github.com/mautrix/go-util/tree/main/retryafter) | MPL-2.0        | -               | Tidak dimodifikasi | 1de030f   |
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FPakaiWA%2FPakaiWA.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FPakaiWA%2FPakaiWA?ref=badge_large)
