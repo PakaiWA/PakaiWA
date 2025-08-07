@@ -70,14 +70,6 @@ It's ok not to use it if your app project is really small and where an extra lev
 
 The `pkg` directory origins: The old Go source code used to use `pkg` for its packages and then various Go projects in the community started copying the pattern (see [`this`](https://twitter.com/bradfitz/status/1039512487538970624) Brad Fitzpatrick's tweet for more context).
 
-### `/vendor`
-
-Application dependencies (managed manually or by your favorite dependency management tool like the new built-in [`Go Modules`](https://go.dev/wiki/Modules) feature). The `go mod vendor` command will create the `/vendor` directory for you. Note that you might need to add the `-mod=vendor` flag to your `go build` command if you are not using Go 1.14 where it's on by default.
-
-Don't commit your application dependencies if you are building a library.
-
-Note that since [`1.13`](https://golang.org/doc/go1.13#modules) Go also enabled the module proxy feature (using [`https://proxy.golang.org`](https://proxy.golang.org) as their module proxy server by default). Read more about it [`here`](https://blog.golang.org/module-mirror-launch) to see if it fits all of your requirements and constraints. If it does, then you won't need the `vendor` directory at all.
-
 ## Service Application Directories
 
 ### `/api`
@@ -85,12 +77,6 @@ Note that since [`1.13`](https://golang.org/doc/go1.13#modules) Go also enabled 
 OpenAPI/Swagger specs, JSON schema files, protocol definition files.
 
 See the [`/api`](api/README.md) directory for examples.
-
-## Web Application Directories
-
-### `/web`
-
-Web application specific components: static web assets, server side templates and SPAs.
 
 ## Common Application Directories
 
@@ -120,10 +106,6 @@ Put your cloud (AMI), container (Docker), OS (deb, rpm, pkg) package configurati
 
 Put your CI (travis, circle, drone) configurations and scripts in the `/build/ci` directory. Note that some of the CI tools (e.g., Travis CI) are very picky about the location of their config files. Try putting the config files in the `/build/ci` directory linking them to the location where the CI tools expect them (when possible).
 
-### `/deployments`
-
-IaaS, PaaS, system and container orchestration deployment configurations and templates (docker-compose, kubernetes/helm, terraform). Note that in some repos (especially apps deployed with kubernetes) this directory is called `/deploy`.
-
 ### `/test`
 
 Additional external test apps and test data. Feel free to structure the `/test` directory anyway you want. For bigger projects it makes sense to have a data subdirectory. For example, you can have `/test/data` or `/test/testdata` if you need Go to ignore what's in that directory. Note that Go will also ignore directories or files that begin with "." or "_", so you have more flexibility in terms of how you name your test data directory.
@@ -144,29 +126,9 @@ Supporting tools for this project. Note that these tools can import code from th
 
 See the [`/tools`](tools/README.md) directory for examples.
 
-### `/examples`
-
-Examples for your applications and/or public libraries.
-
-See the [`/examples`](examples/README.md) directory for examples.
-
-### `/third_party`
-
-External helper tools, forked code and other 3rd party utilities (e.g., Swagger UI).
-
-### `/githooks`
-
-Git hooks.
-
 ### `/assets`
 
 Other assets to go along with your repository (images, logos, etc).
-
-### `/website`
-
-This is the place to put your project's website data if you are not using GitHub pages.
-
-See the [`/website`](website/README.md) directory for examples.
 
 ## Directories You Shouldn't Have
 
