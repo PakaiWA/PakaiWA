@@ -1,0 +1,10 @@
+# See the OWNERS docs at https://pakaiwa.my.id/owners
+
+# Disable inheritance as this is an api owners file
+options:
+  no_parent_owners: true
+approvers:
+  - kanggara75
+reviewers:
+  - kanggara75
+  - call-vin
