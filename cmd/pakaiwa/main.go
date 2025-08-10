@@ -10,15 +10,21 @@
  *
  * @author KAnggara75 on Fri 08/08/25 08.29
  * @project PakaiWA pakaiwa
- * https://github.com/KAnggara75/IDXStock/tree/main/cmd/pakaiwa
+ * https://github.com/PakaiWA/PakaiWA/tree/main/cmd/pakaiwa
  */
 
 package main
 
 import (
 	"fmt"
+	"github.com/KAnggara75/scc2go"
 	"net/http"
+	"os"
 )
+
+func init() {
+	scc2go.GetEnv(os.Getenv("SCC_URL"), os.Getenv("AUTH"))
+}
 
 func main() {
 	fmt.Println("API server berjalan di port 8080...")
