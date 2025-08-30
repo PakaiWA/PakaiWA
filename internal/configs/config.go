@@ -9,13 +9,14 @@
  * See <https://www.gnu.org/licenses/gpl-3.0.html>.
  *
  * @author KAnggara75 on Fri 08/08/25 08.32
- * @project PakaiWA config
+ * @project PakaiWA configs
  * https://github.com/PakaiWA/PakaiWA/tree/main/configs
  */
 
-package config
+package configs
 
 import (
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"strings"
 	"time"
@@ -51,6 +52,26 @@ func GetDBHealthCheckPeriod() time.Duration {
 	return 1 * time.Minute
 }
 
+func GetConnectTimeout() time.Duration {
+	if viper.IsSet("db.pakaiwa.connectTimeout") {
+		val := viper.GetDuration("db.pakaiwa.connectTimeout")
+		if val > 0 {
+			return val
+		}
+	}
+	return 30 * time.Second
+}
+
+func DetMaxConnIdleTime() time.Duration {
+	if viper.IsSet("db.pakaiwa.maxConnIdleTime") {
+		val := viper.GetDuration("db.pakaiwa.maxConnIdleTime")
+		if val > 0 {
+			return val
+		}
+	}
+	return 30 * time.Second
+}
+
 func GetJWTKey() []byte { return []byte(viper.GetString("app.jwt.sign_key")) }
 
 func GetAdminToken() string { return viper.GetString("app.admin.token") }
@@ -69,8 +90,25 @@ func GetRedisHost() string { return viper.GetString("redis.host") }
 
 func GetRedisPassword() string { return viper.GetString("redis.password") }
 
-func GetLogLevel() string { return viper.GetString("log.level") }
+func GetLogLevel() logrus.Level {
+	viper.SetDefault("log.level", "info")
+	raw := strings.TrimSpace(viper.GetString("log.level"))
+	if raw == "" {
+		return logrus.InfoLevel
+	}
+
+	lvl, err := logrus.ParseLevel(strings.ToLower(raw))
+	if err != nil {
+		return logrus.InfoLevel
+	}
+
+	return lvl
+}
 
 func Get40Space() string {
 	return strings.Repeat(" ", 40)
 }
+
+func GetAppName() string { return viper.GetString("app.name") }
+
+func GetPreFork() bool { return viper.GetBool("web.prefork") }

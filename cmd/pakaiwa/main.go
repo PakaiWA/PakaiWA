@@ -16,9 +16,10 @@
 package main
 
 import (
+	"context"
+	"fmt"
 	"github.com/KAnggara75/scc2go"
-	"github.com/gofiber/fiber/v2"
-	"log"
+	"github.com/PakaiWA/PakaiWA/internal/configs"
 	"os"
 )
 
@@ -27,30 +28,20 @@ func init() {
 }
 
 func main() {
-	app := fiber.New()
+	ctx := context.Background()
+	log := configs.NewLogger()
+	db := configs.NewDatabase(ctx, log)
+	app := configs.NewFiber()
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello, World!")
-	})
-
-	app.Get("/api/posts", func(c *fiber.Ctx) error {
-		return c.Status(404).JSON(&fiber.Map{
-			"success": false,
-			"error":   "There are no posts!",
+	configs.Bootstrap(
+		&configs.BootstrapConfig{
+			Pool: db,
+			App:  app,
+			Log:  log,
 		})
-	})
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("GET request")
-	})
-
-	app.Get("/:param", func(c *fiber.Ctx) error {
-		return c.SendString("param: " + c.Params("param"))
-	})
-
-	app.Post("/", func(c *fiber.Ctx) error {
-		return c.SendString("POST request")
-	})
-
-	log.Fatal(app.Listen(":3000"))
+	err := app.Listen(fmt.Sprintf(":%d", 8080))
+	if err != nil {
+		log.Fatalf("Failed to start server: %v", err)
+	}
 }

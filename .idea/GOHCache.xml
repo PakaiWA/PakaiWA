@@ -1,12 +1,162 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="GoORMHelperCache">
+    <option name="schemaMapping">
+      <map>
+        <entry key="Auth">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/app/auth/auth_model.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="AuthModel">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/app/auth/auth_model.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="BootstrapConfig">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/configs/app.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="DeviceController">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/app/devices/device_controller.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="DeviceUseCase">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/app/devices/device_usecase.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="GetUserRequest">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/app/users/user_model.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="LoginUserRequest">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/app/users/user_model.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="LogoutUserRequest">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/app/users/user_model.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="Model">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/app/auth/auth_model.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="OrderedJSONFormatter">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/configs/logrus.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="RateLimiterUtil">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/pkg/utils/rate_limiter_util.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="RegisterUserRequest">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/app/users/user_model.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="RouteConfig">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/routers/router.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="UpdateUserRequest">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/app/users/user_model.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="UserResponse">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/app/users/user_model.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="UserUseCase">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/app/users/user_usecase.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="VerifyUserRequest">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/app/users/user_model.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="propertySource">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/../../KAnggara75/scc2go/scc2go.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="springCloudConfig">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/../../KAnggara75/scc2go/scc2go.go" />
+            </set>
+          </value>
+        </entry>
+      </map>
+    </option>
     <option name="scannedPathMapping">
       <map>
+        <entry key="file://$PROJECT_DIR$/../../KAnggara75/scc2go/scc2go.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1756562321765" />
+              <option name="schema">
+                <list>
+                  <option value="springCloudConfig" />
+                  <option value="propertySource" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
         <entry key="file://$PROJECT_DIR$/cmd/pakaiwa/main.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1756514994575" />
+              <option name="lastModified" value="1756552130190" />
             </ScannedPath>
           </value>
         </entry>
@@ -17,6 +167,199 @@
             </ScannedPath>
           </value>
         </entry>
+        <entry key="file://$PROJECT_DIR$/internal/app/auth/auth_model.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1756533351343" />
+              <option name="schema">
+                <list>
+                  <option value="Model" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/app/devices/device_controller.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1756533351337" />
+              <option name="schema">
+                <list>
+                  <option value="DeviceController" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/app/devices/device_usecase.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1756532791356" />
+              <option name="schema">
+                <list>
+                  <option value="DeviceUseCase" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/app/devices/service.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1756518632454" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/app/router.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1756518386012" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/app/users/user_model.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1756533475333" />
+              <option name="schema">
+                <list>
+                  <option value="UserResponse" />
+                  <option value="VerifyUserRequest" />
+                  <option value="RegisterUserRequest" />
+                  <option value="UpdateUserRequest" />
+                  <option value="LoginUserRequest" />
+                  <option value="LogoutUserRequest" />
+                  <option value="GetUserRequest" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/app/users/user_usecase.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1756533609980" />
+              <option name="schema">
+                <list>
+                  <option value="UserUseCase" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/configs/app.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1756534212391" />
+              <option name="schema">
+                <list>
+                  <option value="BootstrapConfig" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/configs/config.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1756562079893" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/configs/database.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1756562077808" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/configs/fiber.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1756550863415" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/configs/logrus.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1756553157852" />
+              <option name="schema">
+                <list>
+                  <option value="OrderedJSONFormatter" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/configs/validator.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1756551059558" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/helpers/error.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1756551910693" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/middleware/auth_middleware.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1756533563580" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/routers/router.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1756532500495" />
+              <option name="schema">
+                <list>
+                  <option value="RouteConfig" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/pkg/utils/rate_limiter_util.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1756533316330" />
+              <option name="schema">
+                <list>
+                  <option value="RateLimiterUtil" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="tableStructMapping">
+      <map>
+        <entry key="auth" value="Auth" />
+        <entry key="auth_model" value="AuthModel" />
+        <entry key="bootstrap_config" value="BootstrapConfig" />
+        <entry key="device_controller" value="DeviceController" />
+        <entry key="device_use_case" value="DeviceUseCase" />
+        <entry key="get_user_request" value="GetUserRequest" />
+        <entry key="login_user_request" value="LoginUserRequest" />
+        <entry key="logout_user_request" value="LogoutUserRequest" />
+        <entry key="model" value="Model" />
+        <entry key="ordered_json_formatter" value="OrderedJSONFormatter" />
+        <entry key="property_source" value="propertySource" />
+        <entry key="rate_limiter_util" value="RateLimiterUtil" />
+        <entry key="register_user_request" value="RegisterUserRequest" />
+        <entry key="route_config" value="RouteConfig" />
+        <entry key="spring_cloud_config" value="springCloudConfig" />
+        <entry key="update_user_request" value="UpdateUserRequest" />
+        <entry key="user_response" value="UserResponse" />
+        <entry key="user_use_case" value="UserUseCase" />
+        <entry key="verify_user_request" value="VerifyUserRequest" />
       </map>
     </option>
     <option name="lastTimeChecked" value="1756513880084" />
