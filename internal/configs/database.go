@@ -48,17 +48,17 @@ func NewDatabase(ctx context.Context, log *logrus.Logger) *pgxpool.Pool {
 		helpers.PanicIfError(err)
 		log.WithField("trace_id", traceID).Debugf("pgxpool took %s", time.Since(start))
 
-		ctx, cancel := context.WithTimeout(ctx, time.Minute)
+		pingCtx, cancel := context.WithTimeout(ctx, 30*time.Second)
 		defer cancel()
 		log.WithField("trace_id", traceID).Info("Pinging database...")
-		if err := pool.Ping(ctx); err != nil {
-			log.WithField("trace_id", traceID).Errorf("Ping timeout: %v", err)
+		if err := pool.Ping(pingCtx); err != nil {
+			log.WithField("trace_id", traceID).WithError(err).Fatal("database ping failed")
 		}
-		log.WithField("trace_id", traceID).Info("Pinging done...")
+		log.WithField("trace_id", traceID).Infof("Pinging done in %s", time.Since(start))
 	})
 
 	if pool == nil {
-		log.WithField("trace_id", traceID).Error("Database pool is nil")
+		log.WithField("trace_id", traceID).Fatal("database pool is nil")
 	} else {
 		log.WithField("trace_id", traceID).Info("Connected to database...")
 	}
