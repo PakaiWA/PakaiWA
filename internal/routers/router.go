@@ -16,14 +16,14 @@
 package routers
 
 import (
-	"github.com/PakaiWA/PakaiWA/internal/app/devices"
+	"github.com/PakaiWA/PakaiWA/internal/app/messages"
 	"github.com/gofiber/fiber/v2"
 )
 
 type RouteConfig struct {
-	App              *fiber.App
-	DeviceController *devices.DeviceController
-	AuthMiddleware   fiber.Handler
+	App               *fiber.App
+	MessageController *messages.MessageController
+	AuthMiddleware    fiber.Handler
 }
 
 func (c *RouteConfig) Setup() {
@@ -32,7 +32,6 @@ func (c *RouteConfig) Setup() {
 }
 
 func (c *RouteConfig) SetupGuestRoute() {
-	c.App.Post("/api/devices", c.DeviceController.List)
 }
 
 func (c *RouteConfig) SetupAuthRoute() {

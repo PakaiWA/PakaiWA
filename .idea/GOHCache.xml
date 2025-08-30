@@ -156,7 +156,7 @@
         <entry key="file://$PROJECT_DIR$/cmd/pakaiwa/main.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1756552130190" />
+              <option name="lastModified" value="1756592228535" />
             </ScannedPath>
           </value>
         </entry>
@@ -182,7 +182,7 @@
         <entry key="file://$PROJECT_DIR$/internal/app/devices/device_controller.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1756533351337" />
+              <option name="lastModified" value="1756592471667" />
               <option name="schema">
                 <list>
                   <option value="DeviceController" />
@@ -207,6 +207,13 @@
           <value>
             <ScannedPath>
               <option name="lastModified" value="1756518632454" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/app/messages/messages_controller.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1756592397150" />
             </ScannedPath>
           </value>
         </entry>
@@ -250,7 +257,7 @@
         <entry key="file://$PROJECT_DIR$/internal/configs/app.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1756534212391" />
+              <option name="lastModified" value="1756592408669" />
               <option name="schema">
                 <list>
                   <option value="BootstrapConfig" />
@@ -269,7 +276,7 @@
         <entry key="file://$PROJECT_DIR$/internal/configs/database.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1756562077808" />
+              <option name="lastModified" value="1756565426640" />
             </ScannedPath>
           </value>
         </entry>
@@ -289,6 +296,13 @@
                   <option value="OrderedJSONFormatter" />
                 </list>
               </option>
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/configs/redis.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1756591088918" />
             </ScannedPath>
           </value>
         </entry>

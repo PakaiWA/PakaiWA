@@ -1,4 +1,4 @@
-root = "./cmd/pakaiwa"
+root = "."
 testdata_dir = "testdata"
 tmp_dir = "tmp"
 

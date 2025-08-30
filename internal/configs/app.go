@@ -65,9 +65,7 @@ func Bootstrap(config *BootstrapConfig) {
 
 	//routeConfig := routers.RouteConfig{
 	//	App:               config.App,
-	//	UserController:    userController,
-	//	ContactController: contactController,
-	//	AddressController: addressController,
+	//	MessageController: messageController,
 	//	AuthMiddleware:    authMiddleware,
 	//}
 	//routeConfig.Setup()

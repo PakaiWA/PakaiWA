@@ -16,8 +16,6 @@
 package devices
 
 import (
-	"github.com/PakaiWA/PakaiWA/internal/middleware"
-	"github.com/gofiber/fiber/v2"
 	"github.com/sirupsen/logrus"
 )
 
@@ -31,21 +29,4 @@ func NewDeviceController(useCase *DeviceUseCase, log *logrus.Logger) *DeviceCont
 		Log:     log,
 		UseCase: useCase,
 	}
-}
-
-func (c *DeviceController) List(ctx *fiber.Ctx) error {
-	auth := middleware.GetUser(ctx)
-	contactId := ctx.Params("contactId")
-
-	request := &model.ListAddressRequest{
-		UserId:    auth.ID,
-		ContactId: contactId,
-	}
-
-	responses, err := c.UseCase.List(ctx.UserContext(), request)
-	if err != nil {
-		c.Log.WithError(err).Error("failed to list addresses")
-		return err
-	}
-
 }

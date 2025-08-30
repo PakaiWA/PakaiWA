@@ -17,10 +17,11 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"github.com/KAnggara75/scc2go"
 	"github.com/PakaiWA/PakaiWA/internal/configs"
 	"os"
+	"os/signal"
+	"syscall"
 )
 
 func init() {
@@ -30,8 +31,9 @@ func init() {
 func main() {
 	ctx := context.Background()
 	log := configs.NewLogger()
-	db := configs.NewDatabase(ctx, log)
 	app := configs.NewFiber()
+
+	db := configs.NewDatabase(ctx, log)
 
 	configs.Bootstrap(
 		&configs.BootstrapConfig{
@@ -40,8 +42,23 @@ func main() {
 			Log:  log,
 		})
 
-	err := app.Listen(fmt.Sprintf(":%d", 8080))
-	if err != nil {
-		log.Fatalf("Failed to start server: %v", err)
-	}
+	go func() {
+		addr := ":8080"
+		if err := app.Listen(addr); err != nil {
+			log.Fatalf("Failed to start server: %v", err)
+		}
+	}()
+
+	// Graceful shutdown
+	waitForSignal()
+	log.Println("Shutting down...")
+	_ = app.Shutdown()
+	//client.Disconnect()
+	log.Println("Bye!")
+}
+
+func waitForSignal() {
+	ch := make(chan os.Signal, 1)
+	signal.Notify(ch, os.Interrupt, syscall.SIGTERM)
+	<-ch
 }
