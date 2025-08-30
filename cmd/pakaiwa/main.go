@@ -16,9 +16,9 @@
 package main
 
 import (
-	"fmt"
 	"github.com/KAnggara75/scc2go"
-	"net/http"
+	"github.com/gofiber/fiber/v2"
+	"log"
 	"os"
 )
 
@@ -27,6 +27,30 @@ func init() {
 }
 
 func main() {
-	fmt.Println("API server berjalan di port 8080...")
-	http.ListenAndServe(":8080", nil)
+	app := fiber.New()
+
+	app.Get("/", func(c *fiber.Ctx) error {
+		return c.SendString("Hello, World!")
+	})
+
+	app.Get("/api/posts", func(c *fiber.Ctx) error {
+		return c.Status(404).JSON(&fiber.Map{
+			"success": false,
+			"error":   "There are no posts!",
+		})
+	})
+
+	app.Get("/", func(c *fiber.Ctx) error {
+		return c.SendString("GET request")
+	})
+
+	app.Get("/:param", func(c *fiber.Ctx) error {
+		return c.SendString("param: " + c.Params("param"))
+	})
+
+	app.Post("/", func(c *fiber.Ctx) error {
+		return c.SendString("POST request")
+	})
+
+	log.Fatal(app.Listen(":3000"))
 }
