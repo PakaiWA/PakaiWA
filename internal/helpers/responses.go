@@ -28,7 +28,7 @@ func NewMsgID() string {
 
 func RespondPending(c *fiber.Ctx) error {
 	id := NewMsgID()
-	response := messages.MessageResponse{
+	response := messages.SendMessageResponse{
 		ID:      id,
 		Status:  "pending",
 		Message: "Message is pending and waiting to be processed.",

@@ -15,10 +15,9 @@
 
 package messages
 
-type MessageResponse struct {
+type SendMessageResponse struct {
 	ID          string      `json:"id"`
 	Status      string      `json:"status"`
-	To          string      `json:"to"`
 	Message     string      `json:"message"`
 	MessageMeta MessageMeta `json:"meta"`
 }
