@@ -8,12 +8,12 @@
  *
  * See <https://www.gnu.org/licenses/gpl-3.0.html>.
  *
- * @author KAnggara75 on Sun 31/08/25 09.06
- * @project PakaiWA helpers
- * https://github.com/PakaiWA/PakaiWA/tree/main/internal/helpers
+ * @author KAnggara75 on Sun 31/08/25 12.12
+ * @project PakaiWA pakaiwa
+ * https://github.com/PakaiWA/PakaiWA/tree/main/internal/pakaiwa
  */
 
-package helpers
+package pakaiwa
 
 import (
 	"go.mau.fi/whatsmeow"

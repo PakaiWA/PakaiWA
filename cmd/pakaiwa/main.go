@@ -17,20 +17,17 @@ package main
 
 import (
 	"context"
-	_ "github.com/mattn/go-sqlite3"
+	"github.com/PakaiWA/PakaiWA/internal/app/qr"
+	"github.com/PakaiWA/PakaiWA/internal/pakaiwa"
+	_ "github.com/jackc/pgx/v5/stdlib"
 
-	"fmt"
 	"github.com/KAnggara75/scc2go"
 	"github.com/PakaiWA/PakaiWA/internal/configs"
 	"github.com/PakaiWA/PakaiWA/internal/helpers"
 	"github.com/gofiber/fiber/v2"
-	"github.com/mdp/qrterminal/v3"
 	"go.mau.fi/whatsmeow"
 	"go.mau.fi/whatsmeow/proto/waE2E"
-	"go.mau.fi/whatsmeow/store/sqlstore"
-	"go.mau.fi/whatsmeow/types/events"
 	waLog "go.mau.fi/whatsmeow/util/log"
-	"log"
 	"os"
 	"strings"
 	"time"
@@ -40,71 +37,43 @@ func init() {
 	scc2go.GetEnv(os.Getenv("SCC_URL"), os.Getenv("AUTH"))
 }
 
-func eventHandler(e interface{}) {
-	switch v := e.(type) {
-	case *events.Message:
-		msg := v.Message
-		fmt.Println("Received a message!", v.Message.GetConversation())
-		if msg.GetConversation() != "" {
-			log.Printf("[INCOMING] from %s: %s", v.Info.Sender.String(), msg.GetConversation())
-		}
-	}
-}
-
 func main() {
 	ctx := context.Background()
+	log := configs.NewLogger()
+	pool := configs.NewDatabase(ctx, log)
 
-	dbLog := waLog.Stdout("Database", "DEBUG", true)
-	container, err := sqlstore.New(ctx, "sqlite3", "file:store.db?_foreign_keys=on", dbLog)
-	helpers.PanicIfError(err)
-
+	// ====== WhatsApp Client ======
+	container := pakaiwa.InitStoreWithPool(ctx, pool)
 	deviceStore, err := container.GetFirstDevice(ctx)
 	helpers.PanicIfError(err)
 
 	clientLog := waLog.Stdout("Client", "DEBUG", true)
 	client := whatsmeow.NewClient(deviceStore, clientLog)
 
-	state := &helpers.AppState{Client: client}
+	state := &pakaiwa.AppState{Client: client}
 
-	client.AddEventHandler(eventHandler)
+	// Event Handler
+	client.AddEventHandler(pakaiwa.EventHandler)
 
+	// QR Channel, This must be called *before* Connect().
 	var qrChan <-chan whatsmeow.QRChannelItem
 	if client.Store.ID == nil {
 		qrChan, _ = client.GetQRChannel(ctx)
 	}
+
+	// Start connection
 	helpers.PanicIfError(client.Connect())
 
-	if qrChan != nil {
-		go func() {
-			for evt := range qrChan {
-				switch evt.Event {
-				case "code":
-					state.SetQR(evt.Code)
-					qrterminal.GenerateHalfBlock(evt.Code, qrterminal.L, os.Stdout)
-					log.Println("[WA] Scan QR ini dengan WhatsApp (Linked devices)")
-				case "success":
-					state.SetQR("")
-					state.SetConnected(true)
-					log.Println("[WA] Login QR sukses ✔️")
-				default:
-					log.Printf("[WA] Login event: %s", evt.Event)
-				}
-			}
-		}()
-	} else {
-		state.SetConnected(true)
-	}
+	// QR Handler
+	qr.StartQRHandler(state, qrChan)
 
 	// ====== App & Routes (Fiber) ======
-	appLog := configs.NewLogger()
 	app := configs.NewFiber()
-	db := configs.NewDatabase(ctx, appLog)
-
 	configs.Bootstrap(
 		&configs.BootstrapConfig{
-			Pool: db,
+			Pool: pool,
 			App:  app,
-			Log:  appLog,
+			Log:  log,
 		},
 	)
 
