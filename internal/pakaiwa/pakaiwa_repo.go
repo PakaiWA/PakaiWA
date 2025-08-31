@@ -19,13 +19,13 @@ import (
 	"context"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/jackc/pgx/v5/stdlib"
+	"github.com/sirupsen/logrus"
 	"go.mau.fi/whatsmeow/store/sqlstore"
-	waLog "go.mau.fi/whatsmeow/util/log"
 )
 
-func InitStoreWithPool(ctx context.Context, pool *pgxpool.Pool) *sqlstore.Container {
+func InitStoreWithPool(ctx context.Context, pool *pgxpool.Pool, log *logrus.Logger) *sqlstore.Container {
 	db := stdlib.OpenDBFromPool(pool)
-	dbLog := waLog.Stdout("Database", "DEBUG", true)
+	dbLog := NewPakaiWALog(log, "PakaiWA_DB")
 	container := sqlstore.NewWithDB(db, "postgres", dbLog)
 
 	if err := container.Upgrade(ctx); err != nil {

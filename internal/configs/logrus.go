@@ -32,6 +32,7 @@ type OrderedJSONFormatter struct {
 	TimeKey         string // default "time"
 	MsgKey          string // default "msg"
 	TraceIDKey      string // default "trace_id"
+	EscapeHTML      bool
 }
 
 func NewLogger() *logrus.Logger {
@@ -48,6 +49,7 @@ func NewLogger() *logrus.Logger {
 		TimeKey:         "time",
 		MsgKey:          "msg",
 		TraceIDKey:      "trace_id",
+		EscapeHTML:      false, // << penting
 	})
 
 	return l
@@ -82,12 +84,12 @@ func (f *OrderedJSONFormatter) Format(e *logrus.Entry) ([]byte, error) {
 	buf.Grow(256)
 	buf.WriteByte('{')
 
-	writeKV(buf, levelKey, lvl, true)
-	writeKV(buf, timeKey, e.Time.Format(tsFmt), false)
+	writeKV(buf, levelKey, lvl, true, f.EscapeHTML)
+	writeKV(buf, timeKey, e.Time.Format(tsFmt), false, f.EscapeHTML)
 	if trace != "" {
-		writeKV(buf, traceKey, trace, false)
+		writeKV(buf, traceKey, trace, false, f.EscapeHTML)
 	}
-	writeKV(buf, msgKey, e.Message, false)
+	writeKV(buf, msgKey, e.Message, false, f.EscapeHTML)
 
 	if len(e.Data) > 0 {
 		keys := make([]string, 0, len(e.Data))
@@ -100,10 +102,19 @@ func (f *OrderedJSONFormatter) Format(e *logrus.Entry) ([]byte, error) {
 		sort.Strings(keys)
 		for _, k := range keys {
 			buf.WriteByte(',')
-			writeKey(buf, k)
+			writeKey(buf, k, f.EscapeHTML)
 			buf.WriteByte(':')
-			valBytes, _ := json.Marshal(e.Data[k])
-			buf.Write(valBytes)
+
+			// marshal value dengan SetEscapeHTML(f.EscapeHTML)
+			var vb bytes.Buffer
+			enc := json.NewEncoder(&vb)
+			enc.SetEscapeHTML(f.EscapeHTML)
+			_ = enc.Encode(e.Data[k])
+			val := vb.Bytes()
+			if n := len(val); n > 0 && val[n-1] == '\n' {
+				val = val[:n-1]
+			}
+			buf.Write(val)
 		}
 	}
 
@@ -119,17 +130,29 @@ func keyOr(v, def string) string {
 	return v
 }
 
-func writeKV(buf *bytes.Buffer, k, v string, first bool) {
+func writeKey(buf *bytes.Buffer, k string, escapeHTML bool) {
+	writeJSONString(buf, k, escapeHTML)
+}
+
+func writeKV(buf *bytes.Buffer, k, v string, first bool, escapeHTML bool) {
 	if !first {
 		buf.WriteByte(',')
 	}
-	writeKey(buf, k)
+	writeKey(buf, k, escapeHTML)
 	buf.WriteByte(':')
-	b, _ := json.Marshal(v)
-	buf.Write(b)
+	writeJSONString(buf, v, escapeHTML)
 }
 
-func writeKey(buf *bytes.Buffer, k string) {
-	b, _ := json.Marshal(k)
-	buf.Write(b)
+func writeJSONString(buf *bytes.Buffer, s string, escapeHTML bool) {
+	var b bytes.Buffer
+	enc := json.NewEncoder(&b)
+	enc.SetEscapeHTML(escapeHTML)
+	if err := enc.Encode(s); err != nil {
+		b.WriteString(`""`)
+	}
+	out := b.Bytes()
+	if n := len(out); n > 0 && out[n-1] == '\n' {
+		out = out[:len(out)-1]
+	}
+	buf.Write(out)
 }

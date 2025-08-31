@@ -44,3 +44,13 @@ func isAllDigits(s string) bool {
 	}
 	return s != ""
 }
+
+func NormalizeNumber(jid string) string {
+	if i := strings.Index(jid, ":"); i != -1 {
+		jid = jid[:i]
+	}
+	if i := strings.Index(jid, "@"); i != -1 {
+		jid = jid[:i]
+	}
+	return jid
+}

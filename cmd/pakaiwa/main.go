@@ -27,7 +27,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"go.mau.fi/whatsmeow"
 	"go.mau.fi/whatsmeow/proto/waE2E"
-	waLog "go.mau.fi/whatsmeow/util/log"
 	"os"
 	"strings"
 	"time"
@@ -43,11 +42,11 @@ func main() {
 	pool := configs.NewDatabase(ctx, log)
 
 	// ====== WhatsApp Client ======
-	container := pakaiwa.InitStoreWithPool(ctx, pool)
+	container := pakaiwa.InitStoreWithPool(ctx, pool, log)
 	deviceStore, err := container.GetFirstDevice(ctx)
 	helpers.PanicIfError(err)
 
-	clientLog := waLog.Stdout("Client", "DEBUG", true)
+	clientLog := pakaiwa.NewPakaiWALog(log, "PakaiWA")
 	client := whatsmeow.NewClient(deviceStore, clientLog)
 
 	state := &pakaiwa.AppState{Client: client}

@@ -16,14 +16,14 @@
 package qr
 
 import (
-	"github.com/PakaiWA/PakaiWA/internal/helpers"
+	"github.com/PakaiWA/PakaiWA/internal/pakaiwa"
 	"github.com/mdp/qrterminal/v3"
 	"go.mau.fi/whatsmeow"
 	"log"
 	"os"
 )
 
-func StartQRHandler(state *helpers.AppState, qrChan <-chan whatsmeow.QRChannelItem) {
+func StartQRHandler(state *pakaiwa.AppState, qrChan <-chan whatsmeow.QRChannelItem) {
 	if qrChan == nil {
 		state.SetConnected(true)
 		return
