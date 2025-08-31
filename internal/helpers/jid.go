@@ -1,0 +1,46 @@
+/*
+ * Copyright (c) 2025 KAnggara75
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * See <https://www.gnu.org/licenses/gpl-3.0.html>.
+ *
+ * @author KAnggara75 on Sun 31/08/25 08.37
+ * @project PakaiWA helpers
+ * https://github.com/PakaiWA/PakaiWA/tree/main/internal/helpers
+ */
+
+package helpers
+
+import (
+	"fmt"
+	"go.mau.fi/whatsmeow/types"
+	"strings"
+)
+
+func NormalizeJID(s string) (types.JID, error) {
+	s = strings.TrimSpace(s)
+	if strings.Contains(s, "@") {
+		j, err := types.ParseJID(s)
+		if err != nil {
+			return types.JID{}, err
+		}
+		return j, nil
+	}
+	if isAllDigits(s) {
+		return types.JID{User: s, Server: types.DefaultUserServer}, nil
+	}
+	return types.JID{}, fmt.Errorf("invalid phone_number %s", s)
+}
+
+func isAllDigits(s string) bool {
+	for _, r := range s {
+		if r < '0' || r > '9' {
+			return false
+		}
+	}
+	return s != ""
+}
