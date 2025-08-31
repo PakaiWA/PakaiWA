@@ -32,22 +32,12 @@ import (
 	waLog "go.mau.fi/whatsmeow/util/log"
 	"log"
 	"os"
-	"os/signal"
 	"strings"
-	"sync"
-	"syscall"
 	"time"
 )
 
 func init() {
 	scc2go.GetEnv(os.Getenv("SCC_URL"), os.Getenv("AUTH"))
-}
-
-type AppState struct {
-	Client    *whatsmeow.Client
-	QRMu      sync.RWMutex
-	LastQR    string
-	Connected bool
 }
 
 func eventHandler(e interface{}) {
@@ -74,31 +64,27 @@ func main() {
 	clientLog := waLog.Stdout("Client", "DEBUG", true)
 	client := whatsmeow.NewClient(deviceStore, clientLog)
 
-	state := &AppState{Client: client}
+	state := &helpers.AppState{Client: client}
+
 	client.AddEventHandler(eventHandler)
 
-	// Siapkan QR channel hanya kalau BELUM pernah login
 	var qrChan <-chan whatsmeow.QRChannelItem
 	if client.Store.ID == nil {
 		qrChan, _ = client.GetQRChannel(ctx)
 	}
-
-	// Connect ke WA
 	helpers.PanicIfError(client.Connect())
 
-	// Jika login via QR (pertama kali), handle event QR di satu goroutine saja
 	if qrChan != nil {
 		go func() {
 			for evt := range qrChan {
 				switch evt.Event {
 				case "code":
-					state.setQR(evt.Code)
+					state.SetQR(evt.Code)
 					qrterminal.GenerateHalfBlock(evt.Code, qrterminal.L, os.Stdout)
 					log.Println("[WA] Scan QR ini dengan WhatsApp (Linked devices)")
 				case "success":
-					// Login sukses -> sudah terhubung
-					state.setQR("")
-					state.setConnected(true)
+					state.SetQR("")
+					state.SetConnected(true)
 					log.Println("[WA] Login QR sukses ✔️")
 				default:
 					log.Printf("[WA] Login event: %s", evt.Event)
@@ -106,9 +92,7 @@ func main() {
 			}
 		}()
 	} else {
-		// Sudah punya sesi: biasanya langsung connected setelah Connect()
-		// Set optimistic true; untuk verifikasi runtime gunakan IsConnected() saat kirim.
-		state.setConnected(true)
+		state.SetConnected(true)
 	}
 
 	// ====== App & Routes (Fiber) ======
@@ -127,11 +111,11 @@ func main() {
 	// Status & QR
 	app.Get("/qr", func(c *fiber.Ctx) error {
 		if state.Client.IsConnected() {
-			state.setConnected(true) // sinkronkan flag internal
+			state.SetConnected(true)
 			return c.JSON(fiber.Map{"status": "connected"})
 		}
 
-		qr := state.getQR()
+		qr := state.GetQR()
 		if qr == "" {
 			return c.Status(fiber.StatusAccepted).JSON(fiber.Map{
 				"status": "waiting",
@@ -187,22 +171,14 @@ func main() {
 		defer cancel()
 
 		msg := &waE2E.Message{
-			Conversation: protoString(req.Text),
+			Conversation: helpers.ProtoString(req.Text),
 		}
 
 		if _, err := state.Client.SendMessage(ctx, jid, msg); err != nil {
 			return fiber.NewError(fiber.StatusBadGateway, "gagal mengirim: "+err.Error())
 		}
 
-		return c.JSON(fiber.Map{
-			"status":  "pending",
-			"to":      jid.String(),
-			"message": "Message is pending and waiting to be processed.",
-			"id":      "pwa-532cd8656da54257975644d6319",
-			"meta": fiber.Map{
-				"location": "https://api.pakaiwa.my.id/v1/messages/pwa-532cd8656da54257975644d6319",
-			},
-		})
+		return helpers.RespondPending(c)
 	})
 
 	go func() {
@@ -213,40 +189,9 @@ func main() {
 	}()
 
 	// Graceful shutdown
-	waitForSignal()
+	helpers.WaitForSignal()
 	log.Println("Shutting down...")
 	_ = app.Shutdown()
 	state.Client.Disconnect()
 	log.Println("Bye!")
-}
-
-/* ================= Helpers ================= */
-
-func waitForSignal() {
-	ch := make(chan os.Signal, 1)
-	signal.Notify(ch, os.Interrupt, syscall.SIGTERM)
-	<-ch
-}
-
-func protoString(s string) *string { return &s }
-
-func (a *AppState) setQR(code string) {
-	a.QRMu.Lock()
-	a.LastQR = code
-	a.QRMu.Unlock()
-}
-func (a *AppState) getQR() string {
-	a.QRMu.RLock()
-	defer a.QRMu.RUnlock()
-	return a.LastQR
-}
-func (a *AppState) setConnected(v bool) {
-	a.QRMu.Lock()
-	a.Connected = v
-	a.QRMu.Unlock()
-}
-func (a *AppState) getConnected() bool {
-	a.QRMu.RLock()
-	defer a.QRMu.RUnlock()
-	return a.Connected
 }
