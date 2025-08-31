@@ -18,16 +18,11 @@ package helpers
 import (
 	"github.com/PakaiWA/PakaiWA/internal/app/messages"
 	"github.com/gofiber/fiber/v2"
-	"github.com/google/uuid"
+	"strings"
 )
 
-func NewMsgID() string {
-	prefix := "pwa"
-	return prefix + "-" + uuid.NewString()
-}
-
-func RespondPending(c *fiber.Ctx) error {
-	id := NewMsgID()
+func RespondPending(c *fiber.Ctx, msgId string) error {
+	id := "pwa-" + strings.ToLower(msgId)
 	response := messages.SendMessageResponse{
 		ID:      id,
 		Status:  "pending",
@@ -36,6 +31,5 @@ func RespondPending(c *fiber.Ctx) error {
 			Location: "https://api.pakaiwa.my.id/v1/messages/" + id,
 		},
 	}
-
 	return c.JSON(response)
 }

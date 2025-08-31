@@ -17,17 +17,23 @@ package pakaiwa
 
 import (
 	"fmt"
-	"github.com/gofiber/fiber/v2/log"
+	"github.com/PakaiWA/PakaiWA/internal/app/webhooks"
+	"go.mau.fi/whatsmeow/types"
 	"go.mau.fi/whatsmeow/types/events"
 )
 
 func EventHandler(e interface{}) {
 	switch v := e.(type) {
 	case *events.Message:
-		msg := v.Message
-		fmt.Println("Received a message!", v.Message.GetConversation())
-		if msg.GetConversation() != "" {
-			log.Debugf("Received a message! %s from %s", msg.GetConversation(), v.Info.Sender.String())
+		webhooks.ProcessMessageEvent(v.Message, v.Info)
+	case *events.Receipt:
+		switch v.Type {
+		case types.ReceiptTypeDelivered:
+			fmt.Printf("Pesan %v delivered ke %s\n", v.MessageIDs, v.Sender)
+		case types.ReceiptTypeRead:
+			fmt.Printf("Pesan %v dibaca oleh %s\n", v.MessageIDs, v.Sender)
+		case types.ReceiptTypePlayed:
+			fmt.Printf("Voice note %v diputar oleh %s\n", v.MessageIDs, v.Sender)
 		}
 	}
 }

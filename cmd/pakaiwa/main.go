@@ -142,11 +142,11 @@ func main() {
 			Conversation: helpers.ProtoString(req.Text),
 		}
 
-		if _, err := state.Client.SendMessage(ctx, jid, msg); err != nil {
+		response, err := state.Client.SendMessage(ctx, jid, msg)
+		if err != nil {
 			return fiber.NewError(fiber.StatusBadGateway, "gagal mengirim: "+err.Error())
 		}
-
-		return helpers.RespondPending(c)
+		return helpers.RespondPending(c, response.ID)
 	})
 
 	go func() {
