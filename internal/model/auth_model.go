@@ -8,15 +8,13 @@
  *
  * See <https://www.gnu.org/licenses/gpl-3.0.html>.
  *
- * @author KAnggara75 on Sat 30/08/25 12.44
- * @project PakaiWA devices
- * https://github.com/PakaiWA/PakaiWA/tree/main/internal/app/devices
+ * @author KAnggara75 on Sat 30/08/25 12.51
+ * @project PakaiWA auth
+ * https://github.com/PakaiWA/PakaiWA/tree/main/internal/app/auth
  */
 
-package devices
+package model
 
-import "github.com/sirupsen/logrus"
-
-type DeviceUseCase struct {
-	Log *logrus.Logger
+type Model struct {
+	ID string
 }

@@ -8,16 +8,9 @@
  *
  * See <https://www.gnu.org/licenses/gpl-3.0.html>.
  *
- * @author KAnggara75 on Sun 31/08/25 05.19
- * @project PakaiWA messages
- * https://github.com/PakaiWA/PakaiWA/tree/main/internal/app/messages
+ * @author KAnggara75 on Sun 31/08/25 18.41
+ * @project PakaiWA webhooks
+ * https://github.com/PakaiWA/PakaiWA/tree/main/internal/app/webhooks
  */
 
-package messages
-
-import "github.com/sirupsen/logrus"
-
-type MessageController struct {
-	Log     *logrus.Logger
-	UseCase *MessageUseCase
-}
+package handler

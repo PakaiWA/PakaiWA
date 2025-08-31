@@ -9,11 +9,11 @@
  * See <https://www.gnu.org/licenses/gpl-3.0.html>.
  *
  * @author KAnggara75 on Sat 30/08/25 12.57
- * @project PakaiWA users
- * https://github.com/PakaiWA/PakaiWA/tree/main/internal/app/users
+ * @project PakaiWA model
+ * https://github.com/PakaiWA/PakaiWA/tree/main/internal/app/model
  */
 
-package users
+package model
 
 type UserResponse struct {
 	ID        string `json:"id,omitempty"`

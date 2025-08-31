@@ -9,15 +9,15 @@
  * See <https://www.gnu.org/licenses/gpl-3.0.html>.
  *
  * @author KAnggara75 on Sat 30/08/25 12.48
- * @project PakaiWA users
- * https://github.com/PakaiWA/PakaiWA/tree/main/internal/app/users
+ * @project PakaiWA usecase
+ * https://github.com/PakaiWA/PakaiWA/tree/main/internal/app/usecase
  */
 
-package users
+package usecase
 
 import (
 	"context"
-	"github.com/PakaiWA/PakaiWA/internal/app/auth"
+	"github.com/PakaiWA/PakaiWA/internal/model"
 	"github.com/gofiber/fiber/v2"
 	"github.com/sirupsen/logrus"
 )
@@ -32,7 +32,7 @@ func NewUserUseCase(logger *logrus.Logger) *UserUseCase {
 	}
 }
 
-func (c *UserUseCase) Verify(ctx context.Context, request *VerifyUserRequest) (*auth.Model, error) {
+func (c *UserUseCase) Verify(ctx context.Context, request *model.VerifyUserRequest) (*model.Model, error) {
 	tx := c.DB.WithContext(ctx).Begin()
 	defer tx.Rollback()
 

@@ -8,13 +8,11 @@
  *
  * See <https://www.gnu.org/licenses/gpl-3.0.html>.
  *
- * @author KAnggara75 on Sat 30/08/25 12.51
- * @project PakaiWA auth
- * https://github.com/PakaiWA/PakaiWA/tree/main/internal/app/auth
+ * @author KAnggara75 on Sun 31/08/25 05.54
+ * @project PakaiWA messages
+ * https://github.com/PakaiWA/PakaiWA/tree/main/internal/app/messages
  */
 
-package auth
+package usecase
 
-type Model struct {
-	ID string
-}
+type MessageUseCase struct{}

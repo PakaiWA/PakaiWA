@@ -17,7 +17,7 @@ package pakaiwa
 
 import (
 	"fmt"
-	"github.com/PakaiWA/PakaiWA/internal/app/webhooks"
+	"github.com/PakaiWA/PakaiWA/internal/handler"
 	"go.mau.fi/whatsmeow/types"
 	"go.mau.fi/whatsmeow/types/events"
 )
@@ -25,7 +25,7 @@ import (
 func EventHandler(e interface{}) {
 	switch v := e.(type) {
 	case *events.Message:
-		webhooks.ProcessMessageEvent(v.Message, v.Info)
+		handler.ProcessMessageEvent(v.Message, v.Info)
 	case *events.Receipt:
 		switch v.Type {
 		case types.ReceiptTypeDelivered:

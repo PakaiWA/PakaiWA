@@ -8,11 +8,9 @@
  *
  * See <https://www.gnu.org/licenses/gpl-3.0.html>.
  *
- * @author KAnggara75 on Sun 31/08/25 05.54
- * @project PakaiWA messages
- * https://github.com/PakaiWA/PakaiWA/tree/main/internal/app/messages
+ * @author KAnggara75 on Sun 31/08/25 20.50
+ * @project PakaiWA qr
+ * https://github.com/PakaiWA/PakaiWA/tree/main/internal/app/repository
  */
 
-package messages
-
-type MessageUseCase struct{}
+package repository

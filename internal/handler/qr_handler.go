@@ -10,18 +10,56 @@
  *
  * @author KAnggara75 on Sun 31/08/25 12.04
  * @project PakaiWA qr
- * https://github.com/PakaiWA/PakaiWA/tree/main/internal/app/qr
+ * https://github.com/PakaiWA/PakaiWA/tree/main/internal/app/handler
  */
 
-package qr
+package handler
 
 import (
+	"github.com/PakaiWA/PakaiWA/internal/model"
 	"github.com/PakaiWA/PakaiWA/internal/pakaiwa"
+	"github.com/gofiber/fiber/v2"
 	"github.com/mdp/qrterminal/v3"
+	"github.com/sirupsen/logrus"
 	"go.mau.fi/whatsmeow"
 	"log"
 	"os"
 )
+
+type HandlerQR struct {
+	State *pakaiwa.AppState
+	Log   *logrus.Logger
+}
+
+func NewQRHandler(state *pakaiwa.AppState, log *logrus.Logger) *HandlerQR {
+	return &HandlerQR{
+		Log:   log,
+		State: state,
+	}
+}
+
+func (h *HandlerQR) GetQR(c *fiber.Ctx) error {
+	qrResponse := &model.ResponseQR{
+		QRCode:  "",
+		QRImage: "",
+	}
+
+	if h.State.Client.IsConnected() {
+		h.State.SetConnected(true)
+		return c.JSON(qrResponse)
+	}
+
+	qrData := h.State.GetQR()
+	if qrData == "" {
+		qrResponse.Msg = "No QR Code"
+		return c.JSON(qrResponse)
+	}
+
+	qrResponse.QRImage = "https://api.pakaiwa.my.id/v1/qr/show?qrcode=" + qrData
+	qrResponse.QRCode = qrData
+
+	return c.JSON(qrResponse)
+}
 
 func StartQRHandler(state *pakaiwa.AppState, qrChan <-chan whatsmeow.QRChannelItem) {
 	if qrChan == nil {

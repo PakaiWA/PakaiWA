@@ -9,21 +9,21 @@
  * See <https://www.gnu.org/licenses/gpl-3.0.html>.
  *
  * @author KAnggara75 on Sat 30/08/25 08.47
- * @project PakaiWA routers
+ * @project PakaiWA router
  * https://github.com/PakaiWA/PakaiWA/tree/main/internal/routers
  */
 
-package routers
+package router
 
 import (
-	"github.com/PakaiWA/PakaiWA/internal/app/messages"
+	"github.com/PakaiWA/PakaiWA/internal/handler"
 	"github.com/gofiber/fiber/v2"
 )
 
 type RouteConfig struct {
-	App               *fiber.App
-	MessageController *messages.MessageController
-	AuthMiddleware    fiber.Handler
+	App       *fiber.App
+	QRHandler *handler.HandlerQR
+	//AuthMiddleware fiber.Handler
 }
 
 func (c *RouteConfig) Setup() {
@@ -32,8 +32,9 @@ func (c *RouteConfig) Setup() {
 }
 
 func (c *RouteConfig) SetupGuestRoute() {
+	c.App.Get("/v1/qr", c.QRHandler.GetQR)
 }
 
 func (c *RouteConfig) SetupAuthRoute() {
-	c.App.Use(c.AuthMiddleware)
+	//c.App.Use(c.AuthMiddleware)
 }

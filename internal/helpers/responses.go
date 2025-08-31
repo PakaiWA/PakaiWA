@@ -16,18 +16,18 @@
 package helpers
 
 import (
-	"github.com/PakaiWA/PakaiWA/internal/app/messages"
+	"github.com/PakaiWA/PakaiWA/internal/model"
 	"github.com/gofiber/fiber/v2"
 	"strings"
 )
 
 func RespondPending(c *fiber.Ctx, msgId string) error {
 	id := "pwa-" + strings.ToLower(msgId)
-	response := messages.SendMessageResponse{
+	response := model.SendMessageResponse{
 		ID:      id,
 		Status:  "pending",
 		Message: "Message is pending and waiting to be processed.",
-		MessageMeta: messages.MessageMeta{
+		MessageMeta: model.MessageMeta{
 			Location: "https://api.pakaiwa.my.id/v1/messages/" + id,
 		},
 	}

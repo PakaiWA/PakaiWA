@@ -8,9 +8,9 @@
  *
  * See <https://www.gnu.org/licenses/gpl-3.0.html>.
  *
- * @author KAnggara75 on Sun 31/08/25 06.34
- * @project PakaiWA qr
- * https://github.com/PakaiWA/PakaiWA/tree/main/internal/app/qr
+ * @author KAnggara75 on Sun 31/08/25 18.41
+ * @project PakaiWA webhooks
+ * https://github.com/PakaiWA/PakaiWA/tree/main/internal/app/webhooks
  */
 
-package qr
+package handler

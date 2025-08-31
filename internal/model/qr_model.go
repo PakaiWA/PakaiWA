@@ -8,9 +8,15 @@
  *
  * See <https://www.gnu.org/licenses/gpl-3.0.html>.
  *
- * @author KAnggara75 on Sat 30/08/25 08.50
- * @project PakaiWA devices
- * https://github.com/PakaiWA/PakaiWA/tree/main/internal/app/devices
+ * @author KAnggara75 on Sun 31/08/25 06.34
+ * @project PakaiWA qr
+ * https://github.com/PakaiWA/PakaiWA/tree/main/internal/app/model
  */
 
-package devices
+package model
+
+type ResponseQR struct {
+	QRCode  string `json:"qr_code"`
+	QRImage string `json:"image_url"`
+	Msg     string `json:"message,omitempty"`
+}

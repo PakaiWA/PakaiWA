@@ -16,15 +16,15 @@
 package middleware
 
 import (
-	"github.com/PakaiWA/PakaiWA/internal/app/auth"
-	"github.com/PakaiWA/PakaiWA/internal/app/users"
+	"github.com/PakaiWA/PakaiWA/internal/model"
+	"github.com/PakaiWA/PakaiWA/internal/usecase"
 	"github.com/PakaiWA/PakaiWA/pkg/utils"
 	"github.com/gofiber/fiber/v2"
 )
 
-func NewAuth(usecase *users.UserUseCase, rateLimiterUtil *utils.RateLimiterUtil) fiber.Handler {
+func NewAuth(usecase *usecase.UserUseCase, rateLimiterUtil *utils.RateLimiterUtil) fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
-		request := &users.VerifyUserRequest{Token: ctx.Get("Authorization", "NOT_FOUND")}
+		request := &model.VerifyUserRequest{Token: ctx.Get("Authorization", "NOT_FOUND")}
 		usecase.Log.Debugf("Authorization : %s", request.Token)
 
 		authData, err := usecase.Verify(ctx.UserContext(), request)
@@ -44,6 +44,6 @@ func NewAuth(usecase *users.UserUseCase, rateLimiterUtil *utils.RateLimiterUtil)
 	}
 }
 
-func GetUser(ctx *fiber.Ctx) *auth.Model {
-	return ctx.Locals("auth").(*auth.Model)
+func GetUser(ctx *fiber.Ctx) *model.Model {
+	return ctx.Locals("auth").(*model.Model)
 }

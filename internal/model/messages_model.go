@@ -13,7 +13,7 @@
  * https://github.com/PakaiWA/PakaiWA/tree/main/internal/app/messages
  */
 
-package messages
+package model
 
 type SendMessageResponse struct {
 	ID          string      `json:"id"`

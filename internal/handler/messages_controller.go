@@ -8,25 +8,19 @@
  *
  * See <https://www.gnu.org/licenses/gpl-3.0.html>.
  *
- * @author KAnggara75 on Sat 30/08/25 12.35
- * @project PakaiWA devices
- * https://github.com/PakaiWA/PakaiWA/tree/main/internal/app/devices
+ * @author KAnggara75 on Sun 31/08/25 05.19
+ * @project PakaiWA messages
+ * https://github.com/PakaiWA/PakaiWA/tree/main/internal/app/messages
  */
 
-package devices
+package handler
 
 import (
+	"github.com/PakaiWA/PakaiWA/internal/usecase"
 	"github.com/sirupsen/logrus"
 )
 
-type DeviceController struct {
+type MessageController struct {
 	Log     *logrus.Logger
-	UseCase *DeviceUseCase
-}
-
-func NewDeviceController(useCase *DeviceUseCase, log *logrus.Logger) *DeviceController {
-	return &DeviceController{
-		Log:     log,
-		UseCase: useCase,
-	}
+	UseCase *usecase.MessageUseCase
 }

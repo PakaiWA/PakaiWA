@@ -18,7 +18,7 @@ package utils
 import (
 	"context"
 	"fmt"
-	"github.com/PakaiWA/PakaiWA/internal/app/auth"
+	"github.com/PakaiWA/PakaiWA/internal/model"
 	"github.com/redis/go-redis/v9"
 	"time"
 )
@@ -37,7 +37,7 @@ func NewRateLimiterUtil(redis *redis.Client) *RateLimiterUtil {
 	}
 }
 
-func (u RateLimiterUtil) IsAllowed(ctx context.Context, auth *auth.Model) bool {
+func (u RateLimiterUtil) IsAllowed(ctx context.Context, auth *model.Model) bool {
 	key := auth.ID
 
 	increment, err := u.Redis.Incr(ctx, key).Result()
