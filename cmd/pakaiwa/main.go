@@ -98,48 +98,5 @@ func main() {
 	//	})
 	//})
 	//
-	//app.Post("/v1/messages", func(c *fiber.Ctx) error {
-	//	if !state.Client.IsConnected() {
-	//		return c.Status(fiber.StatusServiceUnavailable).JSON(fiber.Map{
-	//			"error": "whatsapp_not_connected",
-	//		})
-	//	}
-	//
-	//	var req struct {
-	//		JID   string `json:"jid"`
-	//		Phone string `json:"phone_number"`
-	//		Text  string `json:"message"`
-	//	}
-	//
-	//	if err := c.BodyParser(&req); err != nil {
-	//		return fiber.NewError(fiber.StatusBadRequest, "invalid json: "+err.Error())
-	//	}
-	//	if strings.TrimSpace(req.Text) == "" {
-	//		return fiber.NewError(fiber.StatusBadRequest, "`text` wajib diisi")
-	//	}
-	//
-	//	phoneNumber := strings.TrimSpace(req.Phone)
-	//	if phoneNumber == "" {
-	//		return fiber.NewError(fiber.StatusBadRequest, "harus menyertakan `jid` atau `phone`")
-	//	}
-	//
-	//	jid, err := helpers.NormalizeJID(phoneNumber)
-	//	if err != nil {
-	//		return fiber.NewError(fiber.StatusBadRequest, err.Error())
-	//	}
-	//
-	//	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
-	//	defer cancel()
-	//
-	//	msg := &waE2E.Message{
-	//		Conversation: helpers.ProtoString(req.Text),
-	//	}
-	//
-	//	response, err := state.Client.SendMessage(ctx, jid, msg)
-	//	if err != nil {
-	//		return fiber.NewError(fiber.StatusBadGateway, "gagal mengirim: "+err.Error())
-	//	}
-	//	return helpers.RespondPending(c, response.ID)
-	//})
 
 }
