@@ -38,15 +38,13 @@ func main() {
 	pool := configs.NewDatabase(ctx, log)
 
 	// ====== WhatsApp Client ======
-	//client := pakaiwa.WAClient{}
+	store.SetOSInfo(configs.GetAppName(), [3]uint32{0, 0, 0})
 
 	container := pakaiwa.InitStoreWithPool(ctx, pool, log)
 	deviceStore, err := container.GetFirstDevice(ctx) // TODO: refactor for multi client
 	helpers.PanicIfError(err)
 
-	store.SetOSInfo("PakaiWA", [3]uint32{1, 0, 0})
-
-	clientLog := pakaiwa.NewPakaiWALog(log, "PakaiWA")
+	clientLog := pakaiwa.NewPakaiWALog(log, configs.GetAppName())
 	client := whatsmeow.NewClient(deviceStore, clientLog)
 
 	state := &pakaiwa.AppState{Client: client}
