@@ -18,6 +18,7 @@ package main
 import (
 	"context"
 	"github.com/KAnggara75/scc2go"
+	"github.com/PakaiWA/PakaiWA/internal/app"
 	"github.com/PakaiWA/PakaiWA/internal/configs"
 	"github.com/PakaiWA/PakaiWA/internal/helpers"
 	_ "github.com/jackc/pgx/v5/stdlib"
@@ -38,19 +39,19 @@ func main() {
 	helpers.PanicIfError(err)
 
 	// ====== App & Routes (Fiber) ======
-	app := configs.NewFiber()
-	configs.Bootstrap(
-		&configs.BootstrapConfig{
+	fiber := configs.NewFiber()
+	app.Bootstrap(
+		&app.BootstrapConfig{
 			PakaiWA: pwa,
 			Pool:    pool,
-			App:     app,
+			Fiber:   fiber,
 			Log:     log,
 		},
 	)
 
 	go func() {
 		addr := ":8080"
-		if err := app.Listen(addr); err != nil {
+		if err := fiber.Listen(addr); err != nil {
 			log.Fatalf("Failed to start server: %v", err)
 		}
 	}()
@@ -58,8 +59,7 @@ func main() {
 	// Graceful shutdown
 	helpers.WaitForSignal()
 	log.Println("Shutting down...")
-	_ = app.Shutdown()
+	_ = fiber.Shutdown()
 	pwa.Client.Disconnect()
 	log.Println("Bye!")
-
 }

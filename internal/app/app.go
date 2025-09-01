@@ -8,12 +8,12 @@
  *
  * See <https://www.gnu.org/licenses/gpl-3.0.html>.
  *
- * @author KAnggara75 on Sat 30/08/25 13.07
- * @project PakaiWA configs
- * https://github.com/PakaiWA/PakaiWA/tree/main/internal/configs
+ * @author KAnggara75 on Mon 01/09/25 21.11
+ * @project PakaiWA app
+ * https://github.com/PakaiWA/PakaiWA/tree/main/internal/app
  */
 
-package configs
+package app
 
 import (
 	"github.com/PakaiWA/PakaiWA/internal/handler"
@@ -27,17 +27,16 @@ import (
 type BootstrapConfig struct {
 	PakaiWA *pakaiwa.AppState
 	Pool    *pgxpool.Pool
-	App     *fiber.App
+	Fiber   *fiber.App
 	Log     *logrus.Logger
 }
 
-func Bootstrap(config *BootstrapConfig) {
-
-	msgHandler := handler.NewMessageHandler(config.PakaiWA, config.Log)
-	qrHandler := handler.NewQRHandler(config.PakaiWA, config.Log)
+func Bootstrap(b *BootstrapConfig) {
+	qrHandler := handler.NewQRHandler(b.PakaiWA, b.Log)
+	msgHandler := handler.NewMessageHandler(b.PakaiWA, b.Log)
 
 	routeConfig := router.RouteConfig{
-		App:            config.App,
+		Fiber:          b.Fiber,
 		MessageHandler: msgHandler,
 		QRHandler:      qrHandler,
 	}

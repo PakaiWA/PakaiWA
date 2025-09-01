@@ -63,7 +63,7 @@ func (h *QRHandler) GetQR(c *fiber.Ctx) error {
 }
 
 func (h *QRHandler) ShowQR(c *fiber.Ctx) error {
-	qrData := c.Query("qrcode", "")
+	qrData := c.Query("qrcode", c.Query("qrCode", ""))
 	h.Log.Infof("show qrcode: %s", qrData)
 	if qrData == "" {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{

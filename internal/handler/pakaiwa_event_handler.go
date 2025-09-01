@@ -16,6 +16,7 @@
 package handler
 
 import (
+	"github.com/PakaiWA/PakaiWA/internal/pakaiwa"
 	"github.com/gofiber/fiber/v2/log"
 	"github.com/sirupsen/logrus"
 	"go.mau.fi/whatsmeow/types"
@@ -23,17 +24,27 @@ import (
 )
 
 type EventHandler struct {
-	Log *logrus.Logger
+	PakaiWA *pakaiwa.AppState
+	Log     *logrus.Logger
 }
 
-func NewEventHandler(log *logrus.Logger) *EventHandler {
-	return &EventHandler{Log: log}
+func NewEventHandler(log *logrus.Logger, state *pakaiwa.AppState) *EventHandler {
+	return &EventHandler{
+		PakaiWA: state,
+		Log:     log,
+	}
 }
 
 func (h *EventHandler) Handle(e interface{}) {
 	switch v := e.(type) {
 	case *events.Message:
 		ProcessMessageEvent(v.Message, v.Info, h.Log)
+	case *events.LoggedOut:
+		reason := v.Reason
+		if reason >= 400 && reason < 500 {
+			HandleLogout(h.PakaiWA.Client)
+		}
+		log.Infof("Logged out: %s\n", reason.String())
 	case *events.Receipt:
 		switch v.Type {
 		case types.ReceiptTypeDelivered:

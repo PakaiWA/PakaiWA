@@ -21,7 +21,9 @@ import (
 	"github.com/PakaiWA/PakaiWA/internal/model"
 	"github.com/PakaiWA/PakaiWA/internal/pakaiwa"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/log"
 	"github.com/sirupsen/logrus"
+	"go.mau.fi/whatsmeow"
 	"go.mau.fi/whatsmeow/proto/waE2E"
 	"strings"
 	"time"
@@ -30,6 +32,11 @@ import (
 type MessageHandler struct {
 	State *pakaiwa.AppState
 	Log   *logrus.Logger
+}
+
+type SendResult struct {
+	ID  string
+	Err error
 }
 
 func NewMessageHandler(state *pakaiwa.AppState, log *logrus.Logger) *MessageHandler {
@@ -65,16 +72,21 @@ func (mh *MessageHandler) SendMsg(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
-	defer cancel()
+	id := mh.State.Client.GenerateMessageID()
 
-	msg := &waE2E.Message{
-		Conversation: helpers.ProtoString(req.Text),
-	}
+	go func() {
+		msg := &waE2E.Message{
+			Conversation: helpers.ProtoString(req.Text),
+		}
 
-	response, err := mh.State.Client.SendMessage(ctx, jid, msg)
-	if err != nil {
-		return fiber.NewError(fiber.StatusBadGateway, "sending Fail: "+err.Error())
-	}
-	return helpers.RespondPending(c, response.ID)
+		ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+		defer cancel()
+
+		_, err = mh.State.Client.SendMessage(ctx, jid, msg, whatsmeow.SendRequestExtra{ID: id})
+		if err != nil {
+			log.Errorf("Fail to send with id: %s %v", id, err)
+		}
+	}()
+
+	return helpers.RespondPending(c, id)
 }

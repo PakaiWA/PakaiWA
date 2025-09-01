@@ -13,6 +13,7 @@
         <entry key="BootstrapConfig">
           <value>
             <set>
+              <option value="file://$PROJECT_DIR$/internal/app/app.go" />
               <option value="file://$PROJECT_DIR$/internal/configs/app.go" />
             </set>
           </value>
@@ -220,6 +221,13 @@
             </set>
           </value>
         </entry>
+        <entry key="SendResult">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/handler/sending_handler.go" />
+            </set>
+          </value>
+        </entry>
         <entry key="UpdateUserRequest">
           <value>
             <set>
@@ -269,7 +277,7 @@
         <entry key="file://$PROJECT_DIR$/cmd/pakaiwa/main.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1756735248611" />
+              <option name="lastModified" value="1756736036888" />
             </ScannedPath>
           </value>
         </entry>
@@ -277,6 +285,18 @@
           <value>
             <ScannedPath>
               <option name="lastModified" value="1756595256460" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/app/app.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1756736001162" />
+              <option name="schema">
+                <list>
+                  <option value="BootstrapConfig" />
+                </list>
+              </option>
             </ScannedPath>
           </value>
         </entry>
@@ -356,14 +376,14 @@
         <entry key="file://$PROJECT_DIR$/internal/handler/logout_handler.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1756733806697" />
+              <option name="lastModified" value="1756735715124" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/internal/handler/pakaiwa_event_handler.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1756725055679" />
+              <option name="lastModified" value="1756735782130" />
               <option name="schema">
                 <list>
                   <option value="EventHandler" />
@@ -375,7 +395,7 @@
         <entry key="file://$PROJECT_DIR$/internal/handler/qr_handler.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1756720923670" />
+              <option name="lastModified" value="1756738554954" />
               <option name="schema">
                 <list>
                   <option value="QRHandler" />
@@ -387,10 +407,11 @@
         <entry key="file://$PROJECT_DIR$/internal/handler/sending_handler.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1756700929488" />
+              <option name="lastModified" value="1756738339485" />
               <option name="schema">
                 <list>
                   <option value="MessageHandler" />
+                  <option value="SendResult" />
                 </list>
               </option>
             </ScannedPath>
@@ -610,7 +631,7 @@
         <entry key="file://$PROJECT_DIR$/internal/router/router.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1756705369179" />
+              <option name="lastModified" value="1756735961020" />
               <option name="schema">
                 <list>
                   <option value="RouteConfig" />
@@ -702,6 +723,7 @@
         <entry key="route_config" value="RouteConfig" />
         <entry key="send_message_req" value="SendMessageReq" />
         <entry key="send_message_response" value="SendMessageResponse" />
+        <entry key="send_result" value="SendResult" />
         <entry key="update_user_request" value="UpdateUserRequest" />
         <entry key="use_case_qr" value="UseCaseQR" />
         <entry key="user_response" value="UserResponse" />
