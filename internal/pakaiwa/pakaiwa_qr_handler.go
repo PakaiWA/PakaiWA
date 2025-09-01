@@ -25,12 +25,12 @@ import (
 
 func StartQRHandler(ctx context.Context, state *AppState, qrChan <-chan whatsmeow.QRChannelItem, log *logrus.Logger) {
 	if qrChan == nil {
-		log.Warn("[WA] QR channel nil → bukan mode pairing. Menunggu status dari event lain.")
+		log.Warn("[WA] QR channel nil → not in pairing mode")
 		return
 	}
 
-	state.SetConnected(false)
 	state.SetQR("")
+	state.SetConnected(false)
 
 	go func() {
 		defer func() {
@@ -45,6 +45,7 @@ func StartQRHandler(ctx context.Context, state *AppState, qrChan <-chan whatsmeo
 
 			case evt, ok := <-qrChan:
 				if !ok {
+					state.Client.Disconnect()
 					log.Warn("[WA] QR channel closed")
 					return
 				}
@@ -53,21 +54,21 @@ func StartQRHandler(ctx context.Context, state *AppState, qrChan <-chan whatsmeo
 				case "code":
 					state.SetQR(evt.Code)
 					qrterminal.GenerateHalfBlock(evt.Code, qrterminal.L, os.Stdout)
-					log.Info("[WA] QR diperbarui — silakan scan dari WhatsApp (Linked devices)")
+					log.Info("[WA] QR updated — scan please")
 
 				case "timeout":
 					state.SetQR("")
-					log.Warn("[WA] QR timeout — menunggu kode baru…")
+					log.Warn("[WA] QR timeout — Waiting for next QR")
 
 				case "success":
-					log.Info("[WA] Login QR sukses ✔️")
+					log.Info("[WA] Login QR Success ✔️")
 					state.SetQR("")
 					state.SetConnected(true)
 					return
 
 				case "error":
 					state.SetQR("")
-					log.Error("[WA] QR error — menunggu pembaruan berikutnya")
+					log.Error("[WA] QR error — Waiting for next QR")
 
 				default:
 					log.Infof("[WA] Login event: %s", evt.Event)

@@ -262,7 +262,7 @@
         <entry key="file://$PROJECT_DIR$/cmd/pakaiwa/main.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1756722788221" />
+              <option name="lastModified" value="1756723925223" />
             </ScannedPath>
           </value>
         </entry>
@@ -288,7 +288,7 @@
         <entry key="file://$PROJECT_DIR$/internal/configs/config.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1756613346670" />
+              <option name="lastModified" value="1756723299153" />
             </ScannedPath>
           </value>
         </entry>
@@ -535,7 +535,7 @@
         <entry key="file://$PROJECT_DIR$/internal/pakaiwa/pakaiwa_qr_handler.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1756704298244" />
+              <option name="lastModified" value="1756724044270" />
             </ScannedPath>
           </value>
         </entry>
