@@ -17,12 +17,12 @@ package pakaiwa
 
 import (
 	"github.com/mdp/qrterminal/v3"
+	"github.com/sirupsen/logrus"
 	"go.mau.fi/whatsmeow"
-	"log"
 	"os"
 )
 
-func StartQRHandler(state *AppState, qrChan <-chan whatsmeow.QRChannelItem) {
+func StartQRHandler(state *AppState, qrChan <-chan whatsmeow.QRChannelItem, log *logrus.Logger) {
 	if qrChan == nil {
 		state.SetConnected(true)
 		return
@@ -34,13 +34,13 @@ func StartQRHandler(state *AppState, qrChan <-chan whatsmeow.QRChannelItem) {
 			case "code":
 				state.SetQR(evt.Code)
 				qrterminal.GenerateHalfBlock(evt.Code, qrterminal.L, os.Stdout)
-				log.Println("[WA] Scan QR ini dengan WhatsApp (Linked devices)")
+				log.Info("[WA] Scan QR ini dengan WhatsApp (Linked devices)")
 			case "success":
 				state.SetQR("")
 				state.SetConnected(true)
-				log.Println("[WA] Login QR sukses ✔️")
+				log.Info("[WA] Login QR sukses ✔️")
 			default:
-				log.Printf("[WA] Login event: %s", evt.Event)
+				log.Infof("[WA] Login event: %s", evt.Event)
 			}
 		}
 	}()

@@ -62,7 +62,7 @@ func main() {
 	helpers.PanicIfError(client.Connect())
 
 	// QR Handler
-	pakaiwa.StartQRHandler(state, qrChan)
+	pakaiwa.StartQRHandler(state, qrChan, log)
 
 	// ====== App & Routes (Fiber) ======
 	app := configs.NewFiber()
