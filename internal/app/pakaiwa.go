@@ -13,10 +13,11 @@
  * https://github.com/PakaiWA/PakaiWA/tree/main/internal/configs
  */
 
-package configs
+package app
 
 import (
 	"context"
+	"github.com/PakaiWA/PakaiWA/internal/configs"
 	"github.com/PakaiWA/PakaiWA/internal/handler"
 	"github.com/PakaiWA/PakaiWA/internal/helpers"
 	"github.com/PakaiWA/PakaiWA/internal/pakaiwa"
@@ -27,13 +28,13 @@ import (
 )
 
 func NewWhatsAppClient(ctx context.Context, pool *pgxpool.Pool, log *logrus.Logger) (*pakaiwa.AppState, error) {
-	store.SetOSInfo(GetAppName(), [3]uint32{0, 0, 0})
+	store.SetOSInfo(configs.GetAppName(), [3]uint32{0, 0, 0})
 
 	container := pakaiwa.InitStoreWithPool(ctx, pool, log)
 	deviceStore, err := container.GetFirstDevice(ctx) // TODO: refactor for multi client
 	helpers.PanicIfError(err)
 
-	clientLog := pakaiwa.NewPakaiWALog(log, GetAppName())
+	clientLog := pakaiwa.NewPakaiWALog(log, configs.GetAppName())
 	client := whatsmeow.NewClient(deviceStore, clientLog)
 
 	state := &pakaiwa.AppState{Client: client}

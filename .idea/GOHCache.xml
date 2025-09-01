@@ -277,7 +277,7 @@
         <entry key="file://$PROJECT_DIR$/cmd/pakaiwa/main.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1756736036888" />
+              <option name="lastModified" value="1756739795058" />
             </ScannedPath>
           </value>
         </entry>
@@ -297,6 +297,13 @@
                   <option value="BootstrapConfig" />
                 </list>
               </option>
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1756739783470" />
             </ScannedPath>
           </value>
         </entry>
@@ -376,14 +383,14 @@
         <entry key="file://$PROJECT_DIR$/internal/handler/logout_handler.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1756735715124" />
+              <option name="lastModified" value="1756740208583" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/internal/handler/pakaiwa_event_handler.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1756735782130" />
+              <option name="lastModified" value="1756739289711" />
               <option name="schema">
                 <list>
                   <option value="EventHandler" />
@@ -395,7 +402,7 @@
         <entry key="file://$PROJECT_DIR$/internal/handler/qr_handler.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1756738554954" />
+              <option name="lastModified" value="1756739592224" />
               <option name="schema">
                 <list>
                   <option value="QRHandler" />

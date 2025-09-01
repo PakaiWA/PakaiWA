@@ -35,7 +35,7 @@ func main() {
 	pool := configs.NewDatabase(ctx, log)
 
 	// ====== WhatsApp Client ======
-	pwa, err := configs.NewWhatsAppClient(ctx, pool, log)
+	pwa, err := app.NewWhatsAppClient(ctx, pool, log)
 	helpers.PanicIfError(err)
 
 	// ====== App & Routes (Fiber) ======

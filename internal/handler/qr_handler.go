@@ -38,33 +38,35 @@ func NewQRHandler(state *pakaiwa.AppState, log *logrus.Logger) *QRHandler {
 }
 
 func (h *QRHandler) GetQR(c *fiber.Ctx) error {
+	log := h.Log
 	qrResponse := &model.ResponseQR{}
 
 	if h.State.GetConnected() {
-		h.Log.Info("client connected")
+		log.Info("client connected")
 		qrResponse.Msg = "Already Connected"
 		qrResponse.Status = "connected"
 		qrResponse.Device.JID = helpers.NormalizeNumber(h.State.Client.Store.ID.String())
 		qrResponse.Device.PushName = h.State.Client.Store.PushName
-		return c.JSON(qrResponse)
+		return c.Status(fiber.StatusAccepted).JSON(qrResponse)
 	}
 
-	h.Log.Info("client not connected yet")
+	log.Info("client not connected yet")
 	qrData := h.State.GetQR()
 	if qrData == "" {
 		qrResponse.Msg = "No QR Code"
+		return c.Status(fiber.StatusServiceUnavailable).JSON(qrResponse)
+	} else {
+		qrData = url.QueryEscape(qrData)
+		qrResponse.QRImage = c.BaseURL() + "/v1/qr/show?qrcode=" + qrData
+		qrResponse.QRCode = qrData
 		return c.JSON(qrResponse)
 	}
-	qrData = url.QueryEscape(qrData)
-
-	qrResponse.QRImage = c.BaseURL() + "/v1/qr/show?qrcode=" + qrData
-	qrResponse.QRCode = qrData
-	return c.JSON(qrResponse)
 }
 
 func (h *QRHandler) ShowQR(c *fiber.Ctx) error {
+	log := h.Log
 	qrData := c.Query("qrcode", c.Query("qrCode", ""))
-	h.Log.Infof("show qrcode: %s", qrData)
+	log.Infof("show qrcode: %s", qrData)
 	if qrData == "" {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": "qrcode query parameter is required",
@@ -75,7 +77,7 @@ func (h *QRHandler) ShowQR(c *fiber.Ctx) error {
 	png, err := qrcode.Encode(qrData, qrcode.Highest, 512)
 
 	if err != nil {
-		h.Log.Error("failed to generate QR code image:", err)
+		log.Error("failed to generate QR code image:", err)
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": "failed to generate QR code image",
 		})

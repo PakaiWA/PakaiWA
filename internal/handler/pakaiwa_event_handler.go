@@ -41,10 +41,12 @@ func (h *EventHandler) Handle(e interface{}) {
 		ProcessMessageEvent(v.Message, v.Info, h.Log)
 	case *events.LoggedOut:
 		reason := v.Reason
+		h.PakaiWA.SetQR("")
+		h.PakaiWA.SetConnected(false)
+		log.Infof("Logged out: %s\n", reason.String())
 		if reason >= 400 && reason < 500 {
 			HandleLogout(h.PakaiWA.Client)
 		}
-		log.Infof("Logged out: %s\n", reason.String())
 	case *events.Receipt:
 		switch v.Type {
 		case types.ReceiptTypeDelivered:
