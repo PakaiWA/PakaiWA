@@ -22,7 +22,6 @@ import (
 	"github.com/mdp/qrterminal/v3"
 	"github.com/sirupsen/logrus"
 	"go.mau.fi/whatsmeow"
-	"log"
 	"os"
 )
 
@@ -59,28 +58,4 @@ func (h *HandlerQR) GetQR(c *fiber.Ctx) error {
 	qrResponse.QRCode = qrData
 
 	return c.JSON(qrResponse)
-}
-
-func StartQRHandler(state *pakaiwa.AppState, qrChan <-chan whatsmeow.QRChannelItem) {
-	if qrChan == nil {
-		state.SetConnected(true)
-		return
-	}
-
-	go func() {
-		for evt := range qrChan {
-			switch evt.Event {
-			case "code":
-				state.SetQR(evt.Code)
-				qrterminal.GenerateHalfBlock(evt.Code, qrterminal.L, os.Stdout)
-				log.Println("[WA] Scan QR ini dengan WhatsApp (Linked devices)")
-			case "success":
-				state.SetQR("")
-				state.SetConnected(true)
-				log.Println("[WA] Login QR sukses ✔️")
-			default:
-				log.Printf("[WA] Login event: %s", evt.Event)
-			}
-		}
-	}()
 }

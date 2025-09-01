@@ -19,6 +19,7 @@ import (
 	"context"
 	"github.com/PakaiWA/PakaiWA/internal/handler"
 	"github.com/PakaiWA/PakaiWA/internal/pakaiwa"
+	"github.com/PakaiWA/PakaiWA/internal/repository"
 	_ "github.com/jackc/pgx/v5/stdlib"
 
 	"github.com/KAnggara75/scc2go"
@@ -38,7 +39,7 @@ func main() {
 	pool := configs.NewDatabase(ctx, log)
 
 	// ====== WhatsApp Client ======
-	container := pakaiwa.InitStoreWithPool(ctx, pool, log)
+	container := repository.InitStoreWithPool(ctx, pool, log)
 	deviceStore, err := container.GetFirstDevice(ctx)
 	helpers.PanicIfError(err)
 
@@ -48,7 +49,7 @@ func main() {
 	state := &pakaiwa.AppState{Client: client}
 
 	// Event Handler
-	client.AddEventHandler(pakaiwa.EventHandler)
+	client.AddEventHandler(handler.EventHandler)
 
 	// QR Channel, This must be called *before* Connect().
 	var qrChan <-chan whatsmeow.QRChannelItem
@@ -59,7 +60,7 @@ func main() {
 	helpers.PanicIfError(client.Connect())
 
 	// QR Handler
-	handler.StartQRHandler(state, qrChan)
+	pakaiwa.StartQRHandler(state, qrChan)
 
 	// ====== App & Routes (Fiber) ======
 	app := configs.NewFiber()
@@ -71,6 +72,21 @@ func main() {
 			Log:     log,
 		},
 	)
+
+	go func() {
+		addr := ":8080"
+		if err := app.Listen(addr); err != nil {
+			log.Fatalf("Failed to start server: %v", err)
+		}
+	}()
+
+	// Graceful shutdown
+	helpers.WaitForSignal()
+	log.Println("Shutting down...")
+	_ = app.Shutdown()
+	state.Client.Disconnect()
+	log.Println("Bye!")
+
 	//
 	//// Healthcheck
 	//app.Get("/healthz", func(c *fiber.Ctx) error {
@@ -124,17 +140,4 @@ func main() {
 	//	return helpers.RespondPending(c, response.ID)
 	//})
 
-	go func() {
-		addr := ":8080"
-		if err := app.Listen(addr); err != nil {
-			log.Fatalf("Failed to start server: %v", err)
-		}
-	}()
-
-	// Graceful shutdown
-	helpers.WaitForSignal()
-	log.Println("Shutting down...")
-	_ = app.Shutdown()
-	state.Client.Disconnect()
-	log.Println("Bye!")
 }

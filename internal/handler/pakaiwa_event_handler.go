@@ -13,11 +13,10 @@
  * https://github.com/PakaiWA/PakaiWA/tree/main/internal/pakaiwa
  */
 
-package pakaiwa
+package handler
 
 import (
 	"fmt"
-	"github.com/PakaiWA/PakaiWA/internal/handler"
 	"go.mau.fi/whatsmeow/types"
 	"go.mau.fi/whatsmeow/types/events"
 )
@@ -25,7 +24,7 @@ import (
 func EventHandler(e interface{}) {
 	switch v := e.(type) {
 	case *events.Message:
-		handler.ProcessMessageEvent(v.Message, v.Info)
+		ProcessMessageEvent(v.Message, v.Info)
 	case *events.Receipt:
 		switch v.Type {
 		case types.ReceiptTypeDelivered:
