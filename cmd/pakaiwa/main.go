@@ -17,14 +17,14 @@ package main
 
 import (
 	"context"
-	"github.com/PakaiWA/PakaiWA/internal/handler"
-	"github.com/PakaiWA/PakaiWA/internal/pakaiwa"
-	_ "github.com/jackc/pgx/v5/stdlib"
-
 	"github.com/KAnggara75/scc2go"
 	"github.com/PakaiWA/PakaiWA/internal/configs"
+	"github.com/PakaiWA/PakaiWA/internal/handler"
 	"github.com/PakaiWA/PakaiWA/internal/helpers"
+	"github.com/PakaiWA/PakaiWA/internal/pakaiwa"
+	_ "github.com/jackc/pgx/v5/stdlib"
 	"go.mau.fi/whatsmeow"
+	"go.mau.fi/whatsmeow/store"
 	"os"
 )
 
@@ -44,6 +44,8 @@ func main() {
 	deviceStore, err := container.GetFirstDevice(ctx) // TODO: refactor for multi client
 	helpers.PanicIfError(err)
 
+	store.SetOSInfo("PakaiWA", [3]uint32{1, 0, 0})
+
 	clientLog := pakaiwa.NewPakaiWALog(log, "PakaiWA")
 	client := whatsmeow.NewClient(deviceStore, clientLog)
 
@@ -55,15 +57,15 @@ func main() {
 	client.AddEventHandler(eh.Handle)
 
 	// QR Channel, This must be called *before* Connect().
-	var qrChan <-chan whatsmeow.QRChannelItem
 	if client.Store.ID == nil {
-		qrChan, _ = client.GetQRChannel(ctx)
+
+		qrChan, _ := client.GetQRChannel(ctx)
+		pakaiwa.StartQRHandler(ctx, state, qrChan, log)
+	} else {
+		state.SetConnected(true)
 	}
 	// Start connection
 	helpers.PanicIfError(client.Connect())
-
-	// QR Handler
-	pakaiwa.StartQRHandler(ctx, state, qrChan, log)
 
 	// ====== App & Routes (Fiber) ======
 	app := configs.NewFiber()

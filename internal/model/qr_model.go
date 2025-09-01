@@ -16,7 +16,14 @@
 package model
 
 type ResponseQR struct {
-	QRCode  string `json:"qr_code"`
-	QRImage string `json:"image_url"`
-	Msg     string `json:"message,omitempty"`
+	QRCode  string           `json:"qr_code,omitempty"`
+	QRImage string           `json:"image_url,omitempty"`
+	Status  string           `json:"status,omitempty"`
+	Msg     string           `json:"message,omitempty"`
+	Device  ResponseQRDevice `json:"device,omitempty"`
+}
+
+type ResponseQRDevice struct {
+	JID      string `json:"jid,omitempty"`
+	PushName string `json:"pushName,omitempty"`
 }

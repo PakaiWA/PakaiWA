@@ -16,6 +16,7 @@
 package handler
 
 import (
+	"github.com/PakaiWA/PakaiWA/internal/helpers"
 	"github.com/PakaiWA/PakaiWA/internal/model"
 	"github.com/PakaiWA/PakaiWA/internal/pakaiwa"
 	"github.com/gofiber/fiber/v2"
@@ -41,6 +42,10 @@ func (h *QRHandler) GetQR(c *fiber.Ctx) error {
 
 	if h.State.GetConnected() {
 		h.Log.Info("client connected")
+		qrResponse.Msg = "Already Connected"
+		qrResponse.Status = "connected"
+		qrResponse.Device.JID = helpers.NormalizeNumber(h.State.Client.Store.ID.String())
+		qrResponse.Device.PushName = h.State.Client.Store.PushName
 		return c.JSON(qrResponse)
 	}
 

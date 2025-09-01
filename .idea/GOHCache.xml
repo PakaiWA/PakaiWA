@@ -178,6 +178,20 @@
             </set>
           </value>
         </entry>
+        <entry key="ResponseQRDetails">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/qr_model.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="ResponseQRDevice">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/qr_model.go" />
+            </set>
+          </value>
+        </entry>
         <entry key="RouteConfig">
           <value>
             <set>
@@ -248,7 +262,7 @@
         <entry key="file://$PROJECT_DIR$/cmd/pakaiwa/main.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1756705733633" />
+              <option name="lastModified" value="1756721828056" />
             </ScannedPath>
           </value>
         </entry>
@@ -340,7 +354,7 @@
         <entry key="file://$PROJECT_DIR$/internal/handler/qr_handler.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1756705629758" />
+              <option name="lastModified" value="1756720923670" />
               <option name="schema">
                 <list>
                   <option value="QRHandler" />
@@ -446,10 +460,11 @@
         <entry key="file://$PROJECT_DIR$/internal/model/qr_model.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1756650773465" />
+              <option name="lastModified" value="1756720254609" />
               <option name="schema">
                 <list>
                   <option value="ResponseQR" />
+                  <option value="ResponseQRDevice" />
                 </list>
               </option>
             </ScannedPath>
@@ -646,6 +661,8 @@
         <entry key="raw_msg" value="RawMsg" />
         <entry key="register_user_request" value="RegisterUserRequest" />
         <entry key="response_qr" value="ResponseQR" />
+        <entry key="response_qr_details" value="ResponseQRDetails" />
+        <entry key="response_qr_device" value="ResponseQRDevice" />
         <entry key="route_config" value="RouteConfig" />
         <entry key="send_message_req" value="SendMessageReq" />
         <entry key="send_message_response" value="SendMessageResponse" />
