@@ -22,7 +22,7 @@ import (
 
 type RouteConfig struct {
 	App       *fiber.App
-	QRHandler *handler.HandlerQR
+	QRHandler *handler.QRHandler
 	//AuthMiddleware fiber.Handler
 }
 

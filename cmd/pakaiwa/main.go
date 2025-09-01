@@ -48,8 +48,10 @@ func main() {
 
 	state := &pakaiwa.AppState{Client: client}
 
+	eh := handler.NewEventHandler(log)
+
 	// Event Handler
-	client.AddEventHandler(handler.EventHandler)
+	client.AddEventHandler(eh.Handle)
 
 	// QR Channel, This must be called *before* Connect().
 	var qrChan <-chan whatsmeow.QRChannelItem

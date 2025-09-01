@@ -19,25 +19,22 @@ import (
 	"github.com/PakaiWA/PakaiWA/internal/model"
 	"github.com/PakaiWA/PakaiWA/internal/pakaiwa"
 	"github.com/gofiber/fiber/v2"
-	"github.com/mdp/qrterminal/v3"
 	"github.com/sirupsen/logrus"
-	"go.mau.fi/whatsmeow"
-	"os"
 )
 
-type HandlerQR struct {
+type QRHandler struct {
 	State *pakaiwa.AppState
 	Log   *logrus.Logger
 }
 
-func NewQRHandler(state *pakaiwa.AppState, log *logrus.Logger) *HandlerQR {
-	return &HandlerQR{
+func NewQRHandler(state *pakaiwa.AppState, log *logrus.Logger) *QRHandler {
+	return &QRHandler{
 		Log:   log,
 		State: state,
 	}
 }
 
-func (h *HandlerQR) GetQR(c *fiber.Ctx) error {
+func (h *QRHandler) GetQR(c *fiber.Ctx) error {
 	qrResponse := &model.ResponseQR{
 		QRCode:  "",
 		QRImage: "",

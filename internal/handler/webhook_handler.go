@@ -19,9 +19,9 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"github.com/PakaiWA/PakaiWA/internal/configs"
 	"github.com/PakaiWA/PakaiWA/internal/helpers"
 	"github.com/PakaiWA/PakaiWA/internal/model"
+	"github.com/sirupsen/logrus"
 	"go.mau.fi/whatsmeow/proto/waE2E"
 	"go.mau.fi/whatsmeow/types"
 	"net/http"
@@ -31,10 +31,9 @@ import (
 var (
 	webhookURL = "https://pakaiwa.requestcatcher.com/"
 	httpClient = &http.Client{Timeout: 5 * time.Second}
-	log        = configs.NewLogger()
 )
 
-func ProcessMessageEvent(msg *waE2E.Message, info types.MessageInfo) {
+func ProcessMessageEvent(msg *waE2E.Message, info types.MessageInfo, log *logrus.Logger) {
 	text, msgType, raw := extractMessageTextAndType(msg)
 	payload := model.MessageEventPayload{
 		Event:       "message",
@@ -48,12 +47,12 @@ func ProcessMessageEvent(msg *waE2E.Message, info types.MessageInfo) {
 	}
 
 	if msgType != "unknown" {
-		go postJSON(context.Background(), webhookURL, payload)
+		go postJSON(context.Background(), webhookURL, payload, log)
 	}
 
 }
 
-func postJSON(ctx context.Context, url string, v any) {
+func postJSON(ctx context.Context, url string, v any, log *logrus.Logger) {
 	ctx, cancel := context.WithTimeout(ctx, 30*time.Second)
 	defer cancel()
 

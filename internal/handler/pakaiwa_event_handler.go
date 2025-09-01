@@ -16,23 +16,32 @@
 package handler
 
 import (
-	"fmt"
+	"github.com/gofiber/fiber/v2/log"
+	"github.com/sirupsen/logrus"
 	"go.mau.fi/whatsmeow/types"
 	"go.mau.fi/whatsmeow/types/events"
 )
 
-func EventHandler(e interface{}) {
+type EventHandler struct {
+	Log *logrus.Logger
+}
+
+func NewEventHandler(log *logrus.Logger) *EventHandler {
+	return &EventHandler{Log: log}
+}
+
+func (h *EventHandler) Handle(e interface{}) {
 	switch v := e.(type) {
 	case *events.Message:
-		ProcessMessageEvent(v.Message, v.Info)
+		ProcessMessageEvent(v.Message, v.Info, h.Log)
 	case *events.Receipt:
 		switch v.Type {
 		case types.ReceiptTypeDelivered:
-			fmt.Printf("Pesan %v delivered ke %s\n", v.MessageIDs, v.Sender)
+			log.Infof("Pesan %v delivered ke %s\n", v.MessageIDs, v.Sender)
 		case types.ReceiptTypeRead:
-			fmt.Printf("Pesan %v dibaca oleh %s\n", v.MessageIDs, v.Sender)
+			log.Infof("Pesan %v dibaca oleh %s\n", v.MessageIDs, v.Sender)
 		case types.ReceiptTypePlayed:
-			fmt.Printf("Voice note %v diputar oleh %s\n", v.MessageIDs, v.Sender)
+			log.Infof("Voice note %v diputar oleh %s\n", v.MessageIDs, v.Sender)
 		}
 	}
 }
