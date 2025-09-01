@@ -16,6 +16,7 @@
 package handler
 
 import (
+	"context"
 	"github.com/PakaiWA/PakaiWA/internal/helpers"
 	"github.com/PakaiWA/PakaiWA/internal/model"
 	"github.com/PakaiWA/PakaiWA/internal/pakaiwa"
@@ -64,7 +65,7 @@ func (mh *MessageHandler) SendMsg(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
 
-	c, cancel := contex.WithTimeout(c, 15*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
 
 	msg := &waE2E.Message{
@@ -73,7 +74,7 @@ func (mh *MessageHandler) SendMsg(c *fiber.Ctx) error {
 
 	response, err := mh.State.Client.SendMessage(ctx, jid, msg)
 	if err != nil {
-		return fiber.NewError(fiber.StatusBadGateway, "gagal mengirim: "+err.Error())
+		return fiber.NewError(fiber.StatusBadGateway, "sending Fail: "+err.Error())
 	}
 	return helpers.RespondPending(c, response.ID)
 }

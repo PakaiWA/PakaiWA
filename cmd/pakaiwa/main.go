@@ -88,15 +88,5 @@ func main() {
 	_ = app.Shutdown()
 	state.Client.Disconnect()
 	log.Println("Bye!")
-
-	//
-	//// Healthcheck
-	//app.Get("/healthz", func(c *fiber.Ctx) error {
-	//	return c.JSON(fiber.Map{
-	//		"ok":        true,
-	//		"connected": state.Client.IsConnected(),
-	//	})
-	//})
-	//
-
+	
 }

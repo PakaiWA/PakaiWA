@@ -16,6 +16,7 @@
 package configs
 
 import (
+	"github.com/PakaiWA/PakaiWA/internal/handler"
 	"github.com/PakaiWA/PakaiWA/internal/pakaiwa"
 	"github.com/PakaiWA/PakaiWA/internal/router"
 	"github.com/gofiber/fiber/v2"
@@ -32,9 +33,11 @@ type BootstrapConfig struct {
 
 func Bootstrap(config *BootstrapConfig) {
 
+	msgHandler := handler.NewMessageHandler(config.PakaiWA, config.Log)
+
 	routeConfig := router.RouteConfig{
-		App: config.App,
-		//QRHandler: qrHandler,
+		App:            config.App,
+		MessageHandler: msgHandler,
 	}
 	routeConfig.Setup()
 }

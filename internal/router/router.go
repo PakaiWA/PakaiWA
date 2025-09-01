@@ -24,7 +24,6 @@ type RouteConfig struct {
 	App            *fiber.App
 	QRHandler      *handler.QRHandler
 	MessageHandler *handler.MessageHandler
-	//AuthMiddleware fiber.Handler
 }
 
 func (c *RouteConfig) Setup() {
@@ -33,8 +32,16 @@ func (c *RouteConfig) Setup() {
 }
 
 func (c *RouteConfig) SetupGuestRoute() {
+	c.App.Get("/", func(ctx *fiber.Ctx) error {
+		return ctx.JSON(fiber.Map{
+			"message":   "API PakaiWA.my.id - Unofficial WhatsApp API Gateway",
+			"version":   "0.0.1",
+			"stability": "Developer-Preview",
+		})
+	})
+
 	c.App.Get("/v1/qr", c.QRHandler.GetQR)
-	c.App.Post("/v1/message", c.MessageHandler.SendMsg)
+	c.App.Post("/v1/messages", c.MessageHandler.SendMsg)
 }
 
 func (c *RouteConfig) SetupAuthRoute() {
