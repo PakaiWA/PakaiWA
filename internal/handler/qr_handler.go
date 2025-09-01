@@ -20,6 +20,8 @@ import (
 	"github.com/PakaiWA/PakaiWA/internal/pakaiwa"
 	"github.com/gofiber/fiber/v2"
 	"github.com/sirupsen/logrus"
+	"github.com/skip2/go-qrcode"
+	"net/url"
 )
 
 type QRHandler struct {
@@ -35,24 +37,44 @@ func NewQRHandler(state *pakaiwa.AppState, log *logrus.Logger) *QRHandler {
 }
 
 func (h *QRHandler) GetQR(c *fiber.Ctx) error {
-	qrResponse := &model.ResponseQR{
-		QRCode:  "",
-		QRImage: "",
-	}
+	qrResponse := &model.ResponseQR{}
 
-	if h.State.Client.IsConnected() {
-		h.State.SetConnected(true)
+	if h.State.GetConnected() {
+		h.Log.Info("client connected")
 		return c.JSON(qrResponse)
 	}
 
+	h.Log.Info("client not connected yet")
 	qrData := h.State.GetQR()
 	if qrData == "" {
 		qrResponse.Msg = "No QR Code"
 		return c.JSON(qrResponse)
 	}
+	qrData = url.QueryEscape(qrData)
 
-	qrResponse.QRImage = "https://api.pakaiwa.my.id/v1/qr/show?qrcode=" + qrData
+	qrResponse.QRImage = c.BaseURL() + "/v1/qr/show?qrcode=" + qrData
 	qrResponse.QRCode = qrData
-
 	return c.JSON(qrResponse)
+}
+
+func (h *QRHandler) ShowQR(c *fiber.Ctx) error {
+	qrData := c.Query("qrcode", "")
+	h.Log.Infof("show qrcode: %s", qrData)
+	if qrData == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "qrcode query parameter is required",
+		})
+	}
+
+	c.Set("Content-Type", "image/png")
+	png, err := qrcode.Encode(qrData, qrcode.Highest, 512)
+
+	if err != nil {
+		h.Log.Error("failed to generate QR code image:", err)
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "failed to generate QR code image",
+		})
+	}
+
+	return c.Send(png)
 }

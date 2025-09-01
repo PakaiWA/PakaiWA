@@ -16,31 +16,62 @@
 package pakaiwa
 
 import (
+	"context"
 	"github.com/mdp/qrterminal/v3"
 	"github.com/sirupsen/logrus"
 	"go.mau.fi/whatsmeow"
 	"os"
 )
 
-func StartQRHandler(state *AppState, qrChan <-chan whatsmeow.QRChannelItem, log *logrus.Logger) {
+func StartQRHandler(ctx context.Context, state *AppState, qrChan <-chan whatsmeow.QRChannelItem, log *logrus.Logger) {
 	if qrChan == nil {
-		state.SetConnected(true)
+		log.Warn("[WA] QR channel nil → bukan mode pairing. Menunggu status dari event lain.")
 		return
 	}
 
+	state.SetConnected(false)
+	state.SetQR("")
+
 	go func() {
-		for evt := range qrChan {
-			switch evt.Event {
-			case "code":
-				state.SetQR(evt.Code)
-				qrterminal.GenerateHalfBlock(evt.Code, qrterminal.L, os.Stdout)
-				log.Info("[WA] Scan QR ini dengan WhatsApp (Linked devices)")
-			case "success":
-				state.SetQR("")
-				state.SetConnected(true)
-				log.Info("[WA] Login QR sukses ✔️")
-			default:
-				log.Infof("[WA] Login event: %s", evt.Event)
+		defer func() {
+			state.SetQR("")
+		}()
+
+		for {
+			select {
+			case <-ctx.Done():
+				log.Info("[WA] QR listener: context canceled")
+				return
+
+			case evt, ok := <-qrChan:
+				if !ok {
+					log.Warn("[WA] QR channel closed")
+					return
+				}
+
+				switch evt.Event {
+				case "code":
+					state.SetQR(evt.Code)
+					qrterminal.GenerateHalfBlock(evt.Code, qrterminal.L, os.Stdout)
+					log.Info("[WA] QR diperbarui — silakan scan dari WhatsApp (Linked devices)")
+
+				case "timeout":
+					state.SetQR("")
+					log.Warn("[WA] QR timeout — menunggu kode baru…")
+
+				case "success":
+					log.Info("[WA] Login QR sukses ✔️")
+					state.SetQR("")
+					state.SetConnected(true)
+					return
+
+				case "error":
+					state.SetQR("")
+					log.Error("[WA] QR error — menunggu pembaruan berikutnya")
+
+				default:
+					log.Infof("[WA] Login event: %s", evt.Event)
+				}
 			}
 		}
 	}()

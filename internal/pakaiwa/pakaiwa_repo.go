@@ -13,11 +13,10 @@
  * https://github.com/PakaiWA/PakaiWA/tree/main/internal/pakaiwa
  */
 
-package repository
+package pakaiwa
 
 import (
 	"context"
-	"github.com/PakaiWA/PakaiWA/internal/pakaiwa"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/jackc/pgx/v5/stdlib"
 	"github.com/sirupsen/logrus"
@@ -26,7 +25,7 @@ import (
 
 func InitStoreWithPool(ctx context.Context, pool *pgxpool.Pool, log *logrus.Logger) *sqlstore.Container {
 	db := stdlib.OpenDBFromPool(pool)
-	dbLog := pakaiwa.NewPakaiWALog(log, "PakaiWA_DB")
+	dbLog := NewPakaiWALog(log, "PakaiWA_DB")
 	container := sqlstore.NewWithDB(db, "postgres", dbLog)
 
 	if err := container.Upgrade(ctx); err != nil {

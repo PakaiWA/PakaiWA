@@ -41,6 +41,7 @@ func (c *RouteConfig) SetupGuestRoute() {
 	})
 
 	c.App.Get("/v1/qr", c.QRHandler.GetQR)
+	c.App.Get("/v1/qr/show", c.QRHandler.ShowQR)
 	c.App.Post("/v1/messages", c.MessageHandler.SendMsg)
 }
 

@@ -19,7 +19,6 @@ import (
 	"context"
 	"github.com/PakaiWA/PakaiWA/internal/handler"
 	"github.com/PakaiWA/PakaiWA/internal/pakaiwa"
-	"github.com/PakaiWA/PakaiWA/internal/repository"
 	_ "github.com/jackc/pgx/v5/stdlib"
 
 	"github.com/KAnggara75/scc2go"
@@ -39,8 +38,10 @@ func main() {
 	pool := configs.NewDatabase(ctx, log)
 
 	// ====== WhatsApp Client ======
-	container := repository.InitStoreWithPool(ctx, pool, log)
-	deviceStore, err := container.GetFirstDevice(ctx)
+	//client := pakaiwa.WAClient{}
+
+	container := pakaiwa.InitStoreWithPool(ctx, pool, log)
+	deviceStore, err := container.GetFirstDevice(ctx) // TODO: refactor for multi client
 	helpers.PanicIfError(err)
 
 	clientLog := pakaiwa.NewPakaiWALog(log, "PakaiWA")
@@ -62,7 +63,7 @@ func main() {
 	helpers.PanicIfError(client.Connect())
 
 	// QR Handler
-	pakaiwa.StartQRHandler(state, qrChan, log)
+	pakaiwa.StartQRHandler(ctx, state, qrChan, log)
 
 	// ====== App & Routes (Fiber) ======
 	app := configs.NewFiber()
@@ -88,5 +89,5 @@ func main() {
 	_ = app.Shutdown()
 	state.Client.Disconnect()
 	log.Println("Bye!")
-	
+
 }

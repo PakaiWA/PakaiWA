@@ -34,10 +34,12 @@ type BootstrapConfig struct {
 func Bootstrap(config *BootstrapConfig) {
 
 	msgHandler := handler.NewMessageHandler(config.PakaiWA, config.Log)
+	qrHandler := handler.NewQRHandler(config.PakaiWA, config.Log)
 
 	routeConfig := router.RouteConfig{
 		App:            config.App,
 		MessageHandler: msgHandler,
+		QRHandler:      qrHandler,
 	}
 	routeConfig.Setup()
 }
