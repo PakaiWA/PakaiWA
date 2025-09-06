@@ -3,10 +3,34 @@
   <component name="GoORMHelperCache">
     <option name="schemaMapping">
       <map>
+        <entry key="AppConfig">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/app/pakaiwa/app_config.go" />
+              <option value="file://$PROJECT_DIR$/internal/bootstrap/app.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="AppContext">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/app/pakaiwa/app_config.go" />
+            </set>
+          </value>
+        </entry>
         <entry key="AppState">
           <value>
             <set>
+              <option value="file://$PROJECT_DIR$/internal/app/pakaiwa/state/state.go" />
               <option value="file://$PROJECT_DIR$/internal/pakaiwa/pakaiwa_state.go" />
+              <option value="file://$PROJECT_DIR$/internal/pkg/state/app_state.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="BaseResponse">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/app/pakaiwa/delivery/http/dto/response_dto.go" />
             </set>
           </value>
         </entry>
@@ -14,14 +38,7 @@
           <value>
             <set>
               <option value="file://$PROJECT_DIR$/internal/app/app.go" />
-              <option value="file://$PROJECT_DIR$/internal/configs/app.go" />
-            </set>
-          </value>
-        </entry>
-        <entry key="ClientWrapper">
-          <value>
-            <set>
-              <option value="file://$PROJECT_DIR$/internal/pakaiwa/pakaiwa_client.go" />
+              <option value="file://$PROJECT_DIR$/internal/app/pakaiwa/app_config.go" />
             </set>
           </value>
         </entry>
@@ -35,6 +52,7 @@
         <entry key="EventHandler">
           <value>
             <set>
+              <option value="file://$PROJECT_DIR$/internal/app/pakaiwa/pakaiwa_event_handler.go" />
               <option value="file://$PROJECT_DIR$/internal/handler/pakaiwa_event_handler.go" />
             </set>
           </value>
@@ -92,6 +110,7 @@
           <value>
             <set>
               <option value="file://$PROJECT_DIR$/internal/pakaiwa/pakaiwa_logger.go" />
+              <option value="file://$PROJECT_DIR$/internal/pkg/logger/pakaiwa_logger.go" />
             </set>
           </value>
         </entry>
@@ -119,6 +138,7 @@
         <entry key="MessageHandler">
           <value>
             <set>
+              <option value="file://$PROJECT_DIR$/internal/app/pakaiwa/handler/sending_handler.go" />
               <option value="file://$PROJECT_DIR$/internal/handler/sending_handler.go" />
             </set>
           </value>
@@ -126,6 +146,7 @@
         <entry key="MessageMeta">
           <value>
             <set>
+              <option value="file://$PROJECT_DIR$/internal/app/pakaiwa/delivery/http/dto/message_dto.go" />
               <option value="file://$PROJECT_DIR$/internal/model/messages_model.go" />
             </set>
           </value>
@@ -134,6 +155,13 @@
           <value>
             <set>
               <option value="file://$PROJECT_DIR$/internal/usecase/messages_usecase.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="Meta">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/app/pakaiwa/delivery/http/dto/response_dto.go" />
             </set>
           </value>
         </entry>
@@ -148,13 +176,36 @@
           <value>
             <set>
               <option value="file://$PROJECT_DIR$/internal/configs/logrus.go" />
+              <option value="file://$PROJECT_DIR$/internal/pkg/logger/logrus.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="ProblemDetails">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/app/pakaiwa/delivery/http/dto/response_dto.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="QREntity">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/app/pakaiwa/entity/qr_entity.go" />
             </set>
           </value>
         </entry>
         <entry key="QRHandler">
           <value>
             <set>
+              <option value="file://$PROJECT_DIR$/internal/app/pakaiwa/handler/qr_handler.go" />
               <option value="file://$PROJECT_DIR$/internal/handler/qr_handler.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="QRResponse">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/app/pakaiwa/delivery/http/dto/qr_dto.go" />
             </set>
           </value>
         </entry>
@@ -182,13 +233,7 @@
         <entry key="ResponseQR">
           <value>
             <set>
-              <option value="file://$PROJECT_DIR$/internal/model/qr_model.go" />
-            </set>
-          </value>
-        </entry>
-        <entry key="ResponseQRDetails">
-          <value>
-            <set>
+              <option value="file://$PROJECT_DIR$/internal/app/pakaiwa/delivery/model/qr_model.go" />
               <option value="file://$PROJECT_DIR$/internal/model/qr_model.go" />
             </set>
           </value>
@@ -196,6 +241,7 @@
         <entry key="ResponseQRDevice">
           <value>
             <set>
+              <option value="file://$PROJECT_DIR$/internal/app/pakaiwa/delivery/model/qr_model.go" />
               <option value="file://$PROJECT_DIR$/internal/model/qr_model.go" />
             </set>
           </value>
@@ -203,13 +249,15 @@
         <entry key="RouteConfig">
           <value>
             <set>
-              <option value="file://$PROJECT_DIR$/internal/router/router.go" />
+              <option value="file://$PROJECT_DIR$/internal/app/pakaiwa/delivery/http/router/router.go" />
+              <option value="file://$PROJECT_DIR$/internal/delivery/http/router/router.go" />
             </set>
           </value>
         </entry>
         <entry key="SendMessageReq">
           <value>
             <set>
+              <option value="file://$PROJECT_DIR$/internal/app/pakaiwa/delivery/http/dto/message_dto.go" />
               <option value="file://$PROJECT_DIR$/internal/model/messages_model.go" />
             </set>
           </value>
@@ -217,6 +265,7 @@
         <entry key="SendMessageResponse">
           <value>
             <set>
+              <option value="file://$PROJECT_DIR$/internal/app/pakaiwa/delivery/http/dto/message_dto.go" />
               <option value="file://$PROJECT_DIR$/internal/model/messages_model.go" />
             </set>
           </value>
@@ -224,6 +273,7 @@
         <entry key="SendResult">
           <value>
             <set>
+              <option value="file://$PROJECT_DIR$/internal/app/pakaiwa/handler/sending_handler.go" />
               <option value="file://$PROJECT_DIR$/internal/handler/sending_handler.go" />
             </set>
           </value>
@@ -252,6 +302,7 @@
         <entry key="UserUseCase">
           <value>
             <set>
+              <option value="file://$PROJECT_DIR$/internal/app/pakaiwa/usecase/user_usecase.go" />
               <option value="file://$PROJECT_DIR$/internal/usecase/user_usecase.go" />
             </set>
           </value>
@@ -263,10 +314,10 @@
             </set>
           </value>
         </entry>
-        <entry key="WAClient">
+        <entry key="VersionRes">
           <value>
             <set>
-              <option value="file://$PROJECT_DIR$/internal/pakaiwa/pakaiwa.go" />
+              <option value="file://$PROJECT_DIR$/internal/app/pakaiwa/delivery/http/dto/version_dto.go" />
             </set>
           </value>
         </entry>
@@ -274,10 +325,31 @@
     </option>
     <option name="scannedPathMapping">
       <map>
+        <entry key="file://$PROJECT_DIR$/cmd/kafka/kafka.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757132134935" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/cmd/pakaiwa-relay/pakaiwa_relay.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757089593992" />
+            </ScannedPath>
+          </value>
+        </entry>
         <entry key="file://$PROJECT_DIR$/cmd/pakaiwa/main.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1756739795058" />
+              <option name="lastModified" value="1757128622199" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/cmd/pakaiwa/pakaiwa.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757133046594" />
             </ScannedPath>
           </value>
         </entry>
@@ -291,7 +363,7 @@
         <entry key="file://$PROJECT_DIR$/internal/app/app.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1756736001162" />
+              <option name="lastModified" value="1757130224673" />
               <option name="schema">
                 <list>
                   <option value="BootstrapConfig" />
@@ -303,40 +375,314 @@
         <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1756739783470" />
+              <option name="lastModified" value="1757130193507" />
             </ScannedPath>
           </value>
         </entry>
-        <entry key="file://$PROJECT_DIR$/internal/configs/app.go">
+        <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/app_config.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1756702162025" />
+              <option name="lastModified" value="1757142189171" />
               <option name="schema">
                 <list>
-                  <option value="BootstrapConfig" />
+                  <option value="AppContext" />
                 </list>
               </option>
             </ScannedPath>
           </value>
         </entry>
-        <entry key="file://$PROJECT_DIR$/internal/configs/config.go">
+        <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/delivery/http/dto/device_dto.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1756723299153" />
+              <option name="lastModified" value="1757123684936" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/delivery/http/dto/group_dto.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757123731671" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/delivery/http/dto/message_dto.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757124249228" />
+              <option name="schema">
+                <list>
+                  <option value="SendMessageReq" />
+                  <option value="SendMessageResponse" />
+                  <option value="MessageMeta" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/delivery/http/dto/qr_dto.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757132392690" />
+              <option name="schema">
+                <list>
+                  <option value="QRResponse" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/delivery/http/dto/response_dto.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757129163980" />
+              <option name="schema">
+                <list>
+                  <option value="BaseResponse" />
+                  <option value="Meta" />
+                  <option value="ProblemDetails" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/delivery/http/dto/version_dto.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757124192675" />
+              <option name="schema">
+                <list>
+                  <option value="VersionRes" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/delivery/http/dto/weebhook_dto.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757123742973" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/delivery/http/middleware/auth_middleware.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757130850440" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/delivery/http/router/router.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757132753196" />
+              <option name="schema">
+                <list>
+                  <option value="RouteConfig" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/delivery/model/qr_model.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757130850484" />
+              <option name="schema">
+                <list>
+                  <option value="ResponseQR" />
+                  <option value="ResponseQRDevice" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/entity.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757132350859" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/entity/qr_entity.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757132389393" />
+              <option name="schema">
+                <list>
+                  <option value="QREntity" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/handler/pakaiwa_event_handler.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757132618054" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/handler/qr_handler.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757133402031" />
+              <option name="schema">
+                <list>
+                  <option value="QRHandler" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/handler/sending_handler.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757133598677" />
+              <option name="schema">
+                <list>
+                  <option value="MessageHandler" />
+                  <option value="SendResult" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/handler/webhook_handler.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757133525336" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/helper/normalize.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757133535361" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/helper/response.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757133594255" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/helpers/responses.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757130850435" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/pakaiwa.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757132171248" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/pakaiwa_client.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757142590783" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/pakaiwa_event_handler.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757140614694" />
+              <option name="schema">
+                <list>
+                  <option value="EventHandler" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/pakaiwa_qr_handler.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757140654628" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/pakaiwa_repo.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757142369626" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/state/state.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757133365337" />
+              <option name="schema">
+                <list>
+                  <option value="AppState" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/usecase/user_usecase.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757132474920" />
+              <option name="schema">
+                <list>
+                  <option value="UserUseCase" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/bootstrap/app.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757089058996" />
+              <option name="schema">
+                <list>
+                  <option value="AppConfig" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/bootstrap/pakaiwa.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757130489163" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/configs/app_properties.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757060071426" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/internal/configs/database.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1756565426640" />
+              <option name="lastModified" value="1757128568730" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/internal/configs/fiber.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1756550863415" />
+              <option name="lastModified" value="1757131170174" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/configs/kafka.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757131503834" />
             </ScannedPath>
           </value>
         </entry>
@@ -352,13 +698,6 @@
             </ScannedPath>
           </value>
         </entry>
-        <entry key="file://$PROJECT_DIR$/internal/configs/pakaiwa.go">
-          <value>
-            <ScannedPath>
-              <option name="lastModified" value="1756735294939" />
-            </ScannedPath>
-          </value>
-        </entry>
         <entry key="file://$PROJECT_DIR$/internal/configs/redis.go">
           <value>
             <ScannedPath>
@@ -370,6 +709,18 @@
           <value>
             <ScannedPath>
               <option name="lastModified" value="1756551059558" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/delivery/http/router/router.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757124219845" />
+              <option name="schema">
+                <list>
+                  <option value="RouteConfig" />
+                </list>
+              </option>
             </ScannedPath>
           </value>
         </entry>
@@ -390,7 +741,7 @@
         <entry key="file://$PROJECT_DIR$/internal/handler/pakaiwa_event_handler.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1756739289711" />
+              <option name="lastModified" value="1757130665706" />
               <option name="schema">
                 <list>
                   <option value="EventHandler" />
@@ -402,7 +753,7 @@
         <entry key="file://$PROJECT_DIR$/internal/handler/qr_handler.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1756739592224" />
+              <option name="lastModified" value="1757130775161" />
               <option name="schema">
                 <list>
                   <option value="QRHandler" />
@@ -414,7 +765,7 @@
         <entry key="file://$PROJECT_DIR$/internal/handler/sending_handler.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1756738339485" />
+              <option name="lastModified" value="1757130775151" />
               <option name="schema">
                 <list>
                   <option value="MessageHandler" />
@@ -424,24 +775,10 @@
             </ScannedPath>
           </value>
         </entry>
-        <entry key="file://$PROJECT_DIR$/internal/handler/session_handler.go">
-          <value>
-            <ScannedPath>
-              <option name="lastModified" value="1756724752212" />
-            </ScannedPath>
-          </value>
-        </entry>
         <entry key="file://$PROJECT_DIR$/internal/handler/webhook_handler.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1756699883293" />
-            </ScannedPath>
-          </value>
-        </entry>
-        <entry key="file://$PROJECT_DIR$/internal/helpers/error.go">
-          <value>
-            <ScannedPath>
-              <option name="lastModified" value="1756551910693" />
+              <option name="lastModified" value="1757130775167" />
             </ScannedPath>
           </value>
         </entry>
@@ -452,31 +789,10 @@
             </ScannedPath>
           </value>
         </entry>
-        <entry key="file://$PROJECT_DIR$/internal/helpers/proto.go">
-          <value>
-            <ScannedPath>
-              <option name="lastModified" value="1756605810256" />
-            </ScannedPath>
-          </value>
-        </entry>
-        <entry key="file://$PROJECT_DIR$/internal/helpers/qr.go">
-          <value>
-            <ScannedPath>
-              <option name="lastModified" value="1756596817692" />
-            </ScannedPath>
-          </value>
-        </entry>
         <entry key="file://$PROJECT_DIR$/internal/helpers/responses.go">
           <value>
             <ScannedPath>
               <option name="lastModified" value="1756650773505" />
-            </ScannedPath>
-          </value>
-        </entry>
-        <entry key="file://$PROJECT_DIR$/internal/helpers/signal.go">
-          <value>
-            <ScannedPath>
-              <option name="lastModified" value="1756605796770" />
             </ScannedPath>
           </value>
         </entry>
@@ -564,25 +880,6 @@
             </ScannedPath>
           </value>
         </entry>
-        <entry key="file://$PROJECT_DIR$/internal/pakaiwa/pakaiwa.go">
-          <value>
-            <ScannedPath>
-              <option name="lastModified" value="1756703536154" />
-              <option name="schema">
-                <list>
-                  <option value="WAClient" />
-                </list>
-              </option>
-            </ScannedPath>
-          </value>
-        </entry>
-        <entry key="file://$PROJECT_DIR$/internal/pakaiwa/pakaiwa_client.go">
-          <value>
-            <ScannedPath>
-              <option name="lastModified" value="1756735058032" />
-            </ScannedPath>
-          </value>
-        </entry>
         <entry key="file://$PROJECT_DIR$/internal/pakaiwa/pakaiwa_logger.go">
           <value>
             <ScannedPath>
@@ -598,7 +895,7 @@
         <entry key="file://$PROJECT_DIR$/internal/pakaiwa/pakaiwa_qr_handler.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1756724044270" />
+              <option name="lastModified" value="1757130665712" />
             </ScannedPath>
           </value>
         </entry>
@@ -621,10 +918,137 @@
             </ScannedPath>
           </value>
         </entry>
-        <entry key="file://$PROJECT_DIR$/internal/repository/pakaiwa_repo.go">
+        <entry key="file://$PROJECT_DIR$/internal/pkg/config/db_config.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1756698318733" />
+              <option name="lastModified" value="1757131019764" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/pkg/db/pgsql.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757131093072" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/pkg/entity/qr_entity.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757132303556" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/pkg/httpserver/error_handler.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757131427581" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/pkg/httpserver/fiber.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757131458814" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/pkg/kafka/consumer.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757131543000" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/pkg/kafka/producer.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757131567765" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/pkg/logger/logrus.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757131637557" />
+              <option name="schema">
+                <list>
+                  <option value="OrderedJSONFormatter" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/pkg/logger/pakaiwa_logger.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757142600575" />
+              <option name="schema">
+                <list>
+                  <option value="LogrusAdapter" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/pkg/redis/redis.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757131753467" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/pkg/state/app_state.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757133257652" />
+              <option name="schema">
+                <list>
+                  <option value="AppState" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/pkg/store/store.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757142468527" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/pkg/utils/error.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757128568743" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/pkg/utils/proto.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757128590201" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/pkg/utils/signal.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757128622195" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/pkg/validator.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757131784529" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/pkg/validator/validator.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757131802250" />
             </ScannedPath>
           </value>
         </entry>
@@ -632,18 +1056,6 @@
           <value>
             <ScannedPath>
               <option name="lastModified" value="1756650693193" />
-            </ScannedPath>
-          </value>
-        </entry>
-        <entry key="file://$PROJECT_DIR$/internal/router/router.go">
-          <value>
-            <ScannedPath>
-              <option name="lastModified" value="1756735961020" />
-              <option name="schema">
-                <list>
-                  <option value="RouteConfig" />
-                </list>
-              </option>
             </ScannedPath>
           </value>
         </entry>
@@ -683,10 +1095,38 @@
             </ScannedPath>
           </value>
         </entry>
+        <entry key="file://$PROJECT_DIR$/pkg/config/db_config.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757130947631" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/pkg/httpserver.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757131135562" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/pkg/httpserver/fiber.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757131167889" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/pkg/httpserver/rror_handler.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757131198613" />
+            </ScannedPath>
+          </value>
+        </entry>
         <entry key="file://$PROJECT_DIR$/pkg/utils/rate_limiter_util.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1756650773496" />
+              <option name="lastModified" value="1757130850452" />
               <option name="schema">
                 <list>
                   <option value="RateLimiterUtil" />
@@ -699,9 +1139,11 @@
     </option>
     <option name="tableStructMapping">
       <map>
+        <entry key="app_config" value="AppConfig" />
+        <entry key="app_context" value="AppContext" />
         <entry key="app_state" value="AppState" />
+        <entry key="base_response" value="BaseResponse" />
         <entry key="bootstrap_config" value="BootstrapConfig" />
-        <entry key="client_wrapper" value="ClientWrapper" />
         <entry key="contact_info" value="ContactInfo" />
         <entry key="event_handler" value="EventHandler" />
         <entry key="get_user_request" value="GetUserRequest" />
@@ -718,14 +1160,17 @@
         <entry key="message_handler" value="MessageHandler" />
         <entry key="message_meta" value="MessageMeta" />
         <entry key="message_use_case" value="MessageUseCase" />
+        <entry key="meta" value="Meta" />
         <entry key="model" value="Model" />
         <entry key="ordered_json_formatter" value="OrderedJSONFormatter" />
+        <entry key="problem_details" value="ProblemDetails" />
+        <entry key="qr_entity" value="QREntity" />
         <entry key="qr_handler" value="QRHandler" />
+        <entry key="qr_response" value="QRResponse" />
         <entry key="rate_limiter_util" value="RateLimiterUtil" />
         <entry key="raw_msg" value="RawMsg" />
         <entry key="register_user_request" value="RegisterUserRequest" />
         <entry key="response_qr" value="ResponseQR" />
-        <entry key="response_qr_details" value="ResponseQRDetails" />
         <entry key="response_qr_device" value="ResponseQRDevice" />
         <entry key="route_config" value="RouteConfig" />
         <entry key="send_message_req" value="SendMessageReq" />
@@ -736,9 +1181,9 @@
         <entry key="user_response" value="UserResponse" />
         <entry key="user_use_case" value="UserUseCase" />
         <entry key="verify_user_request" value="VerifyUserRequest" />
-        <entry key="wa_client" value="WAClient" />
+        <entry key="version_res" value="VersionRes" />
       </map>
     </option>
-    <option name="lastTimeChecked" value="1756701863619" />
+    <option name="lastTimeChecked" value="1757130024372" />
   </component>
 </project>

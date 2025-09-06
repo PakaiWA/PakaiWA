@@ -18,7 +18,7 @@ package utils
 import (
 	"context"
 	"fmt"
-	"github.com/PakaiWA/PakaiWA/internal/model"
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/model"
 	"github.com/redis/go-redis/v9"
 	"time"
 )
