@@ -16,6 +16,8 @@
 package kafka
 
 import (
+	"encoding/json"
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/model"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/config"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/utils"
 	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
@@ -29,28 +31,37 @@ func NewKafkaProducer(log *logrus.Logger) *kafka.Producer {
 	return producer
 }
 
-func SendKafkaMessage(producer *kafka.Producer, topic string, key string, value string, log *logrus.Logger) {
-	if producer == nil {
-		log.Warn("Kafka producer is not initialized")
-		return
-	}
+type Producer[T model.Event] struct {
+	Producer *kafka.Producer
+	Topic    string
+	Log      *logrus.Logger
+}
 
-	err := producer.Produce(&kafka.Message{
-		TopicPartition: kafka.TopicPartition{Topic: &topic, Partition: kafka.PartitionAny},
-		Key:            []byte(key),
-		Value:          []byte(value),
-	}, nil)
+func (p *Producer[T]) GetTopic() *string {
+	return &p.Topic
+}
+
+func (p *Producer[T]) Send(event T) error {
+	value, err := json.Marshal(event)
 	if err != nil {
-		log.Errorf("Failed to produce message to topic %s: %v", topic, err)
-		return
+		p.Log.WithError(err).Error("failed to marshal event")
+		return err
 	}
 
-	e := <-producer.Events()
-	m := e.(*kafka.Message)
-
-	if m.TopicPartition.Error != nil {
-		log.Errorf("Failed to deliver message to topic %s: %v", topic, m.TopicPartition.Error)
-	} else {
-		log.Infof("Message delivered to topic %s [%d] at offset %v", *m.TopicPartition.Topic, m.TopicPartition.Partition, m.TopicPartition.Offset)
+	message := &kafka.Message{
+		TopicPartition: kafka.TopicPartition{
+			Topic:     p.GetTopic(),
+			Partition: kafka.PartitionAny,
+		},
+		Value: value,
+		Key:   []byte(event.GetId()),
 	}
+
+	err = p.Producer.Produce(message, nil)
+	if err != nil {
+		p.Log.WithError(err).Error("failed to produce message")
+		return err
+	}
+
+	return nil
 }

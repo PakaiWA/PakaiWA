@@ -8,82 +8,19 @@
  *
  * See <https://www.gnu.org/licenses/gpl-3.0.html>.
  *
- * @author KAnggara75 on Sun 31/08/25 13.46
- * @project PakaiWA webhooks
- * https://github.com/PakaiWA/PakaiWA/tree/main/internal/app/webhooks
+ * @author KAnggara75 on Sun 07/09/25 08.34
+ * @project PakaiWA helper
+ * https://github.com/PakaiWA/PakaiWA/tree/main/internal/app/pakaiwa/helper
  */
 
-package handler
+package helper
 
 import (
-	"bytes"
-	"context"
-	"encoding/json"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/model"
-	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/helper"
-	"github.com/sirupsen/logrus"
 	"go.mau.fi/whatsmeow/proto/waE2E"
-	"go.mau.fi/whatsmeow/types"
-	"net/http"
-	"time"
 )
 
-var (
-	webhookURL = "https://pakaiwa.requestcatcher.com/"
-	httpClient = &http.Client{Timeout: 5 * time.Second}
-)
-
-func ProcessMessageEvent(msg *waE2E.Message, info types.MessageInfo, log *logrus.Logger) {
-	text, msgType, raw := extractMessageTextAndType(msg)
-	payload := model.MessageEventPayload{
-		Event:       "message",
-		From:        helper.NormalizeNumber(info.Sender.String()),
-		Chat:        info.Chat.String(),
-		PushName:    info.PushName,
-		Timestamp:   info.Timestamp.Unix(),
-		Text:        text,
-		MessageType: msgType,
-		Raw:         raw,
-	}
-
-	if msgType != "unknown" {
-		go postJSON(context.Background(), webhookURL, payload, log)
-	}
-
-}
-
-func postJSON(ctx context.Context, url string, v any, log *logrus.Logger) {
-	ctx, cancel := context.WithTimeout(ctx, 30*time.Second)
-	defer cancel()
-
-	b, err := json.Marshal(v)
-	if err != nil {
-		log.WithError(err).Error("marshal webhook payload")
-		return
-	}
-
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, bytes.NewReader(b))
-	if err != nil {
-		log.WithError(err).Error("create webhook request")
-		return
-	}
-	req.Header.Set("Content-Type", "application/json")
-
-	resp, err := httpClient.Do(req)
-	if err != nil {
-		log.WithError(err).Error("send webhook request")
-		return
-	}
-	_ = resp.Body.Close()
-
-	if resp.StatusCode >= 300 {
-		log.WithField("status", resp.Status).Warn("webhook non-2xx")
-	} else {
-		log.Info("webhook sent successfully")
-	}
-}
-
-func extractMessageTextAndType(m *waE2E.Message) (text string, msgType string, raw *model.RawMsg) {
+func ExtractMessageTextAndType(m *waE2E.Message) (text string, msgType string, raw *model.RawMsg) {
 	if m == nil {
 		return "", "unknown", &model.RawMsg{}
 	}
@@ -94,6 +31,11 @@ func extractMessageTextAndType(m *waE2E.Message) (text string, msgType string, r
 		text = m.GetConversation()
 		msgType = "text"
 		r.Conversation = text
+
+	case m.ReactionMessage != nil:
+		text = m.GetReactionMessage().GetText()
+		msgType = "reaction"
+		r.ExtendedText = text
 
 	case m.ExtendedTextMessage != nil && m.ExtendedTextMessage.Text != nil:
 		text = m.GetExtendedTextMessage().GetText()

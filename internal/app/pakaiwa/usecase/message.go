@@ -8,19 +8,20 @@
  *
  * See <https://www.gnu.org/licenses/gpl-3.0.html>.
  *
- * @author KAnggara75 on Mon 01/09/25 18.05
- * @project PakaiWA handler
- * https://github.com/PakaiWA/PakaiWA/tree/main/internal/handler
+ * @author KAnggara75 on Sun 31/08/25 05.54
+ * @project PakaiWA messages
+ * https://github.com/PakaiWA/PakaiWA/tree/main/internal/app/messages
  */
 
-package handler
+package usecase
 
 import (
-	"context"
 	"go.mau.fi/whatsmeow"
+	"go.mau.fi/whatsmeow/proto/waE2E"
+	"go.mau.fi/whatsmeow/types"
 )
 
-func HandleLogout(client *whatsmeow.Client) {
-	client.Disconnect()
-	_ = client.Store.Delete(context.Background())
+type MessageUsecase interface {
+	ProcessMessageEvent(msg *waE2E.Message, info *types.MessageInfo) error
+	HandleLogout(client *whatsmeow.Client) error
 }

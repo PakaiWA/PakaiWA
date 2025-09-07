@@ -8,16 +8,16 @@
  *
  * See <https://www.gnu.org/licenses/gpl-3.0.html>.
  *
- * @author KAnggara75 on Sat 06/09/25 09.10
- * @project PakaiWA pakaiwa
- * https://github.com/PakaiWA/PakaiWA/tree/main/internal/app/pakaiwa
+ * @author KAnggara75 on Sun 07/09/25 00.22
+ * @project PakaiWA bootstrap
+ * https://github.com/PakaiWA/PakaiWA/tree/main/internal/app/pakaiwa/bootstrap
  */
 
-package pakaiwa
+package bootstrap
 
 import (
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/handler"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/router"
-	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/handler"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/state"
 	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
 	"github.com/gofiber/fiber/v2"
@@ -35,12 +35,12 @@ type AppContext struct {
 
 func InitApp(b *AppContext) {
 	qrHandler := handler.NewQRHandler(b.PakaiWA, b.Log)
-	//msgHandler := handler.NewMessageHandler(b.PakaiWA, b.Log)
+	msgHandler := handler.NewMessageHandler(b.PakaiWA, b.Log)
 
 	routeConfig := router.RouteConfig{
-		Fiber: b.Fiber,
-		//MessageHandler: msgHandler,
-		QRHandler: qrHandler,
+		Fiber:          b.Fiber,
+		MessageHandler: msgHandler,
+		QRHandler:      qrHandler,
 	}
 	routeConfig.Setup()
 }

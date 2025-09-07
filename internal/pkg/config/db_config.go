@@ -16,10 +16,7 @@
 package config
 
 import (
-	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
-	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
-	"strings"
 	"time"
 )
 
@@ -71,78 +68,4 @@ func DetMaxConnIdleTime() time.Duration {
 		}
 	}
 	return 30 * time.Second
-}
-
-func GetJWTKey() []byte { return []byte(viper.GetString("app.jwt.sign_key")) }
-
-func GetAdminToken() string { return viper.GetString("app.admin.token") }
-
-func GetAllDevicesSQL() string { return viper.GetString("app.sql.getAllDevices") }
-
-func GetDeviceByIdSQL() string { return viper.GetString("app.sql.getDeviceById") }
-
-func GetDeleteDeviceSQL() string { return viper.GetString("app.sql.deleteDeviceById") }
-
-func GetAddDeviceSQL() string { return viper.GetString("app.sql.addDevice") }
-
-func GetCountDeviceSQL() string { return viper.GetString("app.sql.countDeviceById") }
-
-func GetRedisHost() string { return viper.GetString("redis.host") }
-
-func GetRedisPassword() string { return viper.GetString("redis.password") }
-
-func GetLogLevel() logrus.Level {
-	viper.SetDefault("log.level", "info")
-	raw := strings.TrimSpace(viper.GetString("log.level"))
-	if raw == "" {
-		return logrus.InfoLevel
-	}
-
-	lvl, err := logrus.ParseLevel(strings.ToLower(raw))
-	if err != nil {
-		return logrus.InfoLevel
-	}
-
-	return lvl
-}
-
-func Get40Space() string {
-	return strings.Repeat(" ", 40)
-}
-
-func GetAppName() string { return viper.GetString("app.name") }
-
-func GetPreFork() bool { return viper.GetBool("web.prefork") }
-
-func GetBaseKafkaConfig() *kafka.ConfigMap {
-	return &kafka.ConfigMap{
-		"bootstrap.servers": viper.GetString("kafka.bootstrap.servers"),
-		"security.protocol": viper.GetString("kafka.security.protocol"),
-		"ssl.ca.location":   viper.GetString("kafka.ssl.ca.location"),
-		"sasl.mechanism":    viper.GetString("kafka.sasl.mechanism"),
-		"sasl.username":     viper.GetString("kafka.sasl.username"),
-		"sasl.password":     viper.GetString("kafka.sasl.password"),
-	}
-}
-
-func GetConsumerConfig() *kafka.ConfigMap {
-	cfg := GetBaseKafkaConfig()
-	groupId := viper.GetString("kafka.group.id")
-	if groupId == "" {
-		groupId = "pakaiwa-group"
-	}
-
-	(*cfg)["group.id"] = groupId
-	(*cfg)["auto.offset.reset"] = viper.GetString("kafka.auto.offset.reset")
-	return cfg
-}
-
-func GetProducerConfig() *kafka.ConfigMap {
-	cfg := GetBaseKafkaConfig()
-	(*cfg)["linger.ms"] = 5                           // tunggu sebentar supaya batch lebih besar
-	(*cfg)["batch.num.messages"] = 10000              // kirim batch besar
-	(*cfg)["queue.buffering.max.kbytes"] = 1048576    // default 1GB, bisa dinaikkan
-	(*cfg)["queue.buffering.max.messages"] = 10000000 // default 100000
-
-	return cfg
 }

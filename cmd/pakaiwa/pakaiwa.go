@@ -18,7 +18,7 @@ package main
 import (
 	"context"
 	"github.com/KAnggara75/scc2go"
-	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa"
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/bootstrap"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/db"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/httpserver"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/kafka"
@@ -38,24 +38,26 @@ func main() {
 	log := logger.NewLogger()
 	pool := db.NewDatabase(ctx, log)
 
-	// ====== WhatsApp Client ======
-	pwa, err := pakaiwa.NewWhatsAppClient(ctx, log, pool)
-	utils.PanicIfError(err)
-
 	// ====== Kafka Producer ======
 	producer := kafka.NewKafkaProducer(log)
 
+	// ====== WhatsApp Client ======
+	pwa, err := bootstrap.InitWhatsapp(&bootstrap.PwaContext{
+		Log:      log,
+		Pool:     pool,
+		Producer: producer,
+	})
+	utils.PanicIfError(err)
+
 	// ====== App & Routes (Fiber) ======
 	fiber := httpserver.NewFiber()
-	pakaiwa.InitApp(
-		&pakaiwa.AppContext{
-			Log:      log,
-			Pool:     pool,
-			Fiber:    fiber,
-			PakaiWA:  pwa,
-			Producer: producer,
-		},
-	)
+	bootstrap.InitApp(&bootstrap.AppContext{
+		Log:      log,
+		Pool:     pool,
+		Producer: producer,
+		Fiber:    fiber,
+		PakaiWA:  pwa,
+	})
 
 	go func() {
 		addr := ":8080"

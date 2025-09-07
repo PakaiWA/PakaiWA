@@ -17,7 +17,7 @@ package router
 
 import (
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/dto"
-	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/handler"
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/handler"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -43,6 +43,8 @@ func (c *RouteConfig) SetupGuestRoute() {
 
 		return ctx.JSON(res)
 	})
+
+	c.Fiber.Post("/v1/messages", c.MessageHandler.SendMsg)
 
 }
 

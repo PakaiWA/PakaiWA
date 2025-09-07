@@ -8,12 +8,12 @@
  *
  * See <https://www.gnu.org/licenses/gpl-3.0.html>.
  *
- * @author KAnggara75 on Mon 01/09/25 10.59
- * @project PakaiWA pakaiwa
- * https://github.com/PakaiWA/PakaiWA/tree/main/internal/pakaiwa
+ * @author KAnggara75 on Sun 07/09/25 00.12
+ * @project PakaiWA event
+ * https://github.com/PakaiWA/PakaiWA/tree/main/internal/app/pakaiwa/delivery/event
  */
 
-package pakaiwa
+package event
 
 import (
 	"context"

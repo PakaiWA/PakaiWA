@@ -8,9 +8,9 @@
  *
  * See <https://www.gnu.org/licenses/gpl-3.0.html>.
  *
- * @author KAnggara75 on Sun 31/08/25 12.04
- * @project PakaiWA qr
- * https://github.com/PakaiWA/PakaiWA/tree/main/internal/app/handler
+ * @author KAnggara75 on Sun 07/09/25 08.02
+ * @project PakaiWA handler
+ * https://github.com/PakaiWA/PakaiWA/tree/main/internal/app/pakaiwa/delivery/http/handler
  */
 
 package handler

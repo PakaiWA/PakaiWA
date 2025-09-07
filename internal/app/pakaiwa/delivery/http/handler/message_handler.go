@@ -8,9 +8,9 @@
  *
  * See <https://www.gnu.org/licenses/gpl-3.0.html>.
  *
- * @author KAnggara75 on Sun 31/08/25 18.41
- * @project PakaiWA webhooks
- * https://github.com/PakaiWA/PakaiWA/tree/main/internal/app/webhooks
+ * @author KAnggara75 on Sun 07/09/25 08.00
+ * @project PakaiWA handler
+ * https://github.com/PakaiWA/PakaiWA/tree/main/internal/app/pakaiwa/delivery/http/handler
  */
 
 package handler
@@ -22,7 +22,6 @@ import (
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/state"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/utils"
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/log"
 	"github.com/sirupsen/logrus"
 	"go.mau.fi/whatsmeow"
 	"go.mau.fi/whatsmeow/proto/waE2E"
@@ -48,6 +47,7 @@ func NewMessageHandler(state *state.AppState, log *logrus.Logger) *MessageHandle
 }
 
 func (mh *MessageHandler) SendMsg(c *fiber.Ctx) error {
+	log := mh.Log
 	if !mh.State.Client.IsConnected() {
 		return c.Status(fiber.StatusServiceUnavailable).JSON(fiber.Map{
 			"error": "whatsapp_not_connected",

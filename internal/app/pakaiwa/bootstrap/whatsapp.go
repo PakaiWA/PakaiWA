@@ -8,27 +8,44 @@
  *
  * See <https://www.gnu.org/licenses/gpl-3.0.html>.
  *
- * @author KAnggara75 on Mon 01/09/25 20.59
- * @project PakaiWA configs
- * https://github.com/PakaiWA/PakaiWA/tree/main/internal/configs
+ * @author KAnggara75 on Sun 07/09/25 00.14
+ * @project PakaiWA bootstrap
+ * https://github.com/PakaiWA/PakaiWA/tree/main/internal/app/pakaiwa/bootstrap
  */
 
-package pakaiwa
+package bootstrap
 
 import (
 	"context"
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/event"
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/gateway/kafka"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/state"
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/usecase"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/config"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/logger"
 	pwaStore "github.com/PakaiWA/PakaiWA/internal/pkg/store"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/utils"
+	confluent "github.com/confluentinc/confluent-kafka-go/v2/kafka"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/sirupsen/logrus"
 	"go.mau.fi/whatsmeow"
 	"go.mau.fi/whatsmeow/store"
 )
 
-func NewWhatsAppClient(ctx context.Context, log *logrus.Logger, pool *pgxpool.Pool) (*state.AppState, error) {
+type PwaContext struct {
+	ctx      context.Context
+	Log      *logrus.Logger
+	Pool     *pgxpool.Pool
+	Producer *confluent.Producer
+}
+
+func InitWhatsapp(b *PwaContext) (*state.AppState, error) {
+	ctx := context.Background()
+
+	log := b.Log
+	pool := b.Pool
+	producer := b.Producer
+
 	store.SetOSInfo(config.GetAppName(), [3]uint32{0, 0, 0})
 
 	container := pwaStore.InitStoreWithPool(ctx, pool, log)
@@ -40,13 +57,26 @@ func NewWhatsAppClient(ctx context.Context, log *logrus.Logger, pool *pgxpool.Po
 
 	appState := &state.AppState{Client: client}
 
+	// INJECT dependencies
+	incomingMsgProducer := kafka.NewIncomingMessageProducer(producer, log)
+	receiveMsgUC := usecase.NewReceiveMessageUsecase(log, incomingMsgProducer)
+
+	deliveryStatusProducer := kafka.NewDeliveryStatusProducer(producer, log)
+	deliveryUC := usecase.NewDeliveryStatusUsecase(log, deliveryStatusProducer)
+
+	eventHandler := event.HandleEvent{
+		PakaiWA:        appState,
+		Producer:       producer,
+		ReceiveMsgUC:   receiveMsgUC,
+		DeliveryStatus: deliveryUC,
+	}
+
 	// Register event handler
-	eh := NewEventHandler(log, appState)
-	client.AddEventHandler(eh.Handle)
+	client.AddEventHandler(eventHandler.Handle)
 
 	if client.Store.ID == nil {
 		qrChan, _ := client.GetQRChannel(ctx)
-		StartQRHandler(ctx, appState, qrChan, log)
+		event.StartQRHandler(ctx, appState, qrChan, log)
 	} else {
 		appState.SetConnected(true)
 	}

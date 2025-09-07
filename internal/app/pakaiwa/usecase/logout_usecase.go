@@ -8,11 +8,19 @@
  *
  * See <https://www.gnu.org/licenses/gpl-3.0.html>.
  *
- * @author KAnggara75 on Sun 31/08/25 05.54
- * @project PakaiWA messages
- * https://github.com/PakaiWA/PakaiWA/tree/main/internal/app/messages
+ * @author KAnggara75 on Sun 07/09/25 07.57
+ * @project PakaiWA usecase
+ * https://github.com/PakaiWA/PakaiWA/tree/main/internal/app/pakaiwa/usecase
  */
 
 package usecase
 
-type MessageUseCase struct{}
+import (
+	"context"
+	"go.mau.fi/whatsmeow"
+)
+
+func HandleLogout(client *whatsmeow.Client) {
+	client.Disconnect()
+	_ = client.Store.Delete(context.Background())
+}
