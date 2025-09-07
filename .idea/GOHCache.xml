@@ -94,6 +94,13 @@
             </set>
           </value>
         </entry>
+        <entry key="IncomingMessageModel">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/app/pakaiwa/delivery/model/incoming_message.go" />
+            </set>
+          </value>
+        </entry>
         <entry key="IncomingMessagePayload">
           <value>
             <set>
@@ -630,6 +637,18 @@
             </ScannedPath>
           </value>
         </entry>
+        <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/delivery/model/incoming_message.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757249461636" />
+              <option name="schema">
+                <list>
+                  <option value="IncomingMessageModel" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
         <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/delivery/model/messages_model.go">
           <value>
             <ScannedPath>
@@ -795,7 +814,7 @@
         <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/gateway/kafka/incoming_message_producer.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1757155392491" />
+              <option name="lastModified" value="1757249334075" />
               <option name="schema">
                 <list>
                   <option value="IncomingMessageProducer" />
@@ -923,7 +942,7 @@
         <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/usecase/receive_message_impl.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1757236149117" />
+              <option name="lastModified" value="1757249383879" />
               <option name="schema">
                 <list>
                   <option value="receiveMessageUsecase" />
@@ -1122,6 +1141,7 @@
         <entry key="get_user_request" value="GetUserRequest" />
         <entry key="handle_event" value="HandleEvent" />
         <entry key="incoming_message_event" value="IncomingMessageEvent" />
+        <entry key="incoming_message_model" value="IncomingMessageModel" />
         <entry key="incoming_message_payload" value="IncomingMessagePayload" />
         <entry key="incoming_message_producer" value="IncomingMessageProducer" />
         <entry key="incoming_message_webhook" value="IncomingMessageWebhook" />

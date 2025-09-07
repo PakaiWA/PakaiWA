@@ -16,7 +16,7 @@
 package kafka
 
 import (
-	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/gateway/kafka/dto"
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/model"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/config"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/kafka"
 	confluent "github.com/confluentinc/confluent-kafka-go/v2/kafka"
@@ -24,12 +24,12 @@ import (
 )
 
 type IncomingMessageProducer struct {
-	kafka.Producer[*dto.IncomingMessageEvent]
+	kafka.Producer[*model.IncomingMessageModel]
 }
 
 func NewIncomingMessageProducer(producer *confluent.Producer, log *logrus.Logger) *IncomingMessageProducer {
 	return &IncomingMessageProducer{
-		Producer: kafka.Producer[*dto.IncomingMessageEvent]{
+		Producer: kafka.Producer[*model.IncomingMessageModel]{
 			Producer: producer,
 			Topic:    config.GetIncomingMessageTopic(),
 			Log:      log,

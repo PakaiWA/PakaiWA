@@ -16,13 +16,11 @@
 package usecase
 
 import (
-	"encoding/json"
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/model"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/gateway/kafka"
-	"github.com/gofiber/fiber/v2/log"
 	"github.com/sirupsen/logrus"
 	"go.mau.fi/whatsmeow/proto/waE2E"
 	"go.mau.fi/whatsmeow/types"
-	"google.golang.org/protobuf/encoding/protojson"
 )
 
 type receiveMessageUsecase struct {
@@ -36,31 +34,13 @@ func NewReceiveMessageUsecase(log *logrus.Logger, producer *kafka.IncomingMessag
 
 func (uc *receiveMessageUsecase) ProcessMessage(msg *waE2E.Message, info types.MessageInfo, rawMsg *waE2E.Message) {
 
-	marshaler := protojson.MarshalOptions{
-		Multiline:       false,
-		EmitUnpopulated: false,
-		UseEnumNumbers:  false,
-	}
-
-	msgJSON, err := marshaler.Marshal(msg)
+	incomingMsgModel, err := model.ToIncomingMessageModel(msg, info, rawMsg)
 	if err != nil {
-		uc.Log.Errorf("failed to marshal msg to JSON: %v", err)
-	} else {
-		uc.Log.Infof("Message JSON: %s", msgJSON)
+		uc.Log.Error(err)
 	}
 
-	rawJSON, _ := marshaler.Marshal(rawMsg)
-	uc.Log.Infof("Raw Message JSON: %s", rawJSON)
-
-	infoJSON, err := json.Marshal(info)
+	err = uc.Producer.Send(incomingMsgModel)
 	if err != nil {
-		uc.Log.Errorf("failed to marshal MessageInfo: %v", err)
-	} else {
-		uc.Log.Infof("Info JSON: %s", infoJSON)
+		uc.Log.Error(err)
 	}
-
-	//uc.Producer.Send(msg)
-
-	log.Infof("{\"msg\": %s,\"info\": %s}", rawJSON, infoJSON)
-
 }
