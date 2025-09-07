@@ -24,6 +24,7 @@ import (
 	"github.com/PakaiWA/PakaiWA/internal/pkg/kafka"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/logger"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/utils"
+	"github.com/PakaiWA/PakaiWA/internal/pkg/validator"
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"os"
 )
@@ -37,6 +38,8 @@ func main() {
 
 	log := logger.NewLogger()
 	pool := db.NewDatabase(ctx, log)
+
+	validate := validator.NewValidator()
 
 	// ====== Kafka Producer ======
 	producer := kafka.NewKafkaProducer(log)
@@ -54,9 +57,10 @@ func main() {
 	bootstrap.InitApp(&bootstrap.AppContext{
 		Log:      log,
 		Pool:     pool,
-		Producer: producer,
 		Fiber:    fiber,
 		PakaiWA:  pwa,
+		Producer: producer,
+		Validate: validate,
 	})
 
 	go func() {

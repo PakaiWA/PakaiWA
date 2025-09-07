@@ -32,7 +32,7 @@ func NewReceiveMessageUsecase(log *logrus.Logger, producer *kafka.IncomingMessag
 	return &receiveMessageUsecase{Log: log, Producer: producer}
 }
 
-func (uc *receiveMessageUsecase) ProcessMessage(msg *waE2E.Message, info types.MessageInfo, rawMsg *waE2E.Message) {
+func (uc *receiveMessageUsecase) ProcessIncomingMessage(msg *waE2E.Message, info types.MessageInfo, rawMsg *waE2E.Message) {
 
 	incomingMsgModel, err := model.ToIncomingMessageModel(msg, info, rawMsg)
 	if err != nil {

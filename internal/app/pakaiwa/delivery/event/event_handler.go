@@ -36,7 +36,7 @@ func (h *HandleEvent) Handle(e interface{}) {
 	case *events.Receipt:
 		h.DeliveryStatus.ProcessDeliveryStatus(v)
 	case *events.Message:
-		h.ReceiveMsgUC.ProcessMessage(v.Message, v.Info, v.RawMessage)
+		h.ReceiveMsgUC.ProcessIncomingMessage(v.Message, v.Info, v.RawMessage)
 	case *events.LoggedOut:
 		reason := v.Reason
 		h.PakaiWA.SetQR("")

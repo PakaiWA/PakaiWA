@@ -45,6 +45,7 @@ func ToIncomingMessageModel(msg *waE2E.Message, info types.MessageInfo, raw *waE
 	if err != nil {
 		return nil, err
 	}
+
 	rawJSON, err := marshaler.Marshal(raw)
 	if err != nil {
 		return nil, err

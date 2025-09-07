@@ -8,9 +8,21 @@
  *
  * See <https://www.gnu.org/licenses/gpl-3.0.html>.
  *
- * @author KAnggara75 on Sat 06/09/25 08.54
+ * @author KAnggara75 on Sun 07/09/25 21.43
  * @project PakaiWA dto
  * https://github.com/PakaiWA/PakaiWA/tree/main/internal/app/pakaiwa/delivery/http/dto
  */
 
 package dto
+
+type ValidationErrorResponse struct {
+	Field string `json:"field"`
+	Tag   string `json:"tag"`
+	Value string `json:"value"`
+}
+
+type ValidationError struct {
+	Field string `json:"field"`
+	Tag   string `json:"tag"`
+	Param string `json:"param,omitempty"`
+}

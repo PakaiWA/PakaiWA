@@ -16,28 +16,67 @@
 package usecase
 
 import (
-	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
+	"context"
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/model"
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/helper"
+	"github.com/PakaiWA/PakaiWA/internal/pkg/utils"
+	"github.com/go-playground/validator/v10"
+	"github.com/gofiber/fiber/v2"
 	"github.com/sirupsen/logrus"
 	"go.mau.fi/whatsmeow"
 	"go.mau.fi/whatsmeow/proto/waE2E"
-	"go.mau.fi/whatsmeow/types"
+	"strings"
+	"time"
 )
 
 type messageUsecase struct {
 	Log      *logrus.Logger
-	Producer *kafka.Producer
+	Validate *validator.Validate
+	WA       *whatsmeow.Client
 }
 
-func NewMessageUsecase(log *logrus.Logger, producer *kafka.Producer) MessageUsecase {
-	return &messageUsecase{Log: log, Producer: producer}
+func NewMessageUsecase(log *logrus.Logger, validate *validator.Validate, wa *whatsmeow.Client) MessageUsecase {
+	return &messageUsecase{
+		WA:       wa,
+		Log:      log,
+		Validate: validate,
+	}
 }
 
-func (uc *messageUsecase) ProcessMessageEvent(msg *waE2E.Message, info *types.MessageInfo) error {
-	//TODO implement me
-	panic("implement me")
-}
+func (m messageUsecase) SendMessage(req *model.SendMessageReq) (string, error) {
+	if err := m.Validate.Struct(req); err != nil {
+		return "", err
+	}
 
-func (uc *messageUsecase) HandleLogout(client *whatsmeow.Client) error {
-	//TODO implement me
-	panic("implement me")
+	id := m.WA.GenerateMessageID()
+
+	if strings.TrimSpace(req.Text) == "" {
+		return id, fiber.ErrBadRequest
+	}
+
+	phoneNumber := strings.TrimSpace(req.Phone)
+	if phoneNumber == id {
+		return id, fiber.ErrBadRequest
+	}
+
+	jid, err := helper.NormalizeJID(phoneNumber)
+	if err != nil {
+		return id, fiber.ErrBadRequest
+	}
+
+	go func() {
+		msg := &waE2E.Message{
+			Conversation: utils.ProtoString(req.Text),
+		}
+
+		ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+		defer cancel()
+
+		_, err = m.WA.SendMessage(ctx, jid, msg, whatsmeow.SendRequestExtra{ID: id})
+		if err != nil {
+			m.Log.Errorf("Fail to send with id: %s %v", id, err)
+		}
+	}()
+
+	return id, nil
 }

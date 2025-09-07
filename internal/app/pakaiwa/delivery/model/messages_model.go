@@ -16,9 +16,8 @@
 package model
 
 type SendMessageReq struct {
-	JID   string `json:"jid"`
-	Phone string `json:"phone_number"`
-	Text  string `json:"message"`
+	Phone string `json:"phone_number" validate:"required"`
+	Text  string `json:"message" validate:"required"`
 }
 
 type SendMessageResponse struct {

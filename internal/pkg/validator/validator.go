@@ -15,8 +15,25 @@
 
 package validator
 
-import "github.com/go-playground/validator/v10"
+import (
+	"github.com/go-playground/validator/v10"
+	"reflect"
+	"strings"
+)
 
 func NewValidator() *validator.Validate {
-	return validator.New()
+	validate := validator.New()
+	validate.RegisterTagNameFunc(func(fld reflect.StructField) string {
+		tag := fld.Tag.Get("json")
+		if tag == "" {
+			return fld.Name
+		}
+		name := strings.SplitN(tag, ",", 2)[0]
+		if name == "-" {
+			return ""
+		}
+		return name
+	})
+
+	return validate
 }

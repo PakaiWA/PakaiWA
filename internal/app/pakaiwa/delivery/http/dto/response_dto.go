@@ -30,9 +30,9 @@ type Meta struct {
 
 // ProblemDetails RFC 7807
 type ProblemDetails struct {
-	Type     string `json:"type"`             // link ke dokumentasi error (bisa URL)
-	Title    string `json:"title"`            // judul error singkat
-	Status   int    `json:"status"`           // HTTP status code
-	Detail   string `json:"detail,omitempty"` // deskripsi error
-	Instance string `json:"instance"`         // endpoint/resource terkait
+	Type     string      `json:"type,omitempty"`
+	Title    string      `json:"title"`            // judul error singkat
+	Status   int         `json:"status"`           // HTTP status code
+	Detail   interface{} `json:"detail,omitempty"` // deskripsi error
+	Instance string      `json:"instance"`         // endpoint/resource terkait
 }

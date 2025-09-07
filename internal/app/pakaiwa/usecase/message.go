@@ -16,12 +16,9 @@
 package usecase
 
 import (
-	"go.mau.fi/whatsmeow"
-	"go.mau.fi/whatsmeow/proto/waE2E"
-	"go.mau.fi/whatsmeow/types"
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/model"
 )
 
 type MessageUsecase interface {
-	ProcessMessageEvent(msg *waE2E.Message, info *types.MessageInfo) error
-	HandleLogout(client *whatsmeow.Client) error
+	SendMessage(req *model.SendMessageReq) (string, error)
 }

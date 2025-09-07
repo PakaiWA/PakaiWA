@@ -17,24 +17,46 @@ package httpserver
 
 import (
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/dto"
+	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/pkg/errors"
+	"net/http"
 )
 
 func NewErrorHandler() fiber.ErrorHandler {
-
 	return func(ctx *fiber.Ctx, err error) error {
+		// Default: 500
 		code := fiber.StatusInternalServerError
 		var e *fiber.Error
 		if errors.As(err, &e) {
 			code = e.Code
 		}
 
+		var validationError validator.ValidationErrors
+		if errors.As(err, &validationError) {
+			var details []dto.ValidationError
+			for _, v := range validationError {
+				details = append(details, dto.ValidationError{
+					Field: v.Field(),
+					Tag:   v.Tag(),
+					Param: v.Param(),
+				})
+			}
+			return ctx.Status(fiber.StatusBadRequest).JSON(dto.BaseResponse{
+				Success: false,
+				Error: &dto.ProblemDetails{
+					Title:    http.StatusText(fiber.StatusBadRequest),
+					Status:   fiber.StatusBadRequest,
+					Detail:   details, // array JSON
+					Instance: ctx.Path(),
+				},
+			})
+		}
+
 		return ctx.Status(code).JSON(dto.BaseResponse{
 			Success: false,
 			Error: &dto.ProblemDetails{
-				Type:     "about:blank",
-				Title:    "Internal Server Error",
+				Title:    http.StatusText(code),
 				Status:   code,
 				Detail:   err.Error(),
 				Instance: ctx.Path(),

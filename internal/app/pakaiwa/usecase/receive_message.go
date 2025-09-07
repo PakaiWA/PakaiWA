@@ -21,5 +21,5 @@ import (
 )
 
 type ReceiveMessageUsecase interface {
-	ProcessMessage(msg *waE2E.Message, info types.MessageInfo, rawMsg *waE2E.Message)
+	ProcessIncomingMessage(msg *waE2E.Message, info types.MessageInfo, rawMsg *waE2E.Message)
 }
