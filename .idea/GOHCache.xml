@@ -591,7 +591,7 @@
         <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/delivery/http/handler/message_handler.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1757255526583" />
+              <option name="lastModified" value="1757258614124" />
               <option name="schema">
                 <list>
                   <option value="MessageHandler" />
@@ -678,7 +678,7 @@
         <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/delivery/model/messages_model.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1757256010669" />
+              <option name="lastModified" value="1757258037463" />
               <option name="schema">
                 <list>
                   <option value="SendMessageReq" />
@@ -1049,7 +1049,7 @@
         <entry key="file://$PROJECT_DIR$/internal/pkg/httpserver/error_handler.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1757257307683" />
+              <option name="lastModified" value="1757258314714" />
             </ScannedPath>
           </value>
         </entry>
@@ -1121,6 +1121,13 @@
           <value>
             <ScannedPath>
               <option name="lastModified" value="1757128568743" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/pkg/utils/logging.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1757258555339" />
             </ScannedPath>
           </value>
         </entry>

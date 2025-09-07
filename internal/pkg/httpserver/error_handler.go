@@ -25,7 +25,6 @@ import (
 
 func NewErrorHandler() fiber.ErrorHandler {
 	return func(ctx *fiber.Ctx, err error) error {
-		// Default: 500
 		code := fiber.StatusInternalServerError
 		var e *fiber.Error
 		if errors.As(err, &e) {
@@ -47,7 +46,7 @@ func NewErrorHandler() fiber.ErrorHandler {
 				Error: &dto.ProblemDetails{
 					Title:    http.StatusText(fiber.StatusBadRequest),
 					Status:   fiber.StatusBadRequest,
-					Detail:   details, // array JSON
+					Detail:   details,
 					Instance: ctx.Path(),
 				},
 			})

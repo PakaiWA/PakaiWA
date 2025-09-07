@@ -19,6 +19,7 @@ import (
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/model"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/helper"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/usecase"
+	"github.com/PakaiWA/PakaiWA/internal/pkg/utils"
 	"github.com/gofiber/fiber/v2"
 	"github.com/sirupsen/logrus"
 )
@@ -38,13 +39,13 @@ func NewMessageHandler(useCase usecase.MessageUsecase, log *logrus.Logger) *Mess
 func (h *MessageHandler) SendMsg(c *fiber.Ctx) error {
 	request := new(model.SendMessageReq)
 	if err := c.BodyParser(request); err != nil {
-		h.Log.WithError(err).Error("error parsing request body")
+		utils.LogValidationErrors(h.Log, "error parsing request body", err)
 		return fiber.ErrBadRequest
 	}
 
 	id, err := h.UseCase.SendMessage(request)
 	if err != nil {
-		h.Log.WithError(err).Error("error creating contact")
+		utils.LogValidationErrors(h.Log, "validation failed in SendMessage", err)
 		return err
 	}
 
