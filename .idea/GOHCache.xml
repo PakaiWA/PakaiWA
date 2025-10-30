@@ -476,6 +476,13 @@
     </option>
     <option name="scannedPathMapping">
       <map>
+        <entry key="file://$PROJECT_DIR$/cmd/pakai-relay/pakaiwa_relay.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1761820171575" />
+            </ScannedPath>
+          </value>
+        </entry>
         <entry key="file://$PROJECT_DIR$/cmd/pakaiwa-relay/pakaiwa_relay.go">
           <value>
             <ScannedPath>

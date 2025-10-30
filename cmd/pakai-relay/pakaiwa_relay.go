@@ -10,7 +10,7 @@
  *
  * @author KAnggara75 on Fri 05/09/25 23.25
  * @project PakaiWA pakaiwa_relay
- * https://github.com/PakaiWA/PakaiWA/tree/main/cmd/pakaiwa-relay
+ * https://github.com/PakaiWA/PakaiWA/tree/main/cmd/pakai-relay
  */
 
 package main
