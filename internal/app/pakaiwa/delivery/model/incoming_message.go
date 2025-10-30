@@ -17,10 +17,11 @@ package model
 
 import (
 	"encoding/json"
-	"go.mau.fi/whatsmeow/proto/waE2E"
-	"go.mau.fi/whatsmeow/types"
-	"google.golang.org/protobuf/encoding/protojson"
 	"time"
+
+	"github.com/PakaiWA/whatsmeow/proto/waE2E"
+	"github.com/PakaiWA/whatsmeow/types"
+	"google.golang.org/protobuf/encoding/protojson"
 )
 
 type IncomingMessageModel struct {

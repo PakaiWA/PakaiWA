@@ -16,9 +16,10 @@
 package validator
 
 import (
-	"github.com/go-playground/validator/v10"
 	"reflect"
 	"strings"
+
+	"github.com/go-playground/validator/v10"
 )
 
 func NewValidator() *validator.Validate {

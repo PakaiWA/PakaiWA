@@ -16,10 +16,11 @@
 package kafka
 
 import (
-	"github.com/PakaiWA/PakaiWA/internal/pkg/config"
-	"github.com/PakaiWA/PakaiWA/internal/pkg/utils"
 	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
 	"github.com/sirupsen/logrus"
+
+	"github.com/PakaiWA/PakaiWA/internal/pkg/config"
+	"github.com/PakaiWA/PakaiWA/internal/pkg/utils"
 )
 
 func NewKafkaConsumer(log *logrus.Logger) *kafka.Consumer {

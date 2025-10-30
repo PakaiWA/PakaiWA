@@ -17,16 +17,18 @@ package usecase
 
 import (
 	"context"
-	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/model"
-	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/helper"
-	"github.com/PakaiWA/PakaiWA/internal/pkg/utils"
+	"strings"
+	"time"
+
+	"github.com/PakaiWA/whatsmeow"
+	"github.com/PakaiWA/whatsmeow/proto/waE2E"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/sirupsen/logrus"
-	"go.mau.fi/whatsmeow"
-	"go.mau.fi/whatsmeow/proto/waE2E"
-	"strings"
-	"time"
+
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/model"
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/helper"
+	"github.com/PakaiWA/PakaiWA/internal/pkg/utils"
 )
 
 type messageUsecase struct {

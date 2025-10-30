@@ -17,11 +17,13 @@ package kafka
 
 import (
 	"encoding/json"
+
+	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
+	"github.com/sirupsen/logrus"
+
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/model"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/config"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/utils"
-	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
-	"github.com/sirupsen/logrus"
 )
 
 func NewKafkaProducer(log *logrus.Logger) *kafka.Producer {

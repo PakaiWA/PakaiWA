@@ -16,15 +16,16 @@
 package bootstrap
 
 import (
-	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/handler"
-	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/router"
-	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/state"
-	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/usecase"
 	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/sirupsen/logrus"
+
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/handler"
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/router"
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/state"
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/usecase"
 )
 
 type AppContext struct {

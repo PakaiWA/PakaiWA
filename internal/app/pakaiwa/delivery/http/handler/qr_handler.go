@@ -16,8 +16,9 @@
 package handler
 
 import (
-	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/state"
 	"github.com/sirupsen/logrus"
+
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/state"
 )
 
 type QRHandler struct {

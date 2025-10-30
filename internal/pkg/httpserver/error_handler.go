@@ -16,11 +16,13 @@
 package httpserver
 
 import (
-	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/dto"
+	"net/http"
+
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/pkg/errors"
-	"net/http"
+
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/dto"
 )
 
 func NewErrorHandler() fiber.ErrorHandler {

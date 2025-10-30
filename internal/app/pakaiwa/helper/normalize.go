@@ -17,8 +17,9 @@ package helper
 
 import (
 	"fmt"
-	"go.mau.fi/whatsmeow/types"
 	"strings"
+
+	"github.com/PakaiWA/whatsmeow/types"
 )
 
 func NormalizeJID(s string) (types.JID, error) {

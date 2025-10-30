@@ -17,7 +17,11 @@ package main
 
 import (
 	"context"
+	"os"
+
 	"github.com/KAnggara75/scc2go"
+	_ "github.com/jackc/pgx/v5/stdlib"
+
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/bootstrap"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/db"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/httpserver"
@@ -25,8 +29,6 @@ import (
 	"github.com/PakaiWA/PakaiWA/internal/pkg/logger"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/utils"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/validator"
-	_ "github.com/jackc/pgx/v5/stdlib"
-	"os"
 )
 
 func init() {

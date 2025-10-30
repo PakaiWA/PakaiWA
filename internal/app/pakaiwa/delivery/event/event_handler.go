@@ -16,11 +16,12 @@
 package event
 
 import (
-	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/state"
-	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/usecase"
+	"github.com/PakaiWA/whatsmeow/types/events"
 	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
 	"github.com/sirupsen/logrus"
-	"go.mau.fi/whatsmeow/types/events"
+
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/state"
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/usecase"
 )
 
 type HandleEvent struct {

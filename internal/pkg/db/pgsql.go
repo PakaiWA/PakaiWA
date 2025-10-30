@@ -17,12 +17,14 @@ package db
 
 import (
 	"context"
-	"github.com/PakaiWA/PakaiWA/internal/pkg/config"
-	"github.com/PakaiWA/PakaiWA/internal/pkg/utils"
-	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/sirupsen/logrus"
 	"sync"
 	"time"
+
+	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/sirupsen/logrus"
+
+	"github.com/PakaiWA/PakaiWA/internal/pkg/config"
+	"github.com/PakaiWA/PakaiWA/internal/pkg/utils"
 )
 
 var (

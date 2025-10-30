@@ -16,9 +16,10 @@
 package router
 
 import (
+	"github.com/gofiber/fiber/v2"
+
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/dto"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/handler"
-	"github.com/gofiber/fiber/v2"
 )
 
 type RouteConfig struct {

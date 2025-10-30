@@ -17,6 +17,7 @@ package utils
 
 import (
 	"errors"
+
 	"github.com/go-playground/validator/v10"
 	"github.com/sirupsen/logrus"
 )

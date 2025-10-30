@@ -16,15 +16,17 @@
 package usecase
 
 import (
+	"strings"
+	"time"
+
+	"github.com/PakaiWA/whatsmeow/types"
+	"github.com/PakaiWA/whatsmeow/types/events"
+	"github.com/sirupsen/logrus"
+
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/model"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/entity"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/gateway/kafka"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/helper"
-	"github.com/sirupsen/logrus"
-	"go.mau.fi/whatsmeow/types"
-	"go.mau.fi/whatsmeow/types/events"
-	"strings"
-	"time"
 )
 
 type deliveryStatusUsecase struct {

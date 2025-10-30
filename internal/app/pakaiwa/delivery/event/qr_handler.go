@@ -17,11 +17,13 @@ package event
 
 import (
 	"context"
-	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/state"
+	"os"
+
+	"github.com/PakaiWA/whatsmeow"
 	"github.com/mdp/qrterminal/v3"
 	"github.com/sirupsen/logrus"
-	"go.mau.fi/whatsmeow"
-	"os"
+
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/state"
 )
 
 func StartQRHandler(ctx context.Context, state *state.AppState, qrChan <-chan whatsmeow.QRChannelItem, log *logrus.Logger) {

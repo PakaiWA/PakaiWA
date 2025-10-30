@@ -31,6 +31,13 @@
             </set>
           </value>
         </entry>
+        <entry key="CreateNewsletterParams">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/../whatsmeow/newsletter.go" />
+            </set>
+          </value>
+        </entry>
         <entry key="DeliveryModel">
           <value>
             <set>
@@ -56,6 +63,27 @@
           <value>
             <set>
               <option value="file://$PROJECT_DIR$/internal/app/pakaiwa/gateway/kafka/delivery_status_producer.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="GetNewsletterMessagesParams">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/../whatsmeow/newsletter.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="GetNewsletterUpdatesParams">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/../whatsmeow/newsletter.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="GetProfilePictureParams">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/../whatsmeow/user.go" />
             </set>
           </value>
         </entry>
@@ -129,6 +157,13 @@
             </set>
           </value>
         </entry>
+        <entry key="MessageDebugTimings">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/../whatsmeow/send.go" />
+            </set>
+          </value>
+        </entry>
         <entry key="MessageEventPayload">
           <value>
             <set>
@@ -168,6 +203,69 @@
           <value>
             <set>
               <option value="file://$PROJECT_DIR$/internal/pkg/logger/logrus.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="PositronChat">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/../whatsmeow/proto/waWinUIApi/WAWinUIApi.pb.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="PositronContact">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/../whatsmeow/proto/waWinUIApi/WAWinUIApi.pb.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="PositronData">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/../whatsmeow/proto/waWinUIApi/WAWinUIApi.pb.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="PositronGroupMetadata">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/../whatsmeow/proto/waWinUIApi/WAWinUIApi.pb.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="PositronGroupParticipants">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/../whatsmeow/proto/waWinUIApi/WAWinUIApi.pb.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="PositronMessage">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/../whatsmeow/proto/waWinUIApi/WAWinUIApi.pb.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="PositronMessage_MsgKey">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/../whatsmeow/proto/waWinUIApi/WAWinUIApi.pb.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="PositronMessage_WID">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/../whatsmeow/proto/waWinUIApi/WAWinUIApi.pb.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="PositronReaction">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/../whatsmeow/proto/waWinUIApi/WAWinUIApi.pb.go" />
             </set>
           </value>
         </entry>
@@ -262,10 +360,31 @@
             </set>
           </value>
         </entry>
+        <entry key="SendRequestExtra">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/../whatsmeow/send.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="SendResponse">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/../whatsmeow/send.go" />
+            </set>
+          </value>
+        </entry>
         <entry key="UseCaseQR">
           <value>
             <set>
               <option value="file://$PROJECT_DIR$/internal/app/pakaiwa/usecase/qr_usecase.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="UsyncQueryExtras">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/../whatsmeow/user.go" />
             </set>
           </value>
         </entry>
@@ -311,10 +430,45 @@
             </set>
           </value>
         </entry>
+        <entry key="nodeExtraParams">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/../whatsmeow/send.go" />
+            </set>
+          </value>
+        </entry>
         <entry key="receiveMessageUsecase">
           <value>
             <set>
               <option value="file://$PROJECT_DIR$/internal/app/pakaiwa/usecase/receive_message_impl.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="respCreateNewsletter">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/../whatsmeow/newsletter.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="respGetNewsletterInfo">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/../whatsmeow/newsletter.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="respGetSubscribedNewsletters">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/../whatsmeow/newsletter.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="x">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/../whatsmeow/proto/waWinUIApi/WAWinUIApi.pb.go" />
             </set>
           </value>
         </entry>
@@ -914,6 +1068,93 @@
             </ScannedPath>
           </value>
         </entry>
+        <entry key="file://$PROJECT_DIR$/../whatsmeow/appstate.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1761816873801" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/../whatsmeow/binary/proto/legacy.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1761817061733" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/../whatsmeow/call.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1761816868815" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/../whatsmeow/newsletter.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1761816846992" />
+              <option name="schema">
+                <list>
+                  <option value="respGetNewsletterInfo" />
+                  <option value="respGetSubscribedNewsletters" />
+                  <option value="CreateNewsletterParams" />
+                  <option value="respCreateNewsletter" />
+                  <option value="GetNewsletterMessagesParams" />
+                  <option value="GetNewsletterUpdatesParams" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/../whatsmeow/proto/waWinUIApi/WAWinUIApi.pb.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1761816897182" />
+              <option name="schema">
+                <list>
+                  <option value="PositronMessage" />
+                  <option value="PositronChat" />
+                  <option value="PositronContact" />
+                  <option value="PositronGroupMetadata" />
+                  <option value="PositronGroupParticipants" />
+                  <option value="PositronReaction" />
+                  <option value="PositronData" />
+                  <option value="PositronMessage_MsgKey" />
+                  <option value="PositronMessage_WID" />
+                  <option value="x" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/../whatsmeow/send.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1761816839064" />
+              <option name="schema">
+                <list>
+                  <option value="MessageDebugTimings" />
+                  <option value="SendResponse" />
+                  <option value="SendRequestExtra" />
+                  <option value="nodeExtraParams" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/../whatsmeow/user.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1761816824779" />
+              <option name="schema">
+                <list>
+                  <option value="GetProfilePictureParams" />
+                  <option value="UsyncQueryExtras" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
       </map>
     </option>
     <option name="tableStructMapping">
@@ -922,11 +1163,15 @@
         <entry key="app_state" value="AppState" />
         <entry key="base_response" value="BaseResponse" />
         <entry key="contact_info" value="ContactInfo" />
+        <entry key="create_newsletter_params" value="CreateNewsletterParams" />
         <entry key="delivery_model" value="DeliveryModel" />
         <entry key="delivery_payload" value="DeliveryPayload" />
         <entry key="delivery_status_payload" value="DeliveryStatusPayload" />
         <entry key="delivery_status_producer" value="DeliveryStatusProducer" />
         <entry key="delivery_status_usecase" value="deliveryStatusUsecase" />
+        <entry key="get_newsletter_messages_params" value="GetNewsletterMessagesParams" />
+        <entry key="get_newsletter_updates_params" value="GetNewsletterUpdatesParams" />
+        <entry key="get_profile_picture_params" value="GetProfilePictureParams" />
         <entry key="handle_event" value="HandleEvent" />
         <entry key="incoming_message_model" value="IncomingMessageModel" />
         <entry key="incoming_message_payload" value="IncomingMessagePayload" />
@@ -937,13 +1182,24 @@
         <entry key="logrus_adapter" value="LogrusAdapter" />
         <entry key="media_dim" value="MediaDim" />
         <entry key="media_meta" value="MediaMeta" />
+        <entry key="message_debug_timings" value="MessageDebugTimings" />
         <entry key="message_event_payload" value="MessageEventPayload" />
         <entry key="message_handler" value="MessageHandler" />
         <entry key="message_meta" value="MessageMeta" />
         <entry key="message_usecase" value="messageUsecase" />
         <entry key="meta" value="Meta" />
         <entry key="model" value="Model" />
+        <entry key="node_extra_params" value="nodeExtraParams" />
         <entry key="ordered_json_formatter" value="OrderedJSONFormatter" />
+        <entry key="positron_chat" value="PositronChat" />
+        <entry key="positron_contact" value="PositronContact" />
+        <entry key="positron_data" value="PositronData" />
+        <entry key="positron_group_metadata" value="PositronGroupMetadata" />
+        <entry key="positron_group_participants" value="PositronGroupParticipants" />
+        <entry key="positron_message" value="PositronMessage" />
+        <entry key="positron_message__msg_key" value="PositronMessage_MsgKey" />
+        <entry key="positron_message_wid" value="PositronMessage_WID" />
+        <entry key="positron_reaction" value="PositronReaction" />
         <entry key="problem_details" value="ProblemDetails" />
         <entry key="producer" value="Producer" />
         <entry key="pwa_context" value="PwaContext" />
@@ -953,18 +1209,25 @@
         <entry key="rate_limiter_util" value="RateLimiterUtil" />
         <entry key="raw_msg" value="RawMsg" />
         <entry key="receive_message_usecase" value="receiveMessageUsecase" />
+        <entry key="resp_create_newsletter" value="respCreateNewsletter" />
+        <entry key="resp_get_newsletter_info" value="respGetNewsletterInfo" />
+        <entry key="resp_get_subscribed_newsletters" value="respGetSubscribedNewsletters" />
         <entry key="response_qr" value="ResponseQR" />
         <entry key="response_qr_device" value="ResponseQRDevice" />
         <entry key="route_config" value="RouteConfig" />
         <entry key="send_message_req" value="SendMessageReq" />
         <entry key="send_message_response" value="SendMessageResponse" />
+        <entry key="send_request_extra" value="SendRequestExtra" />
+        <entry key="send_response" value="SendResponse" />
         <entry key="use_case_qr" value="UseCaseQR" />
+        <entry key="usync_query_extras" value="UsyncQueryExtras" />
         <entry key="validation_error" value="ValidationError" />
         <entry key="validation_error_response" value="ValidationErrorResponse" />
         <entry key="version_res" value="VersionRes" />
         <entry key="webhook_entity" value="WebhookEntity" />
+        <entry key="x" value="x" />
       </map>
     </option>
-    <option name="lastTimeChecked" value="1758318055766" />
+    <option name="lastTimeChecked" value="1761816251606" />
   </component>
 </project>

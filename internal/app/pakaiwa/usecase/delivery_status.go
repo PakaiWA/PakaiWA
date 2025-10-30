@@ -16,7 +16,7 @@
 package usecase
 
 import (
-	"go.mau.fi/whatsmeow/types/events"
+	"github.com/PakaiWA/whatsmeow/types/events"
 )
 
 type DeliveryUsecase interface {

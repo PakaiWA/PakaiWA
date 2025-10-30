@@ -16,8 +16,8 @@
 package logger
 
 import (
+	waLog "github.com/PakaiWA/whatsmeow/util/log"
 	"github.com/sirupsen/logrus"
-	waLog "go.mau.fi/whatsmeow/util/log"
 )
 
 var _ waLog.Logger = (*LogrusAdapter)(nil)

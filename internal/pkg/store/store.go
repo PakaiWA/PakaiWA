@@ -17,11 +17,13 @@ package store
 
 import (
 	"context"
-	"github.com/PakaiWA/PakaiWA/internal/pkg/logger"
+
+	"github.com/PakaiWA/whatsmeow/store/sqlstore"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/jackc/pgx/v5/stdlib"
 	"github.com/sirupsen/logrus"
-	"go.mau.fi/whatsmeow/store/sqlstore"
+
+	"github.com/PakaiWA/PakaiWA/internal/pkg/logger"
 )
 
 func InitStoreWithPool(ctx context.Context, pool *pgxpool.Pool, log *logrus.Logger) *sqlstore.Container {

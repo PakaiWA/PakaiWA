@@ -16,8 +16,8 @@
 package usecase
 
 import (
-	"go.mau.fi/whatsmeow/proto/waE2E"
-	"go.mau.fi/whatsmeow/types"
+	"github.com/PakaiWA/whatsmeow/proto/waE2E"
+	"github.com/PakaiWA/whatsmeow/types"
 )
 
 type ReceiveMessageUsecase interface {

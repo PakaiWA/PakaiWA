@@ -16,8 +16,9 @@
 package state
 
 import (
-	"go.mau.fi/whatsmeow"
 	"sync"
+
+	"github.com/PakaiWA/whatsmeow"
 )
 
 type AppState struct {

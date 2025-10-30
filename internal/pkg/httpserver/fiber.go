@@ -16,8 +16,9 @@
 package httpserver
 
 import (
-	"github.com/PakaiWA/PakaiWA/internal/pkg/config"
 	"github.com/gofiber/fiber/v2"
+
+	"github.com/PakaiWA/PakaiWA/internal/pkg/config"
 )
 
 func NewFiber() *fiber.App {

@@ -17,6 +17,13 @@ package bootstrap
 
 import (
 	"context"
+
+	"github.com/PakaiWA/whatsmeow"
+	"github.com/PakaiWA/whatsmeow/store"
+	confluent "github.com/confluentinc/confluent-kafka-go/v2/kafka"
+	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/sirupsen/logrus"
+
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/event"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/gateway/kafka"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/state"
@@ -25,11 +32,6 @@ import (
 	"github.com/PakaiWA/PakaiWA/internal/pkg/logger"
 	pwaStore "github.com/PakaiWA/PakaiWA/internal/pkg/store"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/utils"
-	confluent "github.com/confluentinc/confluent-kafka-go/v2/kafka"
-	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/sirupsen/logrus"
-	"go.mau.fi/whatsmeow"
-	"go.mau.fi/whatsmeow/store"
 )
 
 type PwaContext struct {

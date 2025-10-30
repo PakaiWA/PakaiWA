@@ -17,7 +17,8 @@ package usecase
 
 import (
 	"context"
-	"go.mau.fi/whatsmeow"
+
+	"github.com/PakaiWA/whatsmeow"
 )
 
 func HandleLogout(client *whatsmeow.Client) {

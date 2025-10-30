@@ -16,8 +16,9 @@
 package model
 
 import (
-	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/entity"
 	"time"
+
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/entity"
 )
 
 type DeliveryModel struct {

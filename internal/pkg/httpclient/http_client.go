@@ -20,10 +20,11 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/pkg/errors"
 	"net/http"
 	"sync"
 	"time"
+
+	"github.com/pkg/errors"
 )
 
 var (

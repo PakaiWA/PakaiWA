@@ -16,11 +16,12 @@
 package usecase
 
 import (
+	"github.com/PakaiWA/whatsmeow/proto/waE2E"
+	"github.com/PakaiWA/whatsmeow/types"
+	"github.com/sirupsen/logrus"
+
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/model"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/gateway/kafka"
-	"github.com/sirupsen/logrus"
-	"go.mau.fi/whatsmeow/proto/waE2E"
-	"go.mau.fi/whatsmeow/types"
 )
 
 type receiveMessageUsecase struct {

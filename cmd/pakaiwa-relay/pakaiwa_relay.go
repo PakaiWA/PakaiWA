@@ -16,8 +16,9 @@
 package main
 
 import (
-	"github.com/KAnggara75/scc2go"
 	"os"
+
+	"github.com/KAnggara75/scc2go"
 )
 
 func init() {

@@ -16,9 +16,10 @@
 package error
 
 import (
-	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/dto"
 	"github.com/go-playground/validator/v10"
 	"github.com/pkg/errors"
+
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/dto"
 )
 
 func MapValidationErrors(err error) []dto.ValidationError {

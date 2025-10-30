@@ -16,8 +16,9 @@
 package helper
 
 import (
+	"github.com/PakaiWA/whatsmeow/proto/waE2E"
+
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/model"
-	"go.mau.fi/whatsmeow/proto/waE2E"
 )
 
 func ExtractMessageTextAndType(m *waE2E.Message) (text string, msgType string, raw *model.RawMsg) {

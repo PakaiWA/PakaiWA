@@ -19,11 +19,13 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/PakaiWA/PakaiWA/internal/pkg/config"
-	"github.com/sirupsen/logrus"
 	"sort"
 	"strings"
 	"time"
+
+	"github.com/sirupsen/logrus"
+
+	"github.com/PakaiWA/PakaiWA/internal/pkg/config"
 )
 
 type OrderedJSONFormatter struct {

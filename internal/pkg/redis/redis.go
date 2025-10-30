@@ -16,9 +16,11 @@
 package redis
 
 import (
-	"github.com/PakaiWA/PakaiWA/internal/pkg/config"
-	"github.com/redis/go-redis/v9"
 	"time"
+
+	"github.com/redis/go-redis/v9"
+
+	"github.com/PakaiWA/PakaiWA/internal/pkg/config"
 )
 
 func NewRedisClient() *redis.Client {
