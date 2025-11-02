@@ -1,8 +1,13 @@
-FROM golang:1.25.3-alpine3.22 AS builder
+FROM golang:1.25.3-trixie AS builder
 WORKDIR /build
 
-# install git & ca-certificates supaya go mod download dari GitHub lancar
-RUN apk add --no-cache git ca-certificates
+# install build tools dan librdkafka-dev
+RUN apt-get update && apt-get install -y \
+    git \
+    ca-certificates \
+    build-essential \
+    librdkafka-dev \
+ && rm -rf /var/lib/apt/lists/*
 
 COPY go.mod go.sum ./
 RUN go mod download && go mod verify
