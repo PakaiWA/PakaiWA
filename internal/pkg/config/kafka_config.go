@@ -16,15 +16,60 @@
 package config
 
 import (
+	"io"
+	"net/http"
+	"os"
+	"path/filepath"
+	"sync"
+
 	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
 	"github.com/spf13/viper"
 )
 
+var (
+	once          sync.Once
+	localCertPath string
+)
+
+func downloadCertOnce(url string) string {
+	once.Do(func() {
+		dir := "/tmp/kafka"
+		if err := os.MkdirAll(dir, 0755); err != nil {
+			panic("Failed to create dir for Kafka cert: " + err.Error())
+		}
+
+		localCertPath = filepath.Join(dir, "kafka.cert")
+
+		// Skip download jika file sudah ada
+		if _, err := os.Stat(localCertPath); os.IsNotExist(err) {
+			resp, err := http.Get(url)
+			if err != nil {
+				panic("Failed to download Kafka cert: " + err.Error())
+			}
+			defer resp.Body.Close()
+
+			out, err := os.Create(localCertPath)
+			if err != nil {
+				panic("Failed to create Kafka cert file: " + err.Error())
+			}
+			defer out.Close()
+
+			if _, err := io.Copy(out, resp.Body); err != nil {
+				panic("Failed to write Kafka cert file: " + err.Error())
+			}
+		}
+	})
+	return localCertPath
+}
+
 func GetBaseKafkaConfig() *kafka.ConfigMap {
+	certURL := viper.GetString("kafka.ssl.ca.location") // ini URL dari config
+	localCert := downloadCertOnce(certURL)
+
 	return &kafka.ConfigMap{
 		"bootstrap.servers": viper.GetString("kafka.bootstrap.servers"),
 		"security.protocol": viper.GetString("kafka.security.protocol"),
-		"ssl.ca.location":   viper.GetString("kafka.ssl.ca.location"),
+		"ssl.ca.location":   localCert,
 		"sasl.mechanism":    viper.GetString("kafka.sasl.mechanism"),
 		"sasl.username":     viper.GetString("kafka.sasl.username"),
 		"sasl.password":     viper.GetString("kafka.sasl.password"),

@@ -31,13 +31,6 @@
             </set>
           </value>
         </entry>
-        <entry key="CreateNewsletterParams">
-          <value>
-            <set>
-              <option value="file://$PROJECT_DIR$/../whatsmeow/newsletter.go" />
-            </set>
-          </value>
-        </entry>
         <entry key="DeliveryModel">
           <value>
             <set>
@@ -63,27 +56,6 @@
           <value>
             <set>
               <option value="file://$PROJECT_DIR$/internal/app/pakaiwa/gateway/kafka/delivery_status_producer.go" />
-            </set>
-          </value>
-        </entry>
-        <entry key="GetNewsletterMessagesParams">
-          <value>
-            <set>
-              <option value="file://$PROJECT_DIR$/../whatsmeow/newsletter.go" />
-            </set>
-          </value>
-        </entry>
-        <entry key="GetNewsletterUpdatesParams">
-          <value>
-            <set>
-              <option value="file://$PROJECT_DIR$/../whatsmeow/newsletter.go" />
-            </set>
-          </value>
-        </entry>
-        <entry key="GetProfilePictureParams">
-          <value>
-            <set>
-              <option value="file://$PROJECT_DIR$/../whatsmeow/user.go" />
             </set>
           </value>
         </entry>
@@ -157,13 +129,6 @@
             </set>
           </value>
         </entry>
-        <entry key="MessageDebugTimings">
-          <value>
-            <set>
-              <option value="file://$PROJECT_DIR$/../whatsmeow/send.go" />
-            </set>
-          </value>
-        </entry>
         <entry key="MessageEventPayload">
           <value>
             <set>
@@ -203,69 +168,6 @@
           <value>
             <set>
               <option value="file://$PROJECT_DIR$/internal/pkg/logger/logrus.go" />
-            </set>
-          </value>
-        </entry>
-        <entry key="PositronChat">
-          <value>
-            <set>
-              <option value="file://$PROJECT_DIR$/../whatsmeow/proto/waWinUIApi/WAWinUIApi.pb.go" />
-            </set>
-          </value>
-        </entry>
-        <entry key="PositronContact">
-          <value>
-            <set>
-              <option value="file://$PROJECT_DIR$/../whatsmeow/proto/waWinUIApi/WAWinUIApi.pb.go" />
-            </set>
-          </value>
-        </entry>
-        <entry key="PositronData">
-          <value>
-            <set>
-              <option value="file://$PROJECT_DIR$/../whatsmeow/proto/waWinUIApi/WAWinUIApi.pb.go" />
-            </set>
-          </value>
-        </entry>
-        <entry key="PositronGroupMetadata">
-          <value>
-            <set>
-              <option value="file://$PROJECT_DIR$/../whatsmeow/proto/waWinUIApi/WAWinUIApi.pb.go" />
-            </set>
-          </value>
-        </entry>
-        <entry key="PositronGroupParticipants">
-          <value>
-            <set>
-              <option value="file://$PROJECT_DIR$/../whatsmeow/proto/waWinUIApi/WAWinUIApi.pb.go" />
-            </set>
-          </value>
-        </entry>
-        <entry key="PositronMessage">
-          <value>
-            <set>
-              <option value="file://$PROJECT_DIR$/../whatsmeow/proto/waWinUIApi/WAWinUIApi.pb.go" />
-            </set>
-          </value>
-        </entry>
-        <entry key="PositronMessage_MsgKey">
-          <value>
-            <set>
-              <option value="file://$PROJECT_DIR$/../whatsmeow/proto/waWinUIApi/WAWinUIApi.pb.go" />
-            </set>
-          </value>
-        </entry>
-        <entry key="PositronMessage_WID">
-          <value>
-            <set>
-              <option value="file://$PROJECT_DIR$/../whatsmeow/proto/waWinUIApi/WAWinUIApi.pb.go" />
-            </set>
-          </value>
-        </entry>
-        <entry key="PositronReaction">
-          <value>
-            <set>
-              <option value="file://$PROJECT_DIR$/../whatsmeow/proto/waWinUIApi/WAWinUIApi.pb.go" />
             </set>
           </value>
         </entry>
@@ -360,31 +262,10 @@
             </set>
           </value>
         </entry>
-        <entry key="SendRequestExtra">
-          <value>
-            <set>
-              <option value="file://$PROJECT_DIR$/../whatsmeow/send.go" />
-            </set>
-          </value>
-        </entry>
-        <entry key="SendResponse">
-          <value>
-            <set>
-              <option value="file://$PROJECT_DIR$/../whatsmeow/send.go" />
-            </set>
-          </value>
-        </entry>
         <entry key="UseCaseQR">
           <value>
             <set>
               <option value="file://$PROJECT_DIR$/internal/app/pakaiwa/usecase/qr_usecase.go" />
-            </set>
-          </value>
-        </entry>
-        <entry key="UsyncQueryExtras">
-          <value>
-            <set>
-              <option value="file://$PROJECT_DIR$/../whatsmeow/user.go" />
             </set>
           </value>
         </entry>
@@ -430,45 +311,10 @@
             </set>
           </value>
         </entry>
-        <entry key="nodeExtraParams">
-          <value>
-            <set>
-              <option value="file://$PROJECT_DIR$/../whatsmeow/send.go" />
-            </set>
-          </value>
-        </entry>
         <entry key="receiveMessageUsecase">
           <value>
             <set>
               <option value="file://$PROJECT_DIR$/internal/app/pakaiwa/usecase/receive_message_impl.go" />
-            </set>
-          </value>
-        </entry>
-        <entry key="respCreateNewsletter">
-          <value>
-            <set>
-              <option value="file://$PROJECT_DIR$/../whatsmeow/newsletter.go" />
-            </set>
-          </value>
-        </entry>
-        <entry key="respGetNewsletterInfo">
-          <value>
-            <set>
-              <option value="file://$PROJECT_DIR$/../whatsmeow/newsletter.go" />
-            </set>
-          </value>
-        </entry>
-        <entry key="respGetSubscribedNewsletters">
-          <value>
-            <set>
-              <option value="file://$PROJECT_DIR$/../whatsmeow/newsletter.go" />
-            </set>
-          </value>
-        </entry>
-        <entry key="x">
-          <value>
-            <set>
-              <option value="file://$PROJECT_DIR$/../whatsmeow/proto/waWinUIApi/WAWinUIApi.pb.go" />
             </set>
           </value>
         </entry>
@@ -479,28 +325,21 @@
         <entry key="file://$PROJECT_DIR$/cmd/pakai-relay/pakaiwa_relay.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1761820171575" />
-            </ScannedPath>
-          </value>
-        </entry>
-        <entry key="file://$PROJECT_DIR$/cmd/pakaiwa-relay/pakaiwa_relay.go">
-          <value>
-            <ScannedPath>
-              <option name="lastModified" value="1757089593992" />
+              <option name="lastModified" value="1761821796709" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/cmd/pakaiwa/pakaiwa.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1757255202210" />
+              <option name="lastModified" value="1761819308006" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/bootstrap/pakaiwa.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1757255327444" />
+              <option name="lastModified" value="1761819308014" />
               <option name="schema">
                 <list>
                   <option value="AppContext" />
@@ -512,7 +351,7 @@
         <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/bootstrap/whatsapp.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1757862817957" />
+              <option name="lastModified" value="1761819308004" />
               <option name="schema">
                 <list>
                   <option value="PwaContext" />
@@ -524,7 +363,7 @@
         <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/delivery/event/event_handler.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1757862817978" />
+              <option name="lastModified" value="1761819308003" />
               <option name="schema">
                 <list>
                   <option value="HandleEvent" />
@@ -536,7 +375,7 @@
         <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/delivery/event/qr_handler.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1757862817990" />
+              <option name="lastModified" value="1761819308003" />
             </ScannedPath>
           </value>
         </entry>
@@ -556,7 +395,7 @@
         <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/delivery/http/dto/qr_dto.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1757132392690" />
+              <option name="lastModified" value="1761819308014" />
               <option name="schema">
                 <list>
                   <option value="QRResponse" />
@@ -601,7 +440,7 @@
         <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/delivery/http/handler/message_handler.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1757258614124" />
+              <option name="lastModified" value="1761819308008" />
               <option name="schema">
                 <list>
                   <option value="MessageHandler" />
@@ -613,7 +452,7 @@
         <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/delivery/http/handler/qr_handler.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1757206948833" />
+              <option name="lastModified" value="1761819308015" />
               <option name="schema">
                 <list>
                   <option value="QRHandler" />
@@ -625,7 +464,7 @@
         <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/delivery/http/router/router.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1757206907734" />
+              <option name="lastModified" value="1761819308006" />
               <option name="schema">
                 <list>
                   <option value="RouteConfig" />
@@ -649,7 +488,7 @@
         <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/delivery/model/delivery.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1757247400914" />
+              <option name="lastModified" value="1761819308009" />
               <option name="schema">
                 <list>
                   <option value="DeliveryModel" />
@@ -669,7 +508,7 @@
         <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/delivery/model/incoming_message.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1757862817994" />
+              <option name="lastModified" value="1761819308009" />
               <option name="schema">
                 <list>
                   <option value="IncomingMessageModel" />
@@ -764,14 +603,14 @@
         <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/error/validation_error.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1757256989864" />
+              <option name="lastModified" value="1761819308009" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/gateway/kafka/delivery_status_producer.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1757247479195" />
+              <option name="lastModified" value="1761819308011" />
               <option name="schema">
                 <list>
                   <option value="DeliveryStatusProducer" />
@@ -783,7 +622,7 @@
         <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/gateway/kafka/incoming_message_producer.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1757249334075" />
+              <option name="lastModified" value="1761819308003" />
               <option name="schema">
                 <list>
                   <option value="IncomingMessageProducer" />
@@ -795,21 +634,21 @@
         <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/helper/message_helper.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1757862817968" />
+              <option name="lastModified" value="1761819308015" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/helper/normalize.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1757862817968" />
+              <option name="lastModified" value="1761819308004" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/helper/response.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1757133594255" />
+              <option name="lastModified" value="1761819308004" />
             </ScannedPath>
           </value>
         </entry>
@@ -823,7 +662,7 @@
         <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/state/state.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1757862817968" />
+              <option name="lastModified" value="1761819308006" />
               <option name="schema">
                 <list>
                   <option value="AppState" />
@@ -835,14 +674,14 @@
         <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/usecase/delivery_status.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1757862817957" />
+              <option name="lastModified" value="1761819308004" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/usecase/delivery_status_impl.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1757862817957" />
+              <option name="lastModified" value="1761819308011" />
               <option name="schema">
                 <list>
                   <option value="deliveryStatusUsecase" />
@@ -854,7 +693,7 @@
         <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/usecase/logout_usecase.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1757862817968" />
+              <option name="lastModified" value="1761819308011" />
             </ScannedPath>
           </value>
         </entry>
@@ -868,7 +707,7 @@
         <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/usecase/message_impl.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1757862817974" />
+              <option name="lastModified" value="1761819308015" />
               <option name="schema">
                 <list>
                   <option value="messageUsecase" />
@@ -892,14 +731,14 @@
         <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/usecase/receive_message.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1757862817968" />
+              <option name="lastModified" value="1761819308008" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/internal/app/pakaiwa/usecase/receive_message_impl.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1757862817968" />
+              <option name="lastModified" value="1761819308006" />
               <option name="schema">
                 <list>
                   <option value="receiveMessageUsecase" />
@@ -918,21 +757,21 @@
         <entry key="file://$PROJECT_DIR$/internal/pkg/config/app_config.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1757154946610" />
+              <option name="lastModified" value="1761819308009" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/internal/pkg/config/db_config.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1757154975775" />
+              <option name="lastModified" value="1761819308015" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/internal/pkg/config/kafka_config.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1757247483580" />
+              <option name="lastModified" value="1762059896472" />
             </ScannedPath>
           </value>
         </entry>
@@ -946,42 +785,42 @@
         <entry key="file://$PROJECT_DIR$/internal/pkg/db/pgsql.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1757131093072" />
+              <option name="lastModified" value="1761819308003" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/internal/pkg/httpclient/http_client.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1757210297178" />
+              <option name="lastModified" value="1761819308014" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/internal/pkg/httpserver/error_handler.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1757258314714" />
+              <option name="lastModified" value="1761819308014" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/internal/pkg/httpserver/fiber.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1757131458814" />
+              <option name="lastModified" value="1761819308011" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/internal/pkg/kafka/consumer.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1757131543000" />
+              <option name="lastModified" value="1761819308015" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/internal/pkg/kafka/producer.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1757154036750" />
+              <option name="lastModified" value="1761819308010" />
               <option name="schema">
                 <list>
                   <option value="Producer" />
@@ -993,7 +832,7 @@
         <entry key="file://$PROJECT_DIR$/internal/pkg/logger/logrus.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1757131637557" />
+              <option name="lastModified" value="1761819308008" />
               <option name="schema">
                 <list>
                   <option value="OrderedJSONFormatter" />
@@ -1005,7 +844,7 @@
         <entry key="file://$PROJECT_DIR$/internal/pkg/logger/pakaiwa_logger.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1757862817951" />
+              <option name="lastModified" value="1761819308004" />
               <option name="schema">
                 <list>
                   <option value="LogrusAdapter" />
@@ -1017,14 +856,14 @@
         <entry key="file://$PROJECT_DIR$/internal/pkg/redis/redis.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1757131753467" />
+              <option name="lastModified" value="1761819308008" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/internal/pkg/store/store.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1757862817950" />
+              <option name="lastModified" value="1761819308011" />
             </ScannedPath>
           </value>
         </entry>
@@ -1038,7 +877,7 @@
         <entry key="file://$PROJECT_DIR$/internal/pkg/utils/logging.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1757258555339" />
+              <option name="lastModified" value="1761819308014" />
             </ScannedPath>
           </value>
         </entry>
@@ -1059,104 +898,17 @@
         <entry key="file://$PROJECT_DIR$/internal/pkg/validator/validator.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1757256567624" />
+              <option name="lastModified" value="1761819308008" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/pkg/utils/rate_limiter_util.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1757130850452" />
+              <option name="lastModified" value="1761819308006" />
               <option name="schema">
                 <list>
                   <option value="RateLimiterUtil" />
-                </list>
-              </option>
-            </ScannedPath>
-          </value>
-        </entry>
-        <entry key="file://$PROJECT_DIR$/../whatsmeow/appstate.go">
-          <value>
-            <ScannedPath>
-              <option name="lastModified" value="1761816873801" />
-            </ScannedPath>
-          </value>
-        </entry>
-        <entry key="file://$PROJECT_DIR$/../whatsmeow/binary/proto/legacy.go">
-          <value>
-            <ScannedPath>
-              <option name="lastModified" value="1761817061733" />
-            </ScannedPath>
-          </value>
-        </entry>
-        <entry key="file://$PROJECT_DIR$/../whatsmeow/call.go">
-          <value>
-            <ScannedPath>
-              <option name="lastModified" value="1761816868815" />
-            </ScannedPath>
-          </value>
-        </entry>
-        <entry key="file://$PROJECT_DIR$/../whatsmeow/newsletter.go">
-          <value>
-            <ScannedPath>
-              <option name="lastModified" value="1761816846992" />
-              <option name="schema">
-                <list>
-                  <option value="respGetNewsletterInfo" />
-                  <option value="respGetSubscribedNewsletters" />
-                  <option value="CreateNewsletterParams" />
-                  <option value="respCreateNewsletter" />
-                  <option value="GetNewsletterMessagesParams" />
-                  <option value="GetNewsletterUpdatesParams" />
-                </list>
-              </option>
-            </ScannedPath>
-          </value>
-        </entry>
-        <entry key="file://$PROJECT_DIR$/../whatsmeow/proto/waWinUIApi/WAWinUIApi.pb.go">
-          <value>
-            <ScannedPath>
-              <option name="lastModified" value="1761816897182" />
-              <option name="schema">
-                <list>
-                  <option value="PositronMessage" />
-                  <option value="PositronChat" />
-                  <option value="PositronContact" />
-                  <option value="PositronGroupMetadata" />
-                  <option value="PositronGroupParticipants" />
-                  <option value="PositronReaction" />
-                  <option value="PositronData" />
-                  <option value="PositronMessage_MsgKey" />
-                  <option value="PositronMessage_WID" />
-                  <option value="x" />
-                </list>
-              </option>
-            </ScannedPath>
-          </value>
-        </entry>
-        <entry key="file://$PROJECT_DIR$/../whatsmeow/send.go">
-          <value>
-            <ScannedPath>
-              <option name="lastModified" value="1761816839064" />
-              <option name="schema">
-                <list>
-                  <option value="MessageDebugTimings" />
-                  <option value="SendResponse" />
-                  <option value="SendRequestExtra" />
-                  <option value="nodeExtraParams" />
-                </list>
-              </option>
-            </ScannedPath>
-          </value>
-        </entry>
-        <entry key="file://$PROJECT_DIR$/../whatsmeow/user.go">
-          <value>
-            <ScannedPath>
-              <option name="lastModified" value="1761816824779" />
-              <option name="schema">
-                <list>
-                  <option value="GetProfilePictureParams" />
-                  <option value="UsyncQueryExtras" />
                 </list>
               </option>
             </ScannedPath>
@@ -1170,15 +922,11 @@
         <entry key="app_state" value="AppState" />
         <entry key="base_response" value="BaseResponse" />
         <entry key="contact_info" value="ContactInfo" />
-        <entry key="create_newsletter_params" value="CreateNewsletterParams" />
         <entry key="delivery_model" value="DeliveryModel" />
         <entry key="delivery_payload" value="DeliveryPayload" />
         <entry key="delivery_status_payload" value="DeliveryStatusPayload" />
         <entry key="delivery_status_producer" value="DeliveryStatusProducer" />
         <entry key="delivery_status_usecase" value="deliveryStatusUsecase" />
-        <entry key="get_newsletter_messages_params" value="GetNewsletterMessagesParams" />
-        <entry key="get_newsletter_updates_params" value="GetNewsletterUpdatesParams" />
-        <entry key="get_profile_picture_params" value="GetProfilePictureParams" />
         <entry key="handle_event" value="HandleEvent" />
         <entry key="incoming_message_model" value="IncomingMessageModel" />
         <entry key="incoming_message_payload" value="IncomingMessagePayload" />
@@ -1189,24 +937,13 @@
         <entry key="logrus_adapter" value="LogrusAdapter" />
         <entry key="media_dim" value="MediaDim" />
         <entry key="media_meta" value="MediaMeta" />
-        <entry key="message_debug_timings" value="MessageDebugTimings" />
         <entry key="message_event_payload" value="MessageEventPayload" />
         <entry key="message_handler" value="MessageHandler" />
         <entry key="message_meta" value="MessageMeta" />
         <entry key="message_usecase" value="messageUsecase" />
         <entry key="meta" value="Meta" />
         <entry key="model" value="Model" />
-        <entry key="node_extra_params" value="nodeExtraParams" />
         <entry key="ordered_json_formatter" value="OrderedJSONFormatter" />
-        <entry key="positron_chat" value="PositronChat" />
-        <entry key="positron_contact" value="PositronContact" />
-        <entry key="positron_data" value="PositronData" />
-        <entry key="positron_group_metadata" value="PositronGroupMetadata" />
-        <entry key="positron_group_participants" value="PositronGroupParticipants" />
-        <entry key="positron_message" value="PositronMessage" />
-        <entry key="positron_message__msg_key" value="PositronMessage_MsgKey" />
-        <entry key="positron_message_wid" value="PositronMessage_WID" />
-        <entry key="positron_reaction" value="PositronReaction" />
         <entry key="problem_details" value="ProblemDetails" />
         <entry key="producer" value="Producer" />
         <entry key="pwa_context" value="PwaContext" />
@@ -1216,25 +953,18 @@
         <entry key="rate_limiter_util" value="RateLimiterUtil" />
         <entry key="raw_msg" value="RawMsg" />
         <entry key="receive_message_usecase" value="receiveMessageUsecase" />
-        <entry key="resp_create_newsletter" value="respCreateNewsletter" />
-        <entry key="resp_get_newsletter_info" value="respGetNewsletterInfo" />
-        <entry key="resp_get_subscribed_newsletters" value="respGetSubscribedNewsletters" />
         <entry key="response_qr" value="ResponseQR" />
         <entry key="response_qr_device" value="ResponseQRDevice" />
         <entry key="route_config" value="RouteConfig" />
         <entry key="send_message_req" value="SendMessageReq" />
         <entry key="send_message_response" value="SendMessageResponse" />
-        <entry key="send_request_extra" value="SendRequestExtra" />
-        <entry key="send_response" value="SendResponse" />
         <entry key="use_case_qr" value="UseCaseQR" />
-        <entry key="usync_query_extras" value="UsyncQueryExtras" />
         <entry key="validation_error" value="ValidationError" />
         <entry key="validation_error_response" value="ValidationErrorResponse" />
         <entry key="version_res" value="VersionRes" />
         <entry key="webhook_entity" value="WebhookEntity" />
-        <entry key="x" value="x" />
       </map>
     </option>
-    <option name="lastTimeChecked" value="1761816251606" />
+    <option name="lastTimeChecked" value="1762054554857" />
   </component>
 </project>
