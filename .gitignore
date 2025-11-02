@@ -31,3 +31,11 @@ go.work.sum
 .idea/
 # .vscode/
 tmp/
+pakaiwa
+PakaiWA
+.DS_Store
+*.log
+logs/
+*.pid
+*.seed
+*.pid.lock
