@@ -1,6 +1,6 @@
 module github.com/PakaiWA/PakaiWA
 
-go 1.25.0
+go 1.25.3
 
 require (
 	github.com/KAnggara75/scc2go v0.1.6
