@@ -18,6 +18,8 @@ package router
 import (
 	"github.com/gofiber/fiber/v3"
 
+	"github.com/PakaiWA/PakaiWA/internal/pkg/metrics"
+
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/dto"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/handler"
 )
@@ -46,6 +48,8 @@ func (c *RouteConfig) SetupGuestRoute() {
 	})
 
 	c.Fiber.Post("/v1/messages", c.MessageHandler.SendMsg)
+
+	c.Fiber.Get("/metrics", metrics.PrometheusHandler())
 }
 
 func (c *RouteConfig) SetupAuthRoute() {
