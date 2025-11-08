@@ -47,12 +47,12 @@ func NewLogger() *logrus.Logger {
 
 	l.SetFormatter(&OrderedJSONFormatter{
 		PadLevelTo:      5,
-		TimestampFormat: "2006-01-02T15:04:05.000000Z07:00",
+		TimestampFormat: time.RFC3339Nano,
 		LevelKey:        "level",
 		TimeKey:         "time",
 		MsgKey:          "msg",
 		TraceIDKey:      "trace_id",
-		EscapeHTML:      false, // << penting
+		EscapeHTML:      false,
 	})
 
 	return l

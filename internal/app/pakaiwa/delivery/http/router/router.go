@@ -18,6 +18,8 @@ package router
 import (
 	"github.com/gofiber/fiber/v3"
 
+	"github.com/PakaiWA/PakaiWA/internal/pkg/config"
+
 	"github.com/PakaiWA/PakaiWA/internal/pkg/metrics"
 
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/dto"
@@ -40,8 +42,8 @@ func (c *RouteConfig) SetupGuestRoute() {
 		baseUrl := ctx.BaseURL()
 		res := dto.VersionRes{
 			Message:   baseUrl + " - Unofficial WhatsApp Restful API Gateway",
-			Version:   "0.0.1",
-			Stability: "Developer-Preview",
+			Version:   config.GetAppVersion(),
+			Stability: config.GetAppDesc(),
 		}
 
 		return ctx.JSON(res)

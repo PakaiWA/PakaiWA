@@ -24,6 +24,20 @@ import (
 
 func GetAppName() string { return viper.GetString("app.name") }
 
+func GetAppVersion() string {
+	if v := viper.GetString("app.version"); v != "" {
+		return v
+	}
+	return "v0.0.0-alpha"
+}
+
+func GetAppDesc() string {
+	if v := viper.GetString("app.description"); v != "" {
+		return v
+	}
+	return "Developer Preview"
+}
+
 func GetJWTKey() []byte { return []byte(viper.GetString("app.jwt.sign_key")) }
 
 func GetAdminToken() string { return viper.GetString("app.admin.token") }
@@ -41,8 +55,6 @@ func GetCountDeviceSQL() string { return viper.GetString("app.sql.countDeviceByI
 func Get40Space() string {
 	return strings.Repeat(" ", 40)
 }
-
-func GetPreFork() bool { return viper.GetBool("web.prefork") }
 
 func GetLogLevel() logrus.Level {
 	viper.SetDefault("log.level", "info")
