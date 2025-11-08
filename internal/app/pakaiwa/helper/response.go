@@ -18,12 +18,12 @@ package helper
 import (
 	"strings"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/model"
 )
 
-func RespondPending(c *fiber.Ctx, msgId string) error {
+func RespondPending(c fiber.Ctx, msgId string) error {
 	id := "pwa-" + strings.ToLower(msgId)
 	response := model.SendMessageResponse{
 		ID:      id,

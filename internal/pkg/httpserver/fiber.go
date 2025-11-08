@@ -10,13 +10,13 @@
  *
  * @author KAnggara75 on Sat 06/09/25 10.59
  * @project PakaiWA httpserver
- * https://github.com/PakaiWA/PakaiWA/tree/main/pkg/httpserver
+ * https://github.com/PakaiWA/PakaiWA/tree/main/internal/pkg/httpserver
  */
 
 package httpserver
 
 import (
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 
 	"github.com/PakaiWA/PakaiWA/internal/pkg/config"
 )
@@ -24,7 +24,6 @@ import (
 func NewFiber() *fiber.App {
 	var app = fiber.New(fiber.Config{
 		AppName:      config.GetAppName(),
-		Prefork:      config.GetPreFork(),
 		ErrorHandler: NewErrorHandler(),
 	})
 

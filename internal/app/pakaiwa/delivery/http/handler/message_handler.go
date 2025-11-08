@@ -16,7 +16,7 @@
 package handler
 
 import (
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 	"github.com/sirupsen/logrus"
 
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/model"
@@ -37,9 +37,9 @@ func NewMessageHandler(useCase usecase.MessageUsecase, log *logrus.Logger) *Mess
 	}
 }
 
-func (h *MessageHandler) SendMsg(c *fiber.Ctx) error {
+func (h *MessageHandler) SendMsg(c fiber.Ctx) error {
 	request := new(model.SendMessageReq)
-	if err := c.BodyParser(request); err != nil {
+	if err := c.Bind().Body(request); err != nil {
 		utils.LogValidationErrors(h.Log, "error parsing request body", err)
 		return fiber.ErrBadRequest
 	}

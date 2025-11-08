@@ -16,7 +16,7 @@
 package router
 
 import (
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/dto"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/handler"
@@ -34,7 +34,7 @@ func (c *RouteConfig) Setup() {
 }
 
 func (c *RouteConfig) SetupGuestRoute() {
-	c.Fiber.Get("/", func(ctx *fiber.Ctx) error {
+	c.Fiber.Get("/", func(ctx fiber.Ctx) error {
 		baseUrl := ctx.BaseURL()
 		res := dto.VersionRes{
 			Message:   baseUrl + " - Unofficial WhatsApp Restful API Gateway",
@@ -46,7 +46,6 @@ func (c *RouteConfig) SetupGuestRoute() {
 	})
 
 	c.Fiber.Post("/v1/messages", c.MessageHandler.SendMsg)
-
 }
 
 func (c *RouteConfig) SetupAuthRoute() {
