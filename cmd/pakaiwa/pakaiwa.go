@@ -22,6 +22,9 @@ import (
 	"github.com/KAnggara75/scc2go"
 	_ "github.com/jackc/pgx/v5/stdlib"
 
+	"github.com/PakaiWA/PakaiWA/ent"
+	"github.com/PakaiWA/PakaiWA/internal/pkg/seed"
+
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/middleware"
 
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/bootstrap"
@@ -42,6 +45,16 @@ func main() {
 
 	log := logger.NewLogger()
 	pool := db.NewDatabase(ctx, log)
+
+	entClient := db.NewEntClient(ctx, log)
+	defer func(entClient *ent.Client) {
+		err := entClient.Close()
+		if err != nil {
+			log.Errorf("Failed to close ent client: %v", err)
+		}
+	}(entClient)
+
+	seed.RunSeeders(ctx, entClient, log)
 
 	validate := validator.NewValidator()
 
