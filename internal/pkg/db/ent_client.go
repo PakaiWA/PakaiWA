@@ -22,7 +22,7 @@ import (
 	"entgo.io/ent/dialect"
 	entSql "entgo.io/ent/dialect/sql"
 	_ "github.com/jackc/pgx/v5/stdlib"
-	logrus "github.com/sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 
 	"github.com/PakaiWA/PakaiWA/ent"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/config"
@@ -34,13 +34,21 @@ func NewEntClient(ctx context.Context, log *logrus.Logger) *ent.Client {
 		log.Fatalf("failed to open pgx driver: %v", err)
 	}
 
+	db.SetMaxIdleConns(config.GetMaxIdleConns())
+	db.SetMaxOpenConns(config.GetMaxOpenConns())
+	db.SetConnMaxIdleTime(config.GetMaxConnIdleTime())
+	db.SetConnMaxLifetime(config.GetConnMaxLifetime())
+
+	// Buat driver Ent dari koneksi database/sql yang sudah dikonfigurasi
 	drv := entSql.OpenDB(dialect.Postgres, db)
 
 	client := ent.NewClient(ent.Driver(drv))
 
+	// Auto migrate schema
 	if err := client.Schema.Create(ctx); err != nil {
 		log.Fatalf("failed creating schema resources: %v", err)
 	}
 
+	log.Info("Connected to database and Ent schema initialized successfully")
 	return client
 }

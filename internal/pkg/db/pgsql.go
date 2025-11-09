@@ -45,7 +45,7 @@ func NewDatabase(ctx context.Context, log *logrus.Logger) *pgxpool.Pool {
 
 		cfg.MinConns = config.GetDBMinConn()
 		cfg.MaxConns = config.GetDBMaxConn()
-		cfg.MaxConnIdleTime = config.DetMaxConnIdleTime()
+		cfg.MaxConnIdleTime = config.GetMaxConnIdleTime()
 		cfg.HealthCheckPeriod = config.GetDBHealthCheckPeriod()
 		cfg.ConnConfig.ConnectTimeout = config.GetConnectTimeout()
 
