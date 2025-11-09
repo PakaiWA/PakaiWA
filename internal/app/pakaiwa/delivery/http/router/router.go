@@ -16,7 +16,13 @@
 package router
 
 import (
+	"time"
+
 	"github.com/gofiber/fiber/v3"
+	"github.com/golang-jwt/jwt/v5"
+
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/middleware"
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/model"
 
 	"github.com/PakaiWA/PakaiWA/internal/pkg/config"
 
@@ -49,11 +55,32 @@ func (c *RouteConfig) SetupGuestRoute() {
 		return ctx.JSON(res)
 	})
 
-	c.Fiber.Post("/v1/messages", c.MessageHandler.SendMsg)
-
+	c.Fiber.Get("/auth/login", GenerateJWT())
 	c.Fiber.Get("/metrics", metrics.PrometheusHandler())
 }
 
 func (c *RouteConfig) SetupAuthRoute() {
-	//c.App.Use(c.AuthMiddleware)
+	c.Fiber.Use(middleware.AuthMiddleware())
+	c.Fiber.Post("/v1/messages", c.MessageHandler.SendMsg)
+}
+
+func GenerateJWT() fiber.Handler {
+	return func(c fiber.Ctx) error {
+		claims := jwt.MapClaims{
+			"sub":  "userID",
+			"role": "role",
+			"exp":  time.Now().Add(1 * time.Hour).Unix(),
+			"iat":  time.Now().Unix(),
+		}
+
+		token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+		result, _ := token.SignedString([]byte(config.GetJWTKey()))
+
+		response := model.SendMessageResponse{
+			Message: result,
+		}
+		c.Status(200)
+		return c.JSON(response)
+	}
 }

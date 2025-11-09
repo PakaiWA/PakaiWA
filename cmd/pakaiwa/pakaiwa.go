@@ -18,6 +18,7 @@ package main
 import (
 	"context"
 	"os"
+	"time"
 
 	"github.com/KAnggara75/scc2go"
 	_ "github.com/jackc/pgx/v5/stdlib"
@@ -59,6 +60,7 @@ func main() {
 	// ====== App & Routes (Fiber) ======
 	fiber := httpserver.NewFiber()
 	fiber.Use(middleware.FiberLogger(log))
+	fiber.Use(middleware.RateLimitMiddleware(1, time.Minute*1))
 	bootstrap.InitApp(&bootstrap.AppContext{
 		Log:      log,
 		Pool:     pool,

@@ -38,7 +38,7 @@ func GetAppDesc() string {
 	return "Developer Preview"
 }
 
-func GetJWTKey() []byte { return []byte(viper.GetString("app.jwt.sign_key")) }
+func GetJWTKey() string { return viper.GetString("app.jwt.sign_key") }
 
 func GetAdminToken() string { return viper.GetString("app.admin.token") }
 

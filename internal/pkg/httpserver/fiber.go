@@ -23,8 +23,17 @@ import (
 
 func NewFiber() *fiber.App {
 	var app = fiber.New(fiber.Config{
-		AppName:      config.GetAppName(),
-		ErrorHandler: NewErrorHandler(),
+		AppName:            config.GetAppName(),
+		ErrorHandler:       NewErrorHandler(),
+		TrustProxy:         true,
+		EnableIPValidation: true,
+		TrustProxyConfig: fiber.TrustProxyConfig{
+			Proxies: []string{
+				"10.0.0.0/8",     // internal cluster network
+				"172.16.0.0/12",  // Docker / Pod CIDR
+				"192.168.0.0/16", // local ranges
+			},
+		},
 	})
 
 	return app
