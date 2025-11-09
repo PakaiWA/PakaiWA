@@ -19,21 +19,25 @@ func init() {
 	permissionFields := schema.Permission{}.Fields()
 	_ = permissionFields
 	// permissionDescPath is the schema descriptor for path field.
-	permissionDescPath := permissionFields[0].Descriptor()
+	permissionDescPath := permissionFields[1].Descriptor()
 	// permission.PathValidator is a validator for the "path" field. It is called by the builders before save.
 	permission.PathValidator = permissionDescPath.Validators[0].(func(string) error)
 	// permissionDescMethod is the schema descriptor for method field.
-	permissionDescMethod := permissionFields[1].Descriptor()
+	permissionDescMethod := permissionFields[2].Descriptor()
 	// permission.MethodValidator is a validator for the "method" field. It is called by the builders before save.
 	permission.MethodValidator = permissionDescMethod.Validators[0].(func(string) error)
 	// permissionDescAccess is the schema descriptor for access field.
-	permissionDescAccess := permissionFields[2].Descriptor()
+	permissionDescAccess := permissionFields[3].Descriptor()
 	// permission.AccessValidator is a validator for the "access" field. It is called by the builders before save.
 	permission.AccessValidator = permissionDescAccess.Validators[0].(func(string) error)
 	// permissionDescCreatedAt is the schema descriptor for created_at field.
-	permissionDescCreatedAt := permissionFields[3].Descriptor()
+	permissionDescCreatedAt := permissionFields[4].Descriptor()
 	// permission.DefaultCreatedAt holds the default value on creation for the created_at field.
 	permission.DefaultCreatedAt = permissionDescCreatedAt.Default.(func() time.Time)
+	// permissionDescID is the schema descriptor for id field.
+	permissionDescID := permissionFields[0].Descriptor()
+	// permission.DefaultID holds the default value on creation for the id field.
+	permission.DefaultID = permissionDescID.Default.(func() uuid.UUID)
 	userFields := schema.User{}.Fields()
 	_ = userFields
 	// userDescUsername is the schema descriptor for username field.

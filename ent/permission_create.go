@@ -55,6 +55,20 @@ func (_c *PermissionCreate) SetNillableCreatedAt(v *time.Time) *PermissionCreate
 	return _c
 }
 
+// SetID sets the "id" field.
+func (_c *PermissionCreate) SetID(v uuid.UUID) *PermissionCreate {
+	_c.mutation.SetID(v)
+	return _c
+}
+
+// SetNillableID sets the "id" field if the given value is not nil.
+func (_c *PermissionCreate) SetNillableID(v *uuid.UUID) *PermissionCreate {
+	if v != nil {
+		_c.SetID(*v)
+	}
+	return _c
+}
+
 // SetUserID sets the "user" edge to the User entity by ID.
 func (_c *PermissionCreate) SetUserID(id uuid.UUID) *PermissionCreate {
 	_c.mutation.SetUserID(id)
@@ -113,6 +127,10 @@ func (_c *PermissionCreate) defaults() {
 		v := permission.DefaultCreatedAt()
 		_c.mutation.SetCreatedAt(v)
 	}
+	if _, ok := _c.mutation.ID(); !ok {
+		v := permission.DefaultID()
+		_c.mutation.SetID(v)
+	}
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -158,8 +176,13 @@ func (_c *PermissionCreate) sqlSave(ctx context.Context) (*Permission, error) {
 		}
 		return nil, err
 	}
-	id := _spec.ID.Value.(int64)
-	_node.ID = int(id)
+	if _spec.ID.Value != nil {
+		if id, ok := _spec.ID.Value.(*uuid.UUID); ok {
+			_node.ID = *id
+		} else if err := _node.ID.Scan(_spec.ID.Value); err != nil {
+			return nil, err
+		}
+	}
 	_c.mutation.id = &_node.ID
 	_c.mutation.done = true
 	return _node, nil
@@ -168,8 +191,12 @@ func (_c *PermissionCreate) sqlSave(ctx context.Context) (*Permission, error) {
 func (_c *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 	var (
 		_node = &Permission{config: _c.config}
-		_spec = sqlgraph.NewCreateSpec(permission.Table, sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt))
+		_spec = sqlgraph.NewCreateSpec(permission.Table, sqlgraph.NewFieldSpec(permission.FieldID, field.TypeUUID))
 	)
+	if id, ok := _c.mutation.ID(); ok {
+		_node.ID = id
+		_spec.ID.Value = &id
+	}
 	if value, ok := _c.mutation.Path(); ok {
 		_spec.SetField(permission.FieldPath, field.TypeString, value)
 		_node.Path = value
@@ -251,10 +278,6 @@ func (_c *PermissionCreateBulk) Save(ctx context.Context) ([]*Permission, error)
 					return nil, err
 				}
 				mutation.id = &nodes[i].ID
-				if specs[i].ID.Value != nil {
-					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = int(id)
-				}
 				mutation.done = true
 				return nodes[i], nil
 			})

@@ -98,14 +98,14 @@ func (_c *UserCreate) SetNillableID(v *uuid.UUID) *UserCreate {
 }
 
 // AddPermissionIDs adds the "permissions" edge to the Permission entity by IDs.
-func (_c *UserCreate) AddPermissionIDs(ids ...int) *UserCreate {
+func (_c *UserCreate) AddPermissionIDs(ids ...uuid.UUID) *UserCreate {
 	_c.mutation.AddPermissionIDs(ids...)
 	return _c
 }
 
 // AddPermissions adds the "permissions" edges to the Permission entity.
 func (_c *UserCreate) AddPermissions(v ...*Permission) *UserCreate {
-	ids := make([]int, len(v))
+	ids := make([]uuid.UUID, len(v))
 	for i := range v {
 		ids[i] = v[i].ID
 	}
@@ -267,7 +267,7 @@ func (_c *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 			Columns: []string{user.PermissionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeUUID),
 			},
 		}
 		for _, k := range nodes {

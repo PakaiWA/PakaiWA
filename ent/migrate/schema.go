@@ -10,7 +10,7 @@ import (
 var (
 	// PermissionsColumns holds the columns for the "permissions" table.
 	PermissionsColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "id", Type: field.TypeUUID},
 		{Name: "path", Type: field.TypeString},
 		{Name: "method", Type: field.TypeString},
 		{Name: "access", Type: field.TypeString},

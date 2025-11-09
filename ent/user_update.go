@@ -11,6 +11,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"github.com/google/uuid"
 
 	"github.com/PakaiWA/PakaiWA/ent/permission"
 	"github.com/PakaiWA/PakaiWA/ent/predicate"
@@ -107,14 +108,14 @@ func (_u *UserUpdate) SetUpdatedAt(v time.Time) *UserUpdate {
 }
 
 // AddPermissionIDs adds the "permissions" edge to the Permission entity by IDs.
-func (_u *UserUpdate) AddPermissionIDs(ids ...int) *UserUpdate {
+func (_u *UserUpdate) AddPermissionIDs(ids ...uuid.UUID) *UserUpdate {
 	_u.mutation.AddPermissionIDs(ids...)
 	return _u
 }
 
 // AddPermissions adds the "permissions" edges to the Permission entity.
 func (_u *UserUpdate) AddPermissions(v ...*Permission) *UserUpdate {
-	ids := make([]int, len(v))
+	ids := make([]uuid.UUID, len(v))
 	for i := range v {
 		ids[i] = v[i].ID
 	}
@@ -133,14 +134,14 @@ func (_u *UserUpdate) ClearPermissions() *UserUpdate {
 }
 
 // RemovePermissionIDs removes the "permissions" edge to Permission entities by IDs.
-func (_u *UserUpdate) RemovePermissionIDs(ids ...int) *UserUpdate {
+func (_u *UserUpdate) RemovePermissionIDs(ids ...uuid.UUID) *UserUpdate {
 	_u.mutation.RemovePermissionIDs(ids...)
 	return _u
 }
 
 // RemovePermissions removes "permissions" edges to Permission entities.
 func (_u *UserUpdate) RemovePermissions(v ...*Permission) *UserUpdate {
-	ids := make([]int, len(v))
+	ids := make([]uuid.UUID, len(v))
 	for i := range v {
 		ids[i] = v[i].ID
 	}
@@ -241,7 +242,7 @@ func (_u *UserUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 			Columns: []string{user.PermissionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeUUID),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -254,7 +255,7 @@ func (_u *UserUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 			Columns: []string{user.PermissionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeUUID),
 			},
 		}
 		for _, k := range nodes {
@@ -270,7 +271,7 @@ func (_u *UserUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 			Columns: []string{user.PermissionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeUUID),
 			},
 		}
 		for _, k := range nodes {
@@ -375,14 +376,14 @@ func (_u *UserUpdateOne) SetUpdatedAt(v time.Time) *UserUpdateOne {
 }
 
 // AddPermissionIDs adds the "permissions" edge to the Permission entity by IDs.
-func (_u *UserUpdateOne) AddPermissionIDs(ids ...int) *UserUpdateOne {
+func (_u *UserUpdateOne) AddPermissionIDs(ids ...uuid.UUID) *UserUpdateOne {
 	_u.mutation.AddPermissionIDs(ids...)
 	return _u
 }
 
 // AddPermissions adds the "permissions" edges to the Permission entity.
 func (_u *UserUpdateOne) AddPermissions(v ...*Permission) *UserUpdateOne {
-	ids := make([]int, len(v))
+	ids := make([]uuid.UUID, len(v))
 	for i := range v {
 		ids[i] = v[i].ID
 	}
@@ -401,14 +402,14 @@ func (_u *UserUpdateOne) ClearPermissions() *UserUpdateOne {
 }
 
 // RemovePermissionIDs removes the "permissions" edge to Permission entities by IDs.
-func (_u *UserUpdateOne) RemovePermissionIDs(ids ...int) *UserUpdateOne {
+func (_u *UserUpdateOne) RemovePermissionIDs(ids ...uuid.UUID) *UserUpdateOne {
 	_u.mutation.RemovePermissionIDs(ids...)
 	return _u
 }
 
 // RemovePermissions removes "permissions" edges to Permission entities.
 func (_u *UserUpdateOne) RemovePermissions(v ...*Permission) *UserUpdateOne {
-	ids := make([]int, len(v))
+	ids := make([]uuid.UUID, len(v))
 	for i := range v {
 		ids[i] = v[i].ID
 	}
@@ -539,7 +540,7 @@ func (_u *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) {
 			Columns: []string{user.PermissionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeUUID),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -552,7 +553,7 @@ func (_u *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) {
 			Columns: []string{user.PermissionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeUUID),
 			},
 		}
 		for _, k := range nodes {
@@ -568,7 +569,7 @@ func (_u *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) {
 			Columns: []string{user.PermissionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeUUID),
 			},
 		}
 		for _, k := range nodes {
