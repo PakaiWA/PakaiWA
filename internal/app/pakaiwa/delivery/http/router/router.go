@@ -21,14 +21,14 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"github.com/golang-jwt/jwt/v5"
 
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/dto"
+	"github.com/PakaiWA/PakaiWA/internal/pkg/metrics"
+
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/middleware"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/model"
 
 	"github.com/PakaiWA/PakaiWA/internal/pkg/config"
 
-	"github.com/PakaiWA/PakaiWA/internal/pkg/metrics"
-
-	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/dto"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/handler"
 )
 
@@ -39,11 +39,13 @@ type RouteConfig struct {
 }
 
 func (c *RouteConfig) Setup() {
+	c.NoLimitRoute()
+	c.Fiber.Use(middleware.RateLimitMiddleware(1, time.Minute*1))
 	c.SetupGuestRoute()
 	c.SetupAuthRoute()
 }
 
-func (c *RouteConfig) SetupGuestRoute() {
+func (c *RouteConfig) NoLimitRoute() {
 	c.Fiber.Get("/", func(ctx fiber.Ctx) error {
 		baseUrl := ctx.BaseURL()
 		res := dto.VersionRes{
@@ -54,9 +56,11 @@ func (c *RouteConfig) SetupGuestRoute() {
 
 		return ctx.JSON(res)
 	})
-
-	c.Fiber.Get("/auth/login", GenerateJWT())
 	c.Fiber.Get("/metrics", metrics.PrometheusHandler())
+}
+
+func (c *RouteConfig) SetupGuestRoute() {
+	c.Fiber.Get("/auth/login", GenerateJWT())
 }
 
 func (c *RouteConfig) SetupAuthRoute() {
