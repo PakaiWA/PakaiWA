@@ -1,0 +1,65 @@
+name: "Pull Request Template"
+description: "Gunakan template ini untuk setiap PR agar review lebih mudah dan konsisten."
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 📋 Deskripsi
+        Jelaskan secara ringkas apa yang dilakukan PR ini dan latar belakang perubahannya.
+
+  - type: textarea
+    id: changes
+    attributes:
+      label: Perubahan yang dilakukan
+      description: Uraikan perubahan utama dalam PR ini.
+      placeholder: |
+        - Menambahkan endpoint baru untuk ...
+        - Memperbaiki bug pada ...
+        - Refactor modul ...
+      render: bash
+    validations:
+      required: true
+
+  - type: textarea
+    id: testing
+    attributes:
+      label: Cara pengujian
+      description: Jelaskan bagaimana memastikan perubahan ini berfungsi dengan benar.
+      placeholder: |
+        1. Jalankan perintah `mvn test` atau `go test ./...`
+        2. Tes endpoint `/api/v1/...`
+        3. Verifikasi output JSON sesuai harapan
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      description: Pastikan semua poin berikut terpenuhi.
+      options:
+        - label: Kode telah diuji secara lokal
+        - label: Dokumentasi telah diperbarui (jika diperlukan)
+        - label: Tidak ada error lint/formatting
+        - label: Semua unit test lulus
+        - label: Sudah direview secara internal (opsional)
+
+  - type: dropdown
+    id: impact
+    attributes:
+      label: Dampak perubahan
+      description: Pilih tingkat dampak dari perubahan ini terhadap sistem.
+      options:
+        - Tidak ada dampak
+        - Minor (perubahan kecil, backward compatible)
+        - Major (breaking changes atau perubahan besar)
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-notes
+    attributes:
+      label: Catatan tambahan
+      description: Tambahkan informasi tambahan atau konteks lain untuk reviewer.
+      placeholder: Contoh: Ada PR pendukung di repo lain, perlu merge bersamaan, dsb.
