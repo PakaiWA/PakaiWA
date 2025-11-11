@@ -62,4 +62,4 @@ body:
     attributes:
       label: Catatan tambahan
       description: Tambahkan informasi tambahan atau konteks lain untuk reviewer.
-      placeholder: Contoh: Ada PR pendukung di repo lain, perlu merge bersamaan, dsb.
+      placeholder: Ada PR pendukung di repo lain, perlu merge bersamaan, dsb.

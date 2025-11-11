@@ -40,32 +40,44 @@ type RouteConfig struct {
 
 func (c *RouteConfig) Setup() {
 	c.NoLimitRoute()
-	c.Fiber.Use(middleware.RateLimitMiddleware(1, time.Minute*1))
 	c.SetupGuestRoute()
 	c.SetupAuthRoute()
 }
 
 func (c *RouteConfig) NoLimitRoute() {
-	c.Fiber.Get("/", func(ctx fiber.Ctx) error {
+	c.Fiber.Get("/", middleware.RateLimitMiddleware(3, time.Minute*1), func(ctx fiber.Ctx) error {
 		baseUrl := ctx.BaseURL()
 		res := dto.VersionRes{
 			Message:   baseUrl + " - Unofficial WhatsApp Restful API Gateway",
 			Version:   config.GetAppVersion(),
 			Stability: config.GetAppDesc(),
 		}
-
 		return ctx.JSON(res)
 	})
-	c.Fiber.Get("/metrics", metrics.PrometheusHandler())
+
+	c.Fiber.Get("/metrics",
+		middleware.RateLimitMiddleware(3, time.Minute*1),
+		metrics.PrometheusHandler(),
+	)
 }
 
 func (c *RouteConfig) SetupGuestRoute() {
-	c.Fiber.Get("/auth/login", GenerateJWT())
+	c.Fiber.Post("/auth/login",
+		middleware.RateLimitMiddleware(10, time.Minute*1),
+		GenerateJWT(),
+	)
+
+	c.Fiber.Post("/logout",
+		middleware.RateLimitMiddleware(3, time.Minute*1),
+		metrics.PrometheusHandler(),
+	)
 }
 
 func (c *RouteConfig) SetupAuthRoute() {
-	c.Fiber.Use(middleware.AuthMiddleware())
-	c.Fiber.Post("/v1/messages", c.MessageHandler.SendMsg)
+	//c.Fiber.Use(middleware.AuthMiddleware())
+	//c.Fiber.Use(middleware.AuthMiddleware()) // Quota Middleware
+	auth := c.Fiber.Group("/v1", middleware.RateLimitMiddleware(9999, time.Minute*1))
+	auth.Post("/messages", c.MessageHandler.SendMsg)
 }
 
 func GenerateJWT() fiber.Handler {
