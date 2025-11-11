@@ -23,7 +23,7 @@ import (
 	"github.com/PakaiWA/whatsmeow"
 	"github.com/PakaiWA/whatsmeow/proto/waE2E"
 	"github.com/go-playground/validator/v10"
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 	"github.com/sirupsen/logrus"
 
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/model"

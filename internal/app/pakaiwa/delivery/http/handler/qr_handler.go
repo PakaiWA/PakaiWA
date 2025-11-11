@@ -33,7 +33,7 @@ func NewQRHandler(state *state.AppState, log *logrus.Logger) *QRHandler {
 	}
 }
 
-//func (h *QRHandler) GetQR(c *fiber.Ctx) error {
+//func (h *QRHandler) GetQR(c fiber.Ctx) error {
 //	log := h.Log
 //	qrResponse := &model.ResponseQR{}
 //
@@ -59,7 +59,7 @@ func NewQRHandler(state *state.AppState, log *logrus.Logger) *QRHandler {
 //	}
 //}
 //
-//func (h *QRHandler) ShowQR(c *fiber.Ctx) error {
+//func (h *QRHandler) ShowQR(c fiber.Ctx) error {
 //	log := h.Log
 //	qrData := c.Query("qrcode", c.Query("qrCode", ""))
 //	log.Infof("show qrcode: %s", qrData)

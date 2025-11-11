@@ -16,9 +16,19 @@
 package router
 
 import (
-	"github.com/gofiber/fiber/v2"
+	"time"
+
+	"github.com/gofiber/fiber/v3"
+	"github.com/golang-jwt/jwt/v5"
 
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/dto"
+	"github.com/PakaiWA/PakaiWA/internal/pkg/metrics"
+
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/middleware"
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/model"
+
+	"github.com/PakaiWA/PakaiWA/internal/pkg/config"
+
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/handler"
 )
 
@@ -29,26 +39,64 @@ type RouteConfig struct {
 }
 
 func (c *RouteConfig) Setup() {
+	c.NoLimitRoute()
 	c.SetupGuestRoute()
 	c.SetupAuthRoute()
 }
 
-func (c *RouteConfig) SetupGuestRoute() {
-	c.Fiber.Get("/", func(ctx *fiber.Ctx) error {
+func (c *RouteConfig) NoLimitRoute() {
+	c.Fiber.Get("/", middleware.RateLimitMiddleware(3, time.Minute*1), func(ctx fiber.Ctx) error {
 		baseUrl := ctx.BaseURL()
 		res := dto.VersionRes{
 			Message:   baseUrl + " - Unofficial WhatsApp Restful API Gateway",
-			Version:   "0.0.1",
-			Stability: "Developer-Preview",
+			Version:   config.GetAppVersion(),
+			Stability: config.GetAppDesc(),
 		}
-
 		return ctx.JSON(res)
 	})
 
-	c.Fiber.Post("/v1/messages", c.MessageHandler.SendMsg)
+	c.Fiber.Get("/metrics",
+		middleware.RateLimitMiddleware(3, time.Minute*1),
+		metrics.PrometheusHandler(),
+	)
+}
 
+func (c *RouteConfig) SetupGuestRoute() {
+	c.Fiber.Post("/auth/login",
+		middleware.RateLimitMiddleware(10, time.Minute*1),
+		GenerateJWT(),
+	)
+
+	c.Fiber.Post("/logout",
+		middleware.RateLimitMiddleware(3, time.Minute*1),
+		metrics.PrometheusHandler(),
+	)
 }
 
 func (c *RouteConfig) SetupAuthRoute() {
-	//c.App.Use(c.AuthMiddleware)
+	//c.Fiber.Use(middleware.AuthMiddleware())
+	//c.Fiber.Use(middleware.AuthMiddleware()) // Quota Middleware
+	auth := c.Fiber.Group("/v1", middleware.RateLimitMiddleware(9999, time.Minute*1))
+	auth.Post("/messages", c.MessageHandler.SendMsg)
+}
+
+func GenerateJWT() fiber.Handler {
+	return func(c fiber.Ctx) error {
+		claims := jwt.MapClaims{
+			"sub":  "userID",
+			"role": "role",
+			"exp":  time.Now().Add(1 * time.Hour).Unix(),
+			"iat":  time.Now().Unix(),
+		}
+
+		token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+		result, _ := token.SignedString([]byte(config.GetJWTKey()))
+
+		response := model.SendMessageResponse{
+			Message: result,
+		}
+		c.Status(200)
+		return c.JSON(response)
+	}
 }

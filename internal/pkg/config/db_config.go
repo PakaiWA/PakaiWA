@@ -41,6 +41,22 @@ func GetDBMaxConn() int32 {
 	return maxConn
 }
 
+func GetMaxIdleConns() int {
+	maxConn := viper.GetInt("db.pakaiwa.maxIdleConns")
+	if maxConn <= 0 {
+		maxConn = 10
+	}
+	return maxConn
+}
+
+func GetMaxOpenConns() int {
+	maxConn := viper.GetInt("db.pakaiwa.maxOpenConns")
+	if maxConn <= 0 {
+		maxConn = 10
+	}
+	return maxConn
+}
+
 func GetDBHealthCheckPeriod() time.Duration {
 	if viper.IsSet("db.pakaiwa.HealthCheckPeriod") {
 		val := viper.GetDuration("db.pakaiwa.HealthCheckPeriod")
@@ -61,7 +77,7 @@ func GetConnectTimeout() time.Duration {
 	return 30 * time.Second
 }
 
-func DetMaxConnIdleTime() time.Duration {
+func GetMaxConnIdleTime() time.Duration {
 	if viper.IsSet("db.pakaiwa.maxConnIdleTime") {
 		val := viper.GetDuration("db.pakaiwa.maxConnIdleTime")
 		if val > 0 {
@@ -69,4 +85,14 @@ func DetMaxConnIdleTime() time.Duration {
 		}
 	}
 	return 30 * time.Second
+}
+
+func GetConnMaxLifetime() time.Duration {
+	if viper.IsSet("db.pakaiwa.maxLifetimeConn") {
+		val := viper.GetDuration("db.pakaiwa.maxLifetimeConn")
+		if val > 0 {
+			return val
+		}
+	}
+	return time.Hour
 }

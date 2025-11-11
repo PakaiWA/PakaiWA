@@ -19,14 +19,14 @@ import (
 	"net/http"
 
 	"github.com/go-playground/validator/v10"
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 	"github.com/pkg/errors"
 
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/dto"
 )
 
 func NewErrorHandler() fiber.ErrorHandler {
-	return func(ctx *fiber.Ctx, err error) error {
+	return func(ctx fiber.Ctx, err error) error {
 		code := fiber.StatusInternalServerError
 		var e *fiber.Error
 		if errors.As(err, &e) {

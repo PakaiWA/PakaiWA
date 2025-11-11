@@ -23,26 +23,29 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/sirupsen/logrus"
 
+	"github.com/PakaiWA/PakaiWA/ent"
+
 	"github.com/PakaiWA/PakaiWA/internal/pkg/config"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/utils"
 )
 
 var (
 	pool   *pgxpool.Pool
-	onceDb sync.Once
+	client *ent.Client
+	onceDB sync.Once
 )
 
 func NewDatabase(ctx context.Context, log *logrus.Logger) *pgxpool.Pool {
 	traceID := config.Get40Space()
 	log.WithField("trace_id", traceID).Info("Connecting to database...")
 
-	onceDb.Do(func() {
+	onceDB.Do(func() {
 		cfg, err := pgxpool.ParseConfig(config.GetDBConn())
 		utils.PanicIfError(err)
 
 		cfg.MinConns = config.GetDBMinConn()
 		cfg.MaxConns = config.GetDBMaxConn()
-		cfg.MaxConnIdleTime = config.DetMaxConnIdleTime()
+		cfg.MaxConnIdleTime = config.GetMaxConnIdleTime()
 		cfg.HealthCheckPeriod = config.GetDBHealthCheckPeriod()
 		cfg.ConnConfig.ConnectTimeout = config.GetConnectTimeout()
 

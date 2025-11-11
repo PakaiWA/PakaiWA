@@ -8,9 +8,11 @@
  *
  * See <https://www.gnu.org/licenses/gpl-3.0.html>.
  *
- * @author KAnggara75 on Sat 30/08/25 12.50
- * @project PakaiWA utils
- * https://github.com/PakaiWA/PakaiWA/tree/main/pkg/utils
+ * @author KAnggara75 on Sun 09/11/25 16.32
+ * @project PakaiWA ent
+ * https://github.com/PakaiWA/PakaiWA/tree/main/ent
  */
 
-package utils
+package ent
+
+//go:generate go run entgo.io/ent/cmd/ent generate ./schema
