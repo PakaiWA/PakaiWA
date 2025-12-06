@@ -19,14 +19,11 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v3"
-	"github.com/golang-jwt/jwt/v5"
 
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/dto"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/metrics"
 
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/middleware"
-	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/model"
-
 	"github.com/PakaiWA/PakaiWA/internal/pkg/config"
 
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/handler"
@@ -35,6 +32,7 @@ import (
 type RouteConfig struct {
 	Fiber          *fiber.App
 	QRHandler      *handler.QRHandler
+	AuthHandler    *handler.AuthHandler
 	MessageHandler *handler.MessageHandler
 }
 
@@ -64,7 +62,7 @@ func (c *RouteConfig) NoLimitRoute() {
 func (c *RouteConfig) SetupGuestRoute() {
 	c.Fiber.Post("/auth/login",
 		middleware.RateLimitMiddleware(10, time.Minute*1),
-		GenerateJWT(),
+		c.AuthHandler.Login,
 	)
 
 	c.Fiber.Post("/logout",
@@ -78,25 +76,4 @@ func (c *RouteConfig) SetupAuthRoute() {
 	//c.Fiber.Use(middleware.AuthMiddleware()) // Quota Middleware
 	auth := c.Fiber.Group("/v1", middleware.RateLimitMiddleware(9999, time.Minute*1))
 	auth.Post("/messages", c.MessageHandler.SendMsg)
-}
-
-func GenerateJWT() fiber.Handler {
-	return func(c fiber.Ctx) error {
-		claims := jwt.MapClaims{
-			"sub":  "userID",
-			"role": "role",
-			"exp":  time.Now().Add(1 * time.Hour).Unix(),
-			"iat":  time.Now().Unix(),
-		}
-
-		token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-
-		result, _ := token.SignedString([]byte(config.GetJWTKey()))
-
-		response := model.SendMessageResponse{
-			Message: result,
-		}
-		c.Status(200)
-		return c.JSON(response)
-	}
 }

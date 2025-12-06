@@ -40,6 +40,9 @@ type AppContext struct {
 func InitApp(b *AppContext) {
 	qrHandler := handler.NewQRHandler(b.PakaiWA, b.Log)
 
+	authUsecase := usecase.NewAuthUsecase(b.Log, b.Validate)
+	authHandler := handler.NewAuthHandler(authUsecase, b.Log)
+
 	// Message
 	msgUsecase := usecase.NewMessageUsecase(b.Log, b.Validate, b.PakaiWA.Client)
 	msgHandler := handler.NewMessageHandler(msgUsecase, b.Log)
@@ -47,6 +50,7 @@ func InitApp(b *AppContext) {
 	routeConfig := router.RouteConfig{
 		Fiber:          b.Fiber,
 		MessageHandler: msgHandler,
+		AuthHandler:    authHandler,
 		QRHandler:      qrHandler,
 	}
 	routeConfig.Setup()

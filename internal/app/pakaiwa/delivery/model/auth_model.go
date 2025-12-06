@@ -18,3 +18,14 @@ package model
 type Model struct {
 	ID string
 }
+
+type LoginReq struct {
+	Username string `json:"username" validate:"required"`
+	Password string `json:"password" validate:"required"`
+}
+
+type JwtResponse struct {
+	TokenType   string `json:"token_type"`
+	AccessToken string `json:"access_token"`
+	ExpiresIn   int64  `json:"expires_in"`
+}
