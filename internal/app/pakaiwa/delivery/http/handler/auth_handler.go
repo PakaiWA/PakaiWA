@@ -16,9 +16,12 @@
 package handler
 
 import (
+	"errors"
+
 	"github.com/gofiber/fiber/v3"
 	"github.com/sirupsen/logrus"
 
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/dto"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/model"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/usecase"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/utils"
@@ -69,6 +72,19 @@ func (h *AuthHandler) Register(c fiber.Ctx) error {
 	isSuccess, err := h.UseCase.Register(request)
 	if err != nil {
 		utils.LogValidationErrors(h.Log, err, "validation failed in Register", c.Path())
+
+		var passwordValidationError *utils.PasswordValidationError
+		if errors.As(err, &passwordValidationError) {
+
+			return c.Status(fiber.StatusBadRequest).JSON(
+				dto.ToErrorResponse(
+					fiber.StatusBadRequest,
+					"Validation Error",
+					passwordValidationError.Errors,
+					c.Path(),
+				),
+			)
+		}
 		return err
 	}
 

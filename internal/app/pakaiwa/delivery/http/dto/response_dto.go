@@ -27,3 +27,15 @@ type Meta struct {
 	Limit int `json:"limit"`
 	Total int `json:"total"`
 }
+
+func ToErrorResponse(status int, title string, detail any, instance string) *BaseResponse {
+	return &BaseResponse{
+		Success: false,
+		Error: &ProblemDetails{
+			Title:    title,
+			Status:   status,
+			Detail:   detail,
+			Instance: instance,
+		},
+	}
+}
