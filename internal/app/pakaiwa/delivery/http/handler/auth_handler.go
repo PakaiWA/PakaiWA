@@ -40,13 +40,13 @@ func (h *AuthHandler) Login(c fiber.Ctx) error {
 	request := new(model.LoginReq)
 
 	if err := c.Bind().Body(request); err != nil {
-		utils.LogValidationErrors(h.Log, "error parsing request body", err)
+		utils.LogValidationErrors(h.Log, err, "error parsing request body")
 		return fiber.ErrBadRequest
 	}
 
 	token, err := h.UseCase.Login(request)
 	if err != nil {
-		utils.LogValidationErrors(h.Log, "validation failed in Login", err)
+		utils.LogValidationErrors(h.Log, err, "validation failed in Login", c.Path())
 		return err
 	}
 
@@ -62,13 +62,13 @@ func (h *AuthHandler) Login(c fiber.Ctx) error {
 func (h *AuthHandler) Register(c fiber.Ctx) error {
 	request := new(model.AuthReq)
 	if err := c.Bind().Body(request); err != nil {
-		utils.LogValidationErrors(h.Log, "error parsing request body", err)
+		utils.LogValidationErrors(h.Log, err, "error parsing request body", c.Path())
 		return fiber.ErrBadRequest
 	}
 
 	isSuccess, err := h.UseCase.Register(request)
 	if err != nil {
-		utils.LogValidationErrors(h.Log, "validation failed in Login", err)
+		utils.LogValidationErrors(h.Log, err, "validation failed in Register", c.Path())
 		return err
 	}
 

@@ -40,13 +40,13 @@ func NewMessageHandler(useCase usecase.MessageUsecase, log *logrus.Logger) *Mess
 func (h *MessageHandler) SendMsg(c fiber.Ctx) error {
 	request := new(model.SendMessageReq)
 	if err := c.Bind().Body(request); err != nil {
-		utils.LogValidationErrors(h.Log, "error parsing request body", err)
+		utils.LogValidationErrors(h.Log, err, "error parsing request body", c.Path())
 		return fiber.ErrBadRequest
 	}
 
 	id, err := h.UseCase.SendMessage(request)
 	if err != nil {
-		utils.LogValidationErrors(h.Log, "validation failed in SendMessage", err)
+		utils.LogValidationErrors(h.Log, err, "validation failed in SendMessage", c.Path())
 		return err
 	}
 

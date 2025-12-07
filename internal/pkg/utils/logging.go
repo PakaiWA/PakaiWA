@@ -17,12 +17,22 @@ package utils
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/sirupsen/logrus"
 )
 
-func LogValidationErrors(log *logrus.Logger, msg string, err error) {
+func LogValidationErrors(log *logrus.Logger, err error, data ...string) {
+	message := "unknown"
+	if len(data) > 0 {
+		message = data[0]
+	}
+	path := "unknown"
+	if len(data) > 1 {
+		path = data[1]
+	}
+	msg := fmt.Sprintf("%s at %s", message, path)
 	var validationError validator.ValidationErrors
 	if errors.As(err, &validationError) {
 		for _, v := range validationError {
