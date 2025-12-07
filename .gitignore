@@ -30,10 +30,10 @@ go.work.sum
 
 # Editor/IDE
 .idea/
-# .vscode/
+.vscode/
 tmp/
-pakaiwa
-PakaiWA
+/pakaiwa
+/PakaiWA
 .DS_Store
 *.log
 logs/

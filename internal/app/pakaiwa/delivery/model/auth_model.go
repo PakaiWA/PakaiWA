@@ -20,8 +20,13 @@ type Model struct {
 }
 
 type LoginReq struct {
-	Username string `json:"username" validate:"required"`
+	Email    string `json:"email" validate:"required,email"`
 	Password string `json:"password" validate:"required"`
+}
+
+type AuthReq struct {
+	Email    string `json:"email" validate:"required,email"`
+	Password string `json:"password" validate:"required,strongpwd"`
 }
 
 type JwtResponse struct {

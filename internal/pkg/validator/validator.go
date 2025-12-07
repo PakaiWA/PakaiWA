@@ -36,5 +36,7 @@ func NewValidator() *validator.Validate {
 		return name
 	})
 
+	_ = validate.RegisterValidation("strongpwd", PasswordStrength)
+
 	return validate
 }
