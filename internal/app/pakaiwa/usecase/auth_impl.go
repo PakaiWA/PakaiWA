@@ -19,13 +19,11 @@ import (
 	"time"
 
 	"github.com/go-playground/validator/v10"
-	"github.com/gofiber/fiber/v3"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/sirupsen/logrus"
 
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/model"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/config"
-	"github.com/PakaiWA/PakaiWA/internal/pkg/utils"
 )
 
 type authUsecase struct {
@@ -68,9 +66,7 @@ func (u *authUsecase) Login(req *model.LoginReq) (string, error) {
 func (u *authUsecase) Register(req *model.AuthReq) (bool, error) {
 
 	if err := u.Validate.Struct(req); err != nil {
-		details := utils.ExtractValidationErrors(err)
-
-		return false, fiber.NewError(fiber.StatusBadRequest, utils.ToJSON(details))
+		return false, err
 	}
 
 	return true, nil

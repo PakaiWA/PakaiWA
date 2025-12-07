@@ -26,7 +26,7 @@ type LoginReq struct {
 
 type AuthReq struct {
 	Email    string `json:"email" validate:"required,email"`
-	Password string `json:"password" validate:"required,strongpwd"`
+	Password string `json:"password" validate:"required,min=8"`
 }
 
 type JwtResponse struct {

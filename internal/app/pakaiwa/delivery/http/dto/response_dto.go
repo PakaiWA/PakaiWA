@@ -17,7 +17,7 @@ package dto
 
 type BaseResponse struct {
 	Success bool            `json:"success"`
-	Data    interface{}     `json:"data,omitempty"`
+	Data    any             `json:"data,omitempty"`
 	Error   *ProblemDetails `json:"error,omitempty"`
 	Meta    *Meta           `json:"meta,omitempty"`
 }
@@ -26,13 +26,4 @@ type Meta struct {
 	Page  int `json:"page"`
 	Limit int `json:"limit"`
 	Total int `json:"total"`
-}
-
-// ProblemDetails RFC 7807
-type ProblemDetails struct {
-	Type     string      `json:"type,omitempty"`
-	Title    string      `json:"title"`            // judul error singkat
-	Status   int         `json:"status"`           // HTTP status code
-	Detail   interface{} `json:"detail,omitempty"` // deskripsi error
-	Instance string      `json:"instance"`         // endpoint/resource terkait
 }

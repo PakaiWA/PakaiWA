@@ -22,7 +22,17 @@ type ValidationErrorResponse struct {
 }
 
 type ValidationError struct {
-	Field string `json:"field"`
-	Tag   string `json:"tag"`
-	Param string `json:"param,omitempty"`
+	Field   string `json:"field"`
+	Tag     string `json:"tag"`
+	Param   string `json:"param,omitempty"`
+	Message string `json:"message,omitempty"`
+}
+
+// ProblemDetails RFC 7807
+type ProblemDetails struct {
+	Type     string `json:"type,omitempty"`
+	Title    string `json:"title"`  // judul error singkat
+	Status   int    `json:"status"` // HTTP status code
+	Detail   any    `json:"detail,omitempty"`
+	Instance string `json:"instance"` // endpoint/resource terkait
 }

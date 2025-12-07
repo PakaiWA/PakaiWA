@@ -21,21 +21,8 @@ func PasswordStrength(fl validator.FieldLevel) bool {
 		return false
 	}
 
-	if !upperCaseRegex.MatchString(password) {
-		return false
-	}
-
-	if !lowerCaseRegex.MatchString(password) {
-		return false
-	}
-
-	if !numberRegex.MatchString(password) {
-		return false
-	}
-
-	if !symbolRegex.MatchString(password) {
-		return false
-	}
-
-	return true
+	return upperCaseRegex.MatchString(password) &&
+		lowerCaseRegex.MatchString(password) &&
+		numberRegex.MatchString(password) &&
+		symbolRegex.MatchString(password)
 }
