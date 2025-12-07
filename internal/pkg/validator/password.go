@@ -14,7 +14,7 @@ var (
 	symbolRegex    = regexp.MustCompile(`[\W_]`)
 )
 
-func PasswordStrength(fl validator.FieldLevel) bool {
+func ValidateStrongPassword(fl validator.FieldLevel) bool {
 	password := fl.Field().String()
 
 	if len(password) < 8 {
