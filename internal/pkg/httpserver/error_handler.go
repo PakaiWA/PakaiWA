@@ -23,16 +23,22 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/dto"
+	"github.com/PakaiWA/PakaiWA/internal/pkg/utils"
 )
 
 func NewErrorHandler() fiber.ErrorHandler {
 	return func(ctx fiber.Ctx, err error) error {
+
+		// Default -> 500
 		code := fiber.StatusInternalServerError
+
+		// Jika error bawaan fiber
 		var e *fiber.Error
 		if errors.As(err, &e) {
 			code = e.Code
 		}
 
+		// 1. Error VALIDATOR
 		var validationError validator.ValidationErrors
 		if errors.As(err, &validationError) {
 			var details []dto.ValidationError
@@ -43,6 +49,7 @@ func NewErrorHandler() fiber.ErrorHandler {
 					Param: v.Param(),
 				})
 			}
+
 			return ctx.Status(fiber.StatusBadRequest).JSON(dto.BaseResponse{
 				Success: false,
 				Error: &dto.ProblemDetails{
@@ -54,6 +61,34 @@ func NewErrorHandler() fiber.ErrorHandler {
 			})
 		}
 
+		// 2. Error USERNAME EXISTS -> 400
+		if errors.Is(err, utils.ErrUsernameExists) {
+			return ctx.Status(fiber.StatusBadRequest).JSON(dto.BaseResponse{
+				Success: false,
+
+				Error: &dto.ProblemDetails{
+					Title:    "Validation Error",
+					Status:   fiber.StatusBadRequest,
+					Detail:   err.Error(),
+					Instance: ctx.Path(),
+				},
+			})
+		}
+
+		// 3. Error PASSWORD WEAK -> 400 (custom)
+		if errors.Is(err, utils.ErrPasswordWeak) {
+			return ctx.Status(fiber.StatusBadRequest).JSON(dto.BaseResponse{
+				Success: false,
+				Error: &dto.ProblemDetails{
+					Title:    "Validation Error",
+					Status:   fiber.StatusBadRequest,
+					Detail:   err.Error(),
+					Instance: ctx.Path(),
+				},
+			})
+		}
+
+		// 4. Error umum -> 500 atau kode fiber
 		return ctx.Status(code).JSON(dto.BaseResponse{
 			Success: false,
 			Error: &dto.ProblemDetails{

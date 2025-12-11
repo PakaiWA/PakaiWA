@@ -14,3 +14,38 @@
  */
 
 package repository
+
+import (
+	"context"
+
+	"github.com/PakaiWA/PakaiWA/ent"
+	"github.com/PakaiWA/PakaiWA/ent/user"
+)
+
+type UserRepository interface {
+	CreateUser(ctx context.Context, email, hashedPassword string) (*ent.User, error)
+	GetUserByEmail(ctx context.Context, email string) (*ent.User, error)
+}
+
+type userRepository struct {
+	client *ent.Client
+}
+
+func NewUserRepository(c *ent.Client) UserRepository {
+	return &userRepository{client: c}
+}
+
+func (r *userRepository) CreateUser(ctx context.Context, email, hashedPassword string) (*ent.User, error) {
+	return r.client.User.
+		Create().
+		SetEmail(email).
+		SetPassword(hashedPassword).
+		Save(ctx)
+}
+
+func (r *userRepository) GetUserByEmail(ctx context.Context, email string) (*ent.User, error) {
+	return r.client.User.
+		Query().
+		Where(user.EmailEQ(email)).
+		Only(ctx)
+}

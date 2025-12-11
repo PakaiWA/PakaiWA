@@ -15,7 +15,10 @@
 
 package utils
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 func PanicIfError(err error) {
 	if err != nil {
@@ -23,3 +26,6 @@ func PanicIfError(err error) {
 		panic(err)
 	}
 }
+
+var ErrUsernameExists = errors.New("username already exists")
+var ErrPasswordWeak = errors.New("password does not meet complexity requirements")

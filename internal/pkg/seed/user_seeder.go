@@ -31,7 +31,6 @@ func seedUsers(ctx context.Context, client *ent.Client) error {
 	}
 
 	user, _ := client.User.Create().
-		SetUsername("admin").
 		SetEmail("admin@example.com").
 		SetPassword("5f4dcc3b5aa765d61d8327deb882cf99").
 		Save(ctx)

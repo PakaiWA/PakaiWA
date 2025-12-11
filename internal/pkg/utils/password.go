@@ -3,6 +3,8 @@ package utils
 import (
 	"regexp"
 
+	"golang.org/x/crypto/bcrypt"
+
 	dto "github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/dto"
 )
 
@@ -62,4 +64,12 @@ func ValidateStrongPassword(password string) error {
 	}
 
 	return nil
+}
+
+func HashPassword(password string) (string, error) {
+	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return "", err
+	}
+	return string(hash), nil
 }

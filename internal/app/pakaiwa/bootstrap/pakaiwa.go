@@ -22,25 +22,30 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/sirupsen/logrus"
 
+	"github.com/PakaiWA/PakaiWA/ent"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/handler"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/router"
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/repository"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/state"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/usecase"
 )
 
 type AppContext struct {
-	Log      *logrus.Logger
-	Pool     *pgxpool.Pool
-	Fiber    *fiber.App
-	PakaiWA  *state.AppState
-	Producer *kafka.Producer
-	Validate *validator.Validate
+	Log       *logrus.Logger
+	EntClient *ent.Client
+	Pool      *pgxpool.Pool
+	Fiber     *fiber.App
+	PakaiWA   *state.AppState
+	Producer  *kafka.Producer
+	Validate  *validator.Validate
 }
 
 func InitApp(b *AppContext) {
 	qrHandler := handler.NewQRHandler(b.PakaiWA, b.Log)
 
-	authUsecase := usecase.NewAuthUsecase(b.Log, b.Validate)
+	// Auth
+	userRepo := repository.NewUserRepository(b.EntClient)
+	authUsecase := usecase.NewAuthUsecase(b.Log, userRepo, b.Validate)
 	authHandler := handler.NewAuthHandler(authUsecase, b.Log)
 
 	// Message

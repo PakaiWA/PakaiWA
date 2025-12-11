@@ -73,13 +73,15 @@ func main() {
 	fiber := httpserver.NewFiber()
 	fiber.Use(middleware.FiberLogger(log))
 	bootstrap.InitApp(&bootstrap.AppContext{
-		Log:      log,
-		Pool:     pool,
-		Fiber:    fiber,
-		PakaiWA:  pwa,
-		Producer: producer,
-		Validate: validate,
+		EntClient: entClient,
+		Log:       log,
+		Pool:      pool,
+		Fiber:     fiber,
+		PakaiWA:   pwa,
+		Producer:  producer,
+		Validate:  validate,
 	})
+	log.Info("OKE")
 
 	go func() {
 		addr := ":8080"
