@@ -19,6 +19,7 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"github.com/sirupsen/logrus"
 
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/dto"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/model"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/usecase"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/utils"
@@ -72,14 +73,20 @@ func (h *AuthHandler) Register(c fiber.Ctx) error {
 	}
 
 	if isSuccess {
-		return c.Status(fiber.StatusCreated).JSON(fiber.Map{
-			"status":  "success",
-			"message": "user registered",
+		return c.Status(fiber.StatusCreated).JSON(dto.BaseResponse{
+			Success: true,
+			Message: "user registered",
+			Data: dto.RegisterUserData{
+				Email: request.Email,
+			},
 		})
 	} else {
-		return c.Status(fiber.StatusConflict).JSON(fiber.Map{
-			"status":  "failed",
-			"message": "user already exists",
+		return c.Status(fiber.StatusCreated).JSON(dto.BaseResponse{
+			Success: false,
+			Message: "user already exists",
+			Data: dto.RegisterUserData{
+				Email: request.Email,
+			},
 		})
 	}
 }

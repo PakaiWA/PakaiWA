@@ -17,15 +17,17 @@ package dto
 
 type BaseResponse struct {
 	Success bool            `json:"success"`
+	Message string          `json:"message,omitempty"`
 	Data    any             `json:"data,omitempty"`
 	Error   *ProblemDetails `json:"error,omitempty"`
 	Meta    *Meta           `json:"meta,omitempty"`
 }
 
 type Meta struct {
-	Page  int `json:"page"`
-	Limit int `json:"limit"`
-	Total int `json:"total"`
+	Page     int    `json:"page,omitempty"`
+	Limit    int    `json:"limit,omitempty"`
+	Total    int    `json:"total,omitempty"`
+	Location string `json:"location,omitempty"`
 }
 
 func ToErrorResponse(status int, title string, detail any, instance string) *BaseResponse {
