@@ -12,7 +12,6 @@
  * @project PakaiWA webhooks
  * https://github.com/PakaiWA/PakaiWA/tree/main/internal/app/webhooks
  */
-
 package model
 
 import "time"

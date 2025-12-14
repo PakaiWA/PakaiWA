@@ -18,34 +18,92 @@ package repository
 import (
 	"context"
 
-	"github.com/PakaiWA/PakaiWA/ent"
-	"github.com/PakaiWA/PakaiWA/ent/user"
+	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/rs/zerolog/log"
+
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/model"
+	"github.com/PakaiWA/PakaiWA/internal/pkg/config"
 )
 
 type UserRepository interface {
-	CreateUser(ctx context.Context, email, hashedPassword string) (*ent.User, error)
-	GetUserByEmail(ctx context.Context, email string) (*ent.User, error)
+	CreateUser(ctx context.Context, email, hashedPassword string) (*model.User, error)
+	GetUserByEmail(ctx context.Context, email string) (*model.User, error)
 }
 
 type userRepository struct {
-	client *ent.Client
+	pool *pgxpool.Pool
 }
 
-func NewUserRepository(c *ent.Client) UserRepository {
-	return &userRepository{client: c}
+func NewUserRepository(pool *pgxpool.Pool) UserRepository {
+	return &userRepository{pool: pool}
 }
 
-func (r *userRepository) CreateUser(ctx context.Context, email, hashedPassword string) (*ent.User, error) {
-	return r.client.User.
-		Create().
-		SetEmail(email).
-		SetPassword(hashedPassword).
-		Save(ctx)
+func (r *userRepository) CreateUser(
+	ctx context.Context,
+	email string,
+	hashedPassword string,
+) (*model.User, error) {
+
+	const query = `
+		INSERT INTO users (email, password)
+		VALUES ($1, $2)
+		RETURNING id, email, password, logout_at, created_at, updated_at
+	`
+
+	u := new(model.User)
+
+	err := r.pool.QueryRow(
+		ctx,
+		query,
+		email,
+		hashedPassword,
+	).Scan(
+		&u.ID,
+		&u.Email,
+		&u.Password,
+		&u.LogoutAt,
+		&u.CreatedAt,
+		&u.UpdatedAt,
+	)
+	log.Err(err).Str("trace_id", config.Get40Space()).Msg("Creating user in database")
+
+	if err != nil {
+		return nil, err
+	}
+
+	log.Info().Str("trace_id", config.Get40Space()).Msgf("User created with ID: %s", u.ID)
+
+	return u, nil
 }
 
-func (r *userRepository) GetUserByEmail(ctx context.Context, email string) (*ent.User, error) {
-	return r.client.User.
-		Query().
-		Where(user.EmailEQ(email)).
-		Only(ctx)
+func (r *userRepository) GetUserByEmail(
+	ctx context.Context,
+	email string,
+) (*model.User, error) {
+
+	const q = `
+		SELECT id, email, password, logout_at, created_at, updated_at
+		FROM users
+		WHERE email = $1
+	`
+
+	u := new(model.User)
+
+	err := r.pool.QueryRow(ctx, q, email).Scan(
+		&u.ID,
+		&u.Email,
+		&u.Password,
+		&u.LogoutAt,
+		&u.CreatedAt,
+		&u.UpdatedAt,
+	)
+
+	if err != nil {
+		if err.Error() == "no rows in result set" {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	return u, nil
 }

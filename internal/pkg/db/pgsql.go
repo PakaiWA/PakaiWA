@@ -23,15 +23,12 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/sirupsen/logrus"
 
-	"github.com/PakaiWA/PakaiWA/ent"
-
 	"github.com/PakaiWA/PakaiWA/internal/pkg/config"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/utils"
 )
 
 var (
 	pool   *pgxpool.Pool
-	client *ent.Client
 	onceDB sync.Once
 )
 

@@ -86,8 +86,12 @@ func (u *authUsecase) Register(ctx context.Context, req *model.AuthReq) (bool, e
 		return false, err
 	}
 
-	_, err = u.Repository.GetUserByEmail(ctx, req.Email)
-	if err == nil {
+	user, err := u.Repository.GetUserByEmail(ctx, req.Email)
+	if err != nil {
+		return false, err // error sistem, JANGAN ditelan
+	}
+
+	if user != nil {
 		return false, utils.ErrUsernameExists
 	}
 
