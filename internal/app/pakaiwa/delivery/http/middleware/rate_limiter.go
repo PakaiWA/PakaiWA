@@ -83,24 +83,8 @@ func RateLimitMiddleware(limit int, window time.Duration) fiber.Handler {
 	}
 }
 
-func AuthFailureLimiter(rl *RateLimiter) fiber.Handler {
-	return func(c fiber.Ctx) error {
-		err := c.Next()
-
-		if err != nil {
-			if fe, ok := err.(*fiber.Error); ok &&
-				fe.Code == fiber.StatusUnauthorized {
-
-				key := "auth_fail:" + c.IP()
-
-				if !rl.isAllowed(key) {
-					return fiber.NewError(
-						fiber.StatusTooManyRequests,
-						"Terlalu banyak percobaan autentikasi gagal",
-					)
-				}
-			}
-		}
-		return err
-	}
+func (r *RateLimiter) Reset(key string) {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	delete(r.requests, key)
 }

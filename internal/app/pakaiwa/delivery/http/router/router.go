@@ -56,7 +56,7 @@ func (c *RouteConfig) NoLimitRoute() {
 	})
 
 	c.Fiber.Get("/metrics",
-		middleware.RateLimitMiddleware(3, time.Minute*1),
+		middleware.RateLimitMiddleware(30, time.Minute*1),
 		metrics.PrometheusHandler(),
 	)
 }
@@ -74,14 +74,9 @@ func (c *RouteConfig) SetupGuestRoute() {
 }
 
 func (c *RouteConfig) SetupAuthRoute() {
-	authFailLimiter := middleware.NewRateLimiter(5, time.Minute)
-
-	c.Fiber.Use(
-		middleware.AuthFailureLimiter(authFailLimiter),
-		middleware.AuthMiddleware(c.Log),
-	) // Auth Middleware
-
+	c.Fiber.Use(middleware.AuthMiddleware(c.Log, middleware.NewRateLimiter(5, time.Minute))) // Auth Middleware
 	c.Fiber.Post("/register", c.AuthHandler.Register)
-	auth := c.Fiber.Group("/v1", middleware.RateLimitMiddleware(9999, time.Minute*1))
-	auth.Post("/messages", c.MessageHandler.SendMsg)
+	// Grouped Auth Routes V1
+	v1 := c.Fiber.Group("/v1", middleware.RateLimitMiddleware(9999, time.Minute*1))
+	v1.Post("/messages", c.MessageHandler.SendMsg)
 }
