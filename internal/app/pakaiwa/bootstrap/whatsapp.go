@@ -24,6 +24,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/sirupsen/logrus"
 
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/apperror"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/event"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/gateway/kafka"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/state"
@@ -31,7 +32,6 @@ import (
 	"github.com/PakaiWA/PakaiWA/internal/pkg/config"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/logger"
 	pwaStore "github.com/PakaiWA/PakaiWA/internal/pkg/store"
-	"github.com/PakaiWA/PakaiWA/internal/pkg/utils"
 )
 
 type PwaContext struct {
@@ -52,7 +52,7 @@ func InitWhatsapp(b *PwaContext) (*state.AppState, error) {
 
 	container := pwaStore.InitStoreWithPool(ctx, pool, log)
 	deviceStore, err := container.GetFirstDevice(ctx) // TODO: refactor for multi client
-	utils.PanicIfError(err)
+	apperror.PanicIfError(err)
 
 	clientLog := logger.NewPakaiWALog(log, config.GetAppName())
 	client := whatsmeow.NewClient(deviceStore, clientLog)

@@ -20,7 +20,6 @@ import (
 	"github.com/sirupsen/logrus"
 
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/dto"
-	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/model"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/usecase"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/utils"
 )
@@ -38,20 +37,20 @@ func NewAuthHandler(uc usecase.AuthUsecase, log *logrus.Logger) *AuthHandler {
 }
 
 func (h *AuthHandler) Login(c fiber.Ctx) error {
-	request := new(model.LoginReq)
+	request := new(dto.LoginReq)
 
 	if err := c.Bind().Body(request); err != nil {
 		utils.LogValidationErrors(h.Log, err, "error parsing request body")
 		return fiber.ErrBadRequest
 	}
 
-	token, err := h.UseCase.Login(request)
+	token, err := h.UseCase.Login(c.Context(), request, c.BaseURL())
 	if err != nil {
 		utils.LogValidationErrors(h.Log, err, "validation failed in Login", c.Path())
 		return err
 	}
 
-	response := model.JwtResponse{
+	response := dto.JwtResponse{
 		AccessToken: token,
 		TokenType:   "Bearer",
 		ExpiresIn:   3600,
@@ -61,7 +60,7 @@ func (h *AuthHandler) Login(c fiber.Ctx) error {
 }
 
 func (h *AuthHandler) Register(c fiber.Ctx) error {
-	request := new(model.AuthReq)
+	request := new(dto.AuthReq)
 	if err := c.Bind().Body(request); err != nil {
 		utils.LogValidationErrors(h.Log, err, "error parsing request body", c.Path())
 		return fiber.ErrBadRequest
@@ -74,7 +73,6 @@ func (h *AuthHandler) Register(c fiber.Ctx) error {
 
 	if isSuccess {
 		return c.Status(fiber.StatusCreated).JSON(dto.BaseResponse{
-			Success: true,
 			Message: "user registered",
 			Data: dto.RegisterUserData{
 				Email: request.Email,
@@ -82,7 +80,6 @@ func (h *AuthHandler) Register(c fiber.Ctx) error {
 		})
 	} else {
 		return c.Status(fiber.StatusCreated).JSON(dto.BaseResponse{
-			Success: false,
 			Message: "user already exists",
 			Data: dto.RegisterUserData{
 				Email: request.Email,

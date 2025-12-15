@@ -24,9 +24,11 @@ import (
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
 
-	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/model"
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/apperror"
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/dto"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/repository"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/config"
+	"github.com/PakaiWA/PakaiWA/internal/pkg/security/password"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/utils"
 )
 
@@ -37,8 +39,8 @@ type authUsecase struct {
 }
 
 type AuthUsecase interface {
-	Login(req *model.LoginReq) (string, error)
-	Register(ctx context.Context, req *model.AuthReq) (bool, error)
+	Login(ctx context.Context, req *dto.LoginReq, iss string) (string, error)
+	Register(ctx context.Context, req *dto.AuthReq) (bool, error)
 }
 
 func NewAuthUsecase(log *logrus.Logger, repo repository.UserRepository, validator *validator.Validate) AuthUsecase {
@@ -49,16 +51,27 @@ func NewAuthUsecase(log *logrus.Logger, repo repository.UserRepository, validato
 	}
 }
 
-func (u *authUsecase) Login(req *model.LoginReq) (string, error) {
+func (u *authUsecase) Login(ctx context.Context, req *dto.LoginReq, iss string) (string, error) {
 	if err := u.Validate.Struct(req); err != nil {
 		return "", err
 	}
 
+	user, err := u.Repository.GetUserByEmail(ctx, req.Email)
+	if err != nil {
+		return "", err // error sistem, JANGAN ditelan
+	}
+
+	if user == nil || !password.Compare(user.Password, req.Password) {
+		return "", apperror.ErrInvalidCredentials
+	}
+
+	now := time.Now().Unix()
+
 	claims := jwt.MapClaims{
-		"sub":  req.Email,
-		"iss":  "config.Issuer",
-		"aud":  jwt.ClaimStrings{"config.Audience"},
-		"iat":  time.Now().Unix(),
+		"sub":  user.ID,
+		"iss":  iss,
+		"iat":  now,
+		"nbf":  now,
 		"exp":  time.Now().Add(time.Hour * 24 * 7).Unix(),
 		"jti":  uuid.NewString(),
 		"role": "user",
@@ -75,7 +88,7 @@ func (u *authUsecase) Login(req *model.LoginReq) (string, error) {
 	return signedToken, nil
 }
 
-func (u *authUsecase) Register(ctx context.Context, req *model.AuthReq) (bool, error) {
+func (u *authUsecase) Register(ctx context.Context, req *dto.AuthReq) (bool, error) {
 
 	if err := u.Validate.Struct(req); err != nil {
 		return false, err
@@ -92,11 +105,11 @@ func (u *authUsecase) Register(ctx context.Context, req *model.AuthReq) (bool, e
 	}
 
 	if user != nil {
-		return false, utils.ErrUsernameExists
+		return false, apperror.ErrUsernameExists
 	}
 
 	// Hash password
-	hashed, err := utils.HashPassword(req.Password)
+	hashed, err := password.Hash(req.Password)
 	if err != nil {
 		return false, err
 	}

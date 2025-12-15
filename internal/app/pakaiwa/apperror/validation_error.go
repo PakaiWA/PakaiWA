@@ -13,7 +13,7 @@
  * https://github.com/PakaiWA/PakaiWA/tree/main/internal/app/pakaiwa/error
  */
 
-package error
+package apperror
 
 import (
 	"github.com/go-playground/validator/v10"

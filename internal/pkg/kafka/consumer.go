@@ -19,13 +19,13 @@ import (
 	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
 	"github.com/sirupsen/logrus"
 
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/apperror"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/config"
-	"github.com/PakaiWA/PakaiWA/internal/pkg/utils"
 )
 
 func NewKafkaConsumer(log *logrus.Logger) *kafka.Consumer {
 	consumer, err := kafka.NewConsumer(config.GetConsumerConfig())
-	utils.PanicIfError(err)
+	apperror.PanicIfError(err)
 
 	return consumer
 }

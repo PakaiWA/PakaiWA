@@ -22,6 +22,7 @@ import (
 	"github.com/KAnggara75/scc2go"
 	_ "github.com/jackc/pgx/v5/stdlib"
 
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/apperror"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/middleware"
 
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/bootstrap"
@@ -54,7 +55,7 @@ func main() {
 		Pool:     pool,
 		Producer: producer,
 	})
-	utils.PanicIfError(err)
+	apperror.PanicIfError(err)
 
 	// ====== App & Routes (Fiber) ======
 	fiber := httpserver.NewFiber()

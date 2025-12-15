@@ -30,9 +30,10 @@ type ValidationError struct {
 
 // ProblemDetails RFC 7807
 type ProblemDetails struct {
-	Type     string `json:"type,omitempty"`
-	Title    string `json:"title"`  // judul error singkat
-	Status   int    `json:"status"` // HTTP status code
-	Detail   any    `json:"detail,omitempty"`
-	Instance string `json:"instance"` // endpoint/resource terkait
+	Type     string            `json:"type,omitempty"`
+	Title    string            `json:"title"`  // judul error singkat
+	Status   int               `json:"status"` // HTTP status code
+	Detail   any               `json:"detail,omitempty"`
+	Instance string            `json:"instance"` // endpoint/resource terkait
+	Errors   []ValidationError `json:"errors,omitempty"`
 }

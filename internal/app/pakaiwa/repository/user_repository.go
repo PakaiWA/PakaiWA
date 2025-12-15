@@ -18,6 +18,7 @@ package repository
 import (
 	"context"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog/log"
 
@@ -45,26 +46,14 @@ func (r *userRepository) CreateUser(
 ) (*model.User, error) {
 
 	const query = `
-		INSERT INTO users (email, password)
+		INSERT INTO pakaiwa.users (email, password)
 		VALUES ($1, $2)
-		RETURNING id, email, password, logout_at, created_at, updated_at
+		RETURNING id
 	`
 
 	u := new(model.User)
 
-	err := r.pool.QueryRow(
-		ctx,
-		query,
-		email,
-		hashedPassword,
-	).Scan(
-		&u.ID,
-		&u.Email,
-		&u.Password,
-		&u.LogoutAt,
-		&u.CreatedAt,
-		&u.UpdatedAt,
-	)
+	err := r.pool.QueryRow(ctx, query, email, hashedPassword).Scan(&u.ID)
 	log.Err(err).Str("trace_id", config.Get40Space()).Msg("Creating user in database")
 
 	if err != nil {
@@ -82,8 +71,8 @@ func (r *userRepository) GetUserByEmail(
 ) (*model.User, error) {
 
 	const q = `
-		SELECT id, email, password, logout_at, created_at, updated_at
-		FROM users
+		SELECT id, email, password, logout_at
+		FROM pakaiwa.users
 		WHERE email = $1
 	`
 
@@ -94,12 +83,10 @@ func (r *userRepository) GetUserByEmail(
 		&u.Email,
 		&u.Password,
 		&u.LogoutAt,
-		&u.CreatedAt,
-		&u.UpdatedAt,
 	)
 
 	if err != nil {
-		if err.Error() == "no rows in result set" {
+		if err == pgx.ErrNoRows {
 			return nil, nil
 		}
 		return nil, err
