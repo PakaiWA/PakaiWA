@@ -37,15 +37,14 @@ func NewRateLimiter(limit int, window time.Duration) *RateLimiter {
 	}
 }
 
-func (r *RateLimiter) isAllowed(ip string) bool {
+func (r *RateLimiter) isAllowed(key string) bool {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
 	now := time.Now()
 	windowStart := now.Add(-r.window)
-	reqs := r.requests[ip]
+	reqs := r.requests[key]
 
-	// Filter request yang masih dalam window
 	validReqs := reqs[:0]
 	for _, t := range reqs {
 		if t.After(windowStart) {
@@ -53,15 +52,13 @@ func (r *RateLimiter) isAllowed(ip string) bool {
 		}
 	}
 
-	// Update slice ke map
-	r.requests[ip] = validReqs
+	r.requests[key] = validReqs
 
 	if len(validReqs) >= r.limit {
 		return false
 	}
 
-	// Tambahkan request baru
-	r.requests[ip] = append(r.requests[ip], now)
+	r.requests[key] = append(r.requests[key], now)
 	return true
 }
 
@@ -83,5 +80,27 @@ func RateLimitMiddleware(limit int, window time.Duration) fiber.Handler {
 		}
 
 		return c.Next()
+	}
+}
+
+func AuthFailureLimiter(rl *RateLimiter) fiber.Handler {
+	return func(c fiber.Ctx) error {
+		err := c.Next()
+
+		if err != nil {
+			if fe, ok := err.(*fiber.Error); ok &&
+				fe.Code == fiber.StatusUnauthorized {
+
+				key := "auth_fail:" + c.IP()
+
+				if !rl.isAllowed(key) {
+					return fiber.NewError(
+						fiber.StatusTooManyRequests,
+						"Terlalu banyak percobaan autentikasi gagal",
+					)
+				}
+			}
+		}
+		return err
 	}
 }

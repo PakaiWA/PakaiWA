@@ -51,6 +51,7 @@ func InitApp(b *AppContext) {
 	msgHandler := handler.NewMessageHandler(msgUsecase, b.Log)
 
 	routeConfig := router.RouteConfig{
+		Log:            b.Log,
 		Fiber:          b.Fiber,
 		MessageHandler: msgHandler,
 		AuthHandler:    authHandler,

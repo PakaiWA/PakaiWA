@@ -19,6 +19,7 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v3"
+	"github.com/sirupsen/logrus"
 
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/dto"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/metrics"
@@ -30,6 +31,7 @@ import (
 )
 
 type RouteConfig struct {
+	Log            *logrus.Logger
 	Fiber          *fiber.App
 	QRHandler      *handler.QRHandler
 	AuthHandler    *handler.AuthHandler
@@ -72,11 +74,14 @@ func (c *RouteConfig) SetupGuestRoute() {
 }
 
 func (c *RouteConfig) SetupAuthRoute() {
-	c.Fiber.Post("/register",
-		middleware.RateLimitMiddleware(3, time.Minute*1),
-		c.AuthHandler.Register,
-	)
-	//c.Fiber.Use(middleware.AuthMiddleware()) // Quota Middleware
+	authFailLimiter := middleware.NewRateLimiter(5, time.Minute)
+
+	c.Fiber.Use(
+		middleware.AuthFailureLimiter(authFailLimiter),
+		middleware.AuthMiddleware(c.Log),
+	) // Auth Middleware
+
+	c.Fiber.Post("/register", c.AuthHandler.Register)
 	auth := c.Fiber.Group("/v1", middleware.RateLimitMiddleware(9999, time.Minute*1))
 	auth.Post("/messages", c.MessageHandler.SendMsg)
 }

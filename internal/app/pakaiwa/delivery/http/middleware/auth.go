@@ -26,12 +26,12 @@ import (
 	"github.com/PakaiWA/PakaiWA/internal/pkg/config"
 )
 
-func AuthMiddleware() fiber.Handler {
+func AuthMiddleware(log *logrus.Logger) fiber.Handler {
 	return func(c fiber.Ctx) error {
 		authHeader := c.Get("Authorization")
 
 		if authHeader == "" {
-			logrus.Warn("missing Authorization header")
+			log.Warn("missing Authorization header")
 			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 				"error": "missing Authorization header",
 			})
@@ -39,35 +39,31 @@ func AuthMiddleware() fiber.Handler {
 
 		parts := strings.Split(authHeader, " ")
 		if len(parts) != 2 || strings.ToLower(parts[0]) != "bearer" {
-			logrus.Warn("invalid Authorization header format")
+			log.Warn("invalid Authorization header format")
 			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 				"error": "invalid Authorization header format",
 			})
 		}
 
 		tokenStr := parts[1]
-		logrus.Info(tokenStr)
-
 		secretKey := config.GetJWTKey()
-		logrus.Info(secretKey)
-
 		if secretKey == "" {
-			logrus.Fatal("JWT_SECRET is not set in environment")
+			log.Fatal("JWT_SECRET is not set in environment")
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 				"error": "server misconfiguration",
 			})
 		}
 
-		token, err := jwt.Parse(tokenStr, func(t *jwt.Token) (interface{}, error) {
+		token, err := jwt.Parse(tokenStr, func(t *jwt.Token) (any, error) {
 			if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
-				logrus.Warn("unexpected signing method")
+				log.Warn("unexpected signing method")
 				return nil, fiber.NewError(fiber.StatusUnauthorized, "invalid token")
 			}
 			return []byte(secretKey), nil
 		})
 
 		if err != nil || !token.Valid {
-			logrus.WithError(err).Warn("invalid JWT token")
+			log.WithError(err).Warn("invalid JWT token")
 			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 				"error": "invalid or expired token",
 			})
@@ -75,7 +71,7 @@ func AuthMiddleware() fiber.Handler {
 
 		claims, ok := token.Claims.(jwt.MapClaims)
 		if !ok {
-			logrus.Warn("invalid JWT claims type")
+			log.Warn("invalid JWT claims type")
 			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 				"error": "invalid token claims",
 			})
@@ -83,7 +79,7 @@ func AuthMiddleware() fiber.Handler {
 
 		if exp, ok := claims["exp"].(float64); ok {
 			if int64(exp) < time.Now().Unix() {
-				logrus.Warn("token expired")
+				log.Warn("token expired")
 				return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 					"error": "token expired",
 				})
@@ -92,7 +88,7 @@ func AuthMiddleware() fiber.Handler {
 
 		c.Locals("user", claims)
 
-		logrus.WithFields(logrus.Fields{
+		log.WithFields(logrus.Fields{
 			"sub":  claims["sub"],
 			"role": claims["role"],
 			"path": c.Path(),
