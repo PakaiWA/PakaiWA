@@ -20,10 +20,10 @@ import (
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/rs/zerolog/log"
+	"github.com/sirupsen/logrus"
 
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/model"
-	"github.com/PakaiWA/PakaiWA/internal/pkg/config"
+	"github.com/PakaiWA/PakaiWA/internal/pkg/logger/ctxmeta"
 )
 
 type UserRepository interface {
@@ -33,10 +33,11 @@ type UserRepository interface {
 
 type userRepository struct {
 	pool *pgxpool.Pool
+	log  *logrus.Logger
 }
 
-func NewUserRepository(pool *pgxpool.Pool) UserRepository {
-	return &userRepository{pool: pool}
+func NewUserRepository(pool *pgxpool.Pool, log *logrus.Logger) UserRepository {
+	return &userRepository{pool: pool, log: log}
 }
 
 func (r *userRepository) CreateUser(
@@ -54,13 +55,14 @@ func (r *userRepository) CreateUser(
 	u := new(model.User)
 
 	err := r.pool.QueryRow(ctx, query, email, hashedPassword).Scan(&u.ID)
-	log.Err(err).Str("trace_id", config.Get40Space()).Msg("Creating user in database")
+	traceID := ctxmeta.TraceID(ctx)
+	r.log.Infof("Creating user in database => TraceID: %s", traceID)
 
 	if err != nil {
 		return nil, err
 	}
 
-	log.Info().Str("trace_id", config.Get40Space()).Msgf("User created with ID: %s", u.ID)
+	r.log.Infof("User created with ID: %s", u.ID)
 
 	return u, nil
 }
@@ -69,6 +71,8 @@ func (r *userRepository) GetUserByEmail(
 	ctx context.Context,
 	email string,
 ) (*model.User, error) {
+	traceID := ctxmeta.TraceID(ctx)
+	r.log.Infof("GetUserByEmail => TraceID: %s", traceID)
 
 	const q = `
 		SELECT id, email, password, logout_at

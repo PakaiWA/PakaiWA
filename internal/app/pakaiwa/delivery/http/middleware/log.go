@@ -21,45 +21,68 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
+
+	"github.com/PakaiWA/PakaiWA/internal/pkg/logger/ctxmeta"
 )
 
-func FiberLogger(log *logrus.Logger) fiber.Handler {
+func FiberLogger(base *logrus.Logger) fiber.Handler {
 	return func(c fiber.Ctx) error {
-		traceID := c.Get("X-Request-ID", uuid.New().String())
+		// 1. Trace ID
+		traceID := c.Get("X-Request-ID")
+		if traceID == "" {
+			traceID = uuid.NewString()
+		}
+
 		c.Locals("trace_id", traceID)
+		c.Set("X-Request-ID", traceID)
+
 		start := time.Now()
 
-		err := c.Next()
-
-		latency := time.Since(start)
-		status := c.Response().StatusCode()
-		method := c.Method()
-		path := c.Path()
-		ip := c.IP()
-
-		entry := log.WithFields(logrus.Fields{
+		// 2. Request-scoped logger
+		entry := base.WithFields(logrus.Fields{
 			"trace_id": traceID,
-			"status":   status,
-			"method":   method,
-			"path":     path,
-			"ip":       ip,
-			"latency":  latency.String(),
+			"method":   c.Method(),
+			"path":     c.Path(),
+			"ip":       c.IP(),
 		})
 
-		if err != nil {
-			entry.WithError(err).Error("request failed")
-			return err
+		// 3. Inject context SEBELUM c.Next()
+		ctx := c.Context()
+		ctx = ctxmeta.WithTraceID(ctx, traceID)
+		c.SetContext(ctx)
+
+		entry.WithField("event", "request_start").Info("request started")
+
+		// 4. Continue chain
+		err := c.Next()
+
+		// 5. Post-request logging
+		status := c.Response().StatusCode()
+		latency := time.Since(start)
+
+		fields := logrus.Fields{
+			"status":  status,
+			"latency": latency.String(),
 		}
+
+		// Optional: jti
+		if jti, ok := c.Locals("jti").(string); ok && jti != "" {
+			fields["jti"] = jti
+		}
+
+		logEntry := entry.WithFields(fields)
 
 		switch {
-		case status >= 500:
-			entry.Error("server error")
-		case status >= 400:
-			entry.Warn("client error")
+		case err != nil:
+			logEntry.WithField("event", "request_end").Error("request failed")
+		case status >= fiber.StatusInternalServerError:
+			logEntry.Error("server error")
+		case status >= fiber.StatusBadRequest:
+			logEntry.WithField("event", "request_end").Warn("client error")
 		default:
-			entry.Info("request handled")
+			logEntry.WithField("event", "request_end").Info("request handled")
 		}
 
-		return nil
+		return err
 	}
 }

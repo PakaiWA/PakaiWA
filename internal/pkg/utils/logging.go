@@ -16,11 +16,14 @@
 package utils
 
 import (
+	"context"
 	"errors"
 	"fmt"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/sirupsen/logrus"
+
+	"github.com/PakaiWA/PakaiWA/internal/pkg/config"
 )
 
 func LogValidationErrors(log *logrus.Logger, err error, data ...string) {
@@ -45,4 +48,11 @@ func LogValidationErrors(log *logrus.Logger, err error, data ...string) {
 	} else {
 		log.WithError(err).Error(msg)
 	}
+}
+
+func TraceIDFromContext(ctx context.Context) string {
+	if v, ok := ctx.Value("trace_id").(string); ok && v != "" {
+		return v
+	}
+	return config.Get40Space()
 }

@@ -21,6 +21,7 @@ import (
 
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/dto"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/usecase"
+	"github.com/PakaiWA/PakaiWA/internal/pkg/logger/ctxmeta"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/utils"
 )
 
@@ -65,6 +66,8 @@ func (h *AuthHandler) Register(c fiber.Ctx) error {
 		utils.LogValidationErrors(h.Log, err, "error parsing request body", c.Path())
 		return fiber.ErrBadRequest
 	}
+	traceID := ctxmeta.TraceID(c.Context())
+	h.Log.Infof("Creating user in database => TraceID: %s", traceID)
 
 	isSuccess, err := h.UseCase.Register(c.Context(), request)
 	if err != nil {

@@ -86,6 +86,10 @@ func AuthMiddleware(log *logrus.Logger, authFailLimiter *RateLimiter) fiber.Hand
 			return fail("invalid token claims")
 		}
 
+		if jti, ok := claims["jti"].(string); ok {
+			c.Locals("jti", jti)
+		}
+
 		// Optional: exp sudah divalidasi jwt.Parse,
 		// tapi ini defensif dan eksplisit (boleh dipertahankan)
 		if exp, ok := claims["exp"].(float64); ok {

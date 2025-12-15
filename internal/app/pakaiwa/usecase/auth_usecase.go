@@ -28,6 +28,7 @@ import (
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/dto"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/repository"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/config"
+	"github.com/PakaiWA/PakaiWA/internal/pkg/logger/ctxmeta"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/security/password"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/utils"
 )
@@ -89,6 +90,8 @@ func (u *authUsecase) Login(ctx context.Context, req *dto.LoginReq, iss string) 
 }
 
 func (u *authUsecase) Register(ctx context.Context, req *dto.AuthReq) (bool, error) {
+	traceID := ctxmeta.TraceID(ctx)
+	u.Log.Infof("Register user in database => TraceID: %s", traceID)
 
 	if err := u.Validate.Struct(req); err != nil {
 		return false, err

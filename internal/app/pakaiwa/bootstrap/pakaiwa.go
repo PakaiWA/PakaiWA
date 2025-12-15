@@ -42,7 +42,7 @@ func InitApp(b *AppContext) {
 	qrHandler := handler.NewQRHandler(b.PakaiWA, b.Log)
 
 	// Auth
-	userRepo := repository.NewUserRepository(b.Pool)
+	userRepo := repository.NewUserRepository(b.Pool, b.Log)
 	authUsecase := usecase.NewAuthUsecase(b.Log, userRepo, b.Validate)
 	authHandler := handler.NewAuthHandler(authUsecase, b.Log)
 
