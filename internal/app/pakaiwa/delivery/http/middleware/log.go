@@ -61,6 +61,14 @@ func FiberLogger(base *logrus.Logger) fiber.Handler {
 		status := c.Response().StatusCode()
 		latency := time.Since(start)
 
+		if err != nil {
+			if fe, ok := err.(*fiber.Error); ok {
+				status = fe.Code
+			} else {
+				status = fiber.StatusInternalServerError
+			}
+		}
+
 		fields := logrus.Fields{
 			"status":  status,
 			"latency": latency.String(),

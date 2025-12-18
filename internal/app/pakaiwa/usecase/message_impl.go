@@ -23,8 +23,8 @@ import (
 	"github.com/PakaiWA/whatsmeow"
 	"github.com/PakaiWA/whatsmeow/proto/waE2E"
 	"github.com/go-playground/validator/v10"
-	"github.com/gofiber/fiber/v3"
 
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/apperror"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/model"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/helper"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/logger/ctxmeta"
@@ -43,41 +43,41 @@ func NewMessageUsecase(validate *validator.Validate, wa *whatsmeow.Client) Messa
 	}
 }
 
-func (m messageUsecase) SendMessage(ctx context.Context, req *model.SendMessageReq) (string, error) {
+func (m *messageUsecase) SendMessage(ctx context.Context, req *model.SendMessageReq) (string, error) {
+	log := ctxmeta.Logger(ctx)
 	if err := m.Validate.Struct(req); err != nil {
+		if log != nil {
+			log.WithError(err).WithField("event", "validation_failed").Warn("invalid send message request")
+		}
 		return "", err
 	}
 
 	id := m.WA.GenerateMessageID()
-
 	if strings.TrimSpace(req.Text) == "" {
-		return id, fiber.ErrBadRequest
+		return id, apperror.ErrInvalidMessage
 	}
 
 	phoneNumber := strings.TrimSpace(req.Phone)
-	if phoneNumber == id {
-		return id, fiber.ErrBadRequest
-	}
-
 	jid, err := helper.NormalizeJID(phoneNumber)
 	if err != nil {
-		return id, fiber.ErrBadRequest
+		return id, apperror.ErrInvalidMessage
 	}
 
-	go func() {
-		msg := &waE2E.Message{
-			Conversation: utils.ProtoString(req.Text),
-		}
-
-		ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	// Turunkan context dari caller
+	go func(parent context.Context, msgID string) {
+		ctxSend, cancel := context.WithTimeout(parent, 15*time.Second)
 		defer cancel()
 
-		_, err = m.WA.SendMessage(ctx, jid, msg, whatsmeow.SendRequestExtra{ID: id})
+		msg := &waE2E.Message{Conversation: utils.ProtoString(req.Text)}
+
+		_, err := m.WA.SendMessage(ctxSend, jid, msg, whatsmeow.SendRequestExtra{ID: msgID})
+
 		if err != nil {
-			log := ctxmeta.Logger(ctx)
-			log.Errorf("Fail to send with id: %s %v", id, err)
+			if l := ctxmeta.Logger(ctxSend); l != nil {
+				l.WithError(err).WithField("message_id", msgID).Error("failed to send whatsapp message")
+			}
 		}
-	}()
+	}(ctx, id)
 
 	return id, nil
 }

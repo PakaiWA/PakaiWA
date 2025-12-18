@@ -31,3 +31,4 @@ func PanicIfError(err error) {
 var ErrUsernameExists = errors.New("username already exists")
 var ErrInvalidCredentials = errors.New("invalid email or password")
 var ErrPasswordWeak = errors.New("password does not meet complexity requirements")
+var ErrInvalidMessage = errors.New("message is invalid")
