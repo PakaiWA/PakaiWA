@@ -63,7 +63,6 @@ func (m *messageUsecase) SendMessage(ctx context.Context, req *model.SendMessage
 		return id, apperror.ErrInvalidMessage
 	}
 
-	// Turunkan context dari caller
 	go func(parent context.Context, msgID string) {
 		ctxSend, cancel := context.WithTimeout(parent, 15*time.Second)
 		defer cancel()
@@ -74,7 +73,11 @@ func (m *messageUsecase) SendMessage(ctx context.Context, req *model.SendMessage
 
 		if err != nil {
 			if l := ctxmeta.Logger(ctxSend); l != nil {
-				l.WithError(err).WithField("message_id", msgID).Error("failed to send whatsapp message")
+				l.
+					WithError(err).
+					WithField("event", "send_message_failed").
+					WithField("message_id", msgID).
+					Error("failed to send whatsapp message")
 			}
 		}
 	}(ctx, id)

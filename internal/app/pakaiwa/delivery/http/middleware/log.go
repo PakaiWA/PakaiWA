@@ -16,12 +16,15 @@
 package middleware
 
 import (
+	"errors"
 	"time"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v3"
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
 
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/apperror"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/logger/ctxmeta"
 )
 
@@ -64,8 +67,15 @@ func FiberLogger(base *logrus.Logger) fiber.Handler {
 		if err != nil {
 			if fe, ok := err.(*fiber.Error); ok {
 				status = fe.Code
+			} else if errors.Is(err, apperror.ErrInvalidMessage) {
+				status = fiber.StatusBadRequest
 			} else {
-				status = fiber.StatusInternalServerError
+				var vErr validator.ValidationErrors
+				if errors.As(err, &vErr) {
+					status = fiber.StatusBadRequest
+				} else {
+					status = fiber.StatusInternalServerError
+				}
 			}
 		}
 
