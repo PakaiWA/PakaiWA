@@ -19,7 +19,6 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v3"
-	"github.com/sirupsen/logrus"
 
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/dto"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/metrics"
@@ -31,7 +30,6 @@ import (
 )
 
 type RouteConfig struct {
-	Log            *logrus.Logger
 	Fiber          *fiber.App
 	QRHandler      *handler.QRHandler
 	AuthHandler    *handler.AuthHandler

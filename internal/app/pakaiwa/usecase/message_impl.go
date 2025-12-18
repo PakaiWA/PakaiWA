@@ -24,28 +24,26 @@ import (
 	"github.com/PakaiWA/whatsmeow/proto/waE2E"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v3"
-	"github.com/sirupsen/logrus"
 
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/model"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/helper"
+	"github.com/PakaiWA/PakaiWA/internal/pkg/logger/ctxmeta"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/utils"
 )
 
 type messageUsecase struct {
-	Log      *logrus.Logger
 	Validate *validator.Validate
 	WA       *whatsmeow.Client
 }
 
-func NewMessageUsecase(log *logrus.Logger, validate *validator.Validate, wa *whatsmeow.Client) MessageUsecase {
+func NewMessageUsecase(validate *validator.Validate, wa *whatsmeow.Client) MessageUsecase {
 	return &messageUsecase{
 		WA:       wa,
-		Log:      log,
 		Validate: validate,
 	}
 }
 
-func (m messageUsecase) SendMessage(req *model.SendMessageReq) (string, error) {
+func (m messageUsecase) SendMessage(ctx context.Context, req *model.SendMessageReq) (string, error) {
 	if err := m.Validate.Struct(req); err != nil {
 		return "", err
 	}
@@ -76,7 +74,8 @@ func (m messageUsecase) SendMessage(req *model.SendMessageReq) (string, error) {
 
 		_, err = m.WA.SendMessage(ctx, jid, msg, whatsmeow.SendRequestExtra{ID: id})
 		if err != nil {
-			m.Log.Errorf("Fail to send with id: %s %v", id, err)
+			log := ctxmeta.Logger(ctx)
+			log.Errorf("Fail to send with id: %s %v", id, err)
 		}
 	}()
 

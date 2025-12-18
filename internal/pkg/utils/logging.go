@@ -24,29 +24,41 @@ import (
 	"github.com/sirupsen/logrus"
 
 	"github.com/PakaiWA/PakaiWA/internal/pkg/config"
+	"github.com/PakaiWA/PakaiWA/internal/pkg/logger/ctxmeta"
 )
 
-func LogValidationErrors(log *logrus.Logger, err error, data ...string) {
+func LogValidationErrors(ctx context.Context, err error, data ...string) {
+	log := ctxmeta.Logger(ctx)
+	if log == nil {
+		return // atau fallback logger infra jika mau
+	}
+
 	message := "unknown"
 	if len(data) > 0 {
 		message = data[0]
 	}
+
 	path := "unknown"
 	if len(data) > 1 {
 		path = data[1]
 	}
+
 	msg := fmt.Sprintf("%s at %s", message, path)
+
 	var validationError validator.ValidationErrors
 	if errors.As(err, &validationError) {
 		for _, v := range validationError {
 			log.WithFields(logrus.Fields{
+				"event": "validation_failed",
 				"field": v.Field(),
 				"tag":   v.Tag(),
 				"param": v.Param(),
-			}).Error(msg)
+			}).Warn(msg)
 		}
 	} else {
-		log.WithError(err).Error(msg)
+		log.WithError(err).
+			WithField("event", "validation_failed").
+			Error(msg)
 	}
 }
 

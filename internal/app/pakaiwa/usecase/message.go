@@ -16,9 +16,11 @@
 package usecase
 
 import (
+	"context"
+
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/model"
 )
 
 type MessageUsecase interface {
-	SendMessage(req *model.SendMessageReq) (string, error)
+	SendMessage(ctx context.Context, req *model.SendMessageReq) (string, error)
 }

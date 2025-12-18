@@ -17,7 +17,6 @@ package handler
 
 import (
 	"github.com/gofiber/fiber/v3"
-	"github.com/sirupsen/logrus"
 
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/dto"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/usecase"
@@ -27,12 +26,10 @@ import (
 
 type AuthHandler struct {
 	UseCase usecase.AuthUsecase
-	Log     *logrus.Logger
 }
 
-func NewAuthHandler(uc usecase.AuthUsecase, log *logrus.Logger) *AuthHandler {
+func NewAuthHandler(uc usecase.AuthUsecase) *AuthHandler {
 	return &AuthHandler{
-		Log:     log,
 		UseCase: uc,
 	}
 }
@@ -41,13 +38,13 @@ func (h *AuthHandler) Login(c fiber.Ctx) error {
 	request := new(dto.LoginReq)
 
 	if err := c.Bind().Body(request); err != nil {
-		utils.LogValidationErrors(h.Log, err, "error parsing request body")
+		utils.LogValidationErrors(c.Context(), err, "error parsing request body")
 		return fiber.ErrBadRequest
 	}
 
 	token, err := h.UseCase.Login(c.Context(), request, c.BaseURL())
 	if err != nil {
-		utils.LogValidationErrors(h.Log, err, "validation failed in Login", c.Path())
+		utils.LogValidationErrors(c.Context(), err, "validation failed in Login", c.Path())
 		return err
 	}
 
@@ -63,7 +60,7 @@ func (h *AuthHandler) Login(c fiber.Ctx) error {
 func (h *AuthHandler) Register(c fiber.Ctx) error {
 	request := new(dto.AuthReq)
 	if err := c.Bind().Body(request); err != nil {
-		utils.LogValidationErrors(h.Log, err, "error parsing request body", c.Path())
+		utils.LogValidationErrors(c.Context(), err, "error parsing request body", c.Path())
 		return fiber.ErrBadRequest
 	}
 	log := ctxmeta.Logger(c.Context())

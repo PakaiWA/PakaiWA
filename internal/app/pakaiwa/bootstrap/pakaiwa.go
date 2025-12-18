@@ -39,19 +39,18 @@ type AppContext struct {
 }
 
 func InitApp(b *AppContext) {
-	qrHandler := handler.NewQRHandler(b.PakaiWA, b.Log)
+	qrHandler := handler.NewQRHandler(b.PakaiWA)
 
 	// Auth
-	userRepo := repository.NewUserRepository(b.Pool, b.Log)
-	authUsecase := usecase.NewAuthUsecase(b.Log, userRepo, b.Validate)
-	authHandler := handler.NewAuthHandler(authUsecase, b.Log)
+	userRepo := repository.NewUserRepository(b.Pool)
+	authUsecase := usecase.NewAuthUsecase(userRepo, b.Validate)
+	authHandler := handler.NewAuthHandler(authUsecase)
 
 	// Message
-	msgUsecase := usecase.NewMessageUsecase(b.Log, b.Validate, b.PakaiWA.Client)
-	msgHandler := handler.NewMessageHandler(msgUsecase, b.Log)
+	msgUsecase := usecase.NewMessageUsecase(b.Validate, b.PakaiWA.Client)
+	msgHandler := handler.NewMessageHandler(msgUsecase)
 
 	routeConfig := router.RouteConfig{
-		Log:            b.Log,
 		Fiber:          b.Fiber,
 		MessageHandler: msgHandler,
 		AuthHandler:    authHandler,

@@ -20,7 +20,6 @@ import (
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/sirupsen/logrus"
 
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/model"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/logger/ctxmeta"
@@ -33,11 +32,10 @@ type UserRepository interface {
 
 type userRepository struct {
 	pool *pgxpool.Pool
-	log  *logrus.Logger
 }
 
-func NewUserRepository(pool *pgxpool.Pool, log *logrus.Logger) UserRepository {
-	return &userRepository{pool: pool, log: log}
+func NewUserRepository(pool *pgxpool.Pool) UserRepository {
+	return &userRepository{pool: pool}
 }
 
 func (r *userRepository) CreateUser(

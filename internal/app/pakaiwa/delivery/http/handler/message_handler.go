@@ -17,7 +17,6 @@ package handler
 
 import (
 	"github.com/gofiber/fiber/v3"
-	"github.com/sirupsen/logrus"
 
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/model"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/helper"
@@ -27,12 +26,10 @@ import (
 
 type MessageHandler struct {
 	UseCase usecase.MessageUsecase
-	Log     *logrus.Logger
 }
 
-func NewMessageHandler(useCase usecase.MessageUsecase, log *logrus.Logger) *MessageHandler {
+func NewMessageHandler(useCase usecase.MessageUsecase) *MessageHandler {
 	return &MessageHandler{
-		Log:     log,
 		UseCase: useCase,
 	}
 }
@@ -40,13 +37,13 @@ func NewMessageHandler(useCase usecase.MessageUsecase, log *logrus.Logger) *Mess
 func (h *MessageHandler) SendMsg(c fiber.Ctx) error {
 	request := new(model.SendMessageReq)
 	if err := c.Bind().Body(request); err != nil {
-		utils.LogValidationErrors(h.Log, err, "error parsing request body", c.Path())
+		utils.LogValidationErrors(c.Context(), err, "error parsing request body", c.Path())
 		return fiber.ErrBadRequest
 	}
 
-	id, err := h.UseCase.SendMessage(request)
+	id, err := h.UseCase.SendMessage(c.Context(), request)
 	if err != nil {
-		utils.LogValidationErrors(h.Log, err, "validation failed in SendMessage", c.Path())
+		utils.LogValidationErrors(c.Context(), err, "validation failed in SendMessage", c.Path())
 		return err
 	}
 

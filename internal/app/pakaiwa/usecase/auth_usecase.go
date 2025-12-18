@@ -22,7 +22,6 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
-	"github.com/sirupsen/logrus"
 
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/apperror"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/dto"
@@ -34,7 +33,6 @@ import (
 )
 
 type authUsecase struct {
-	Log        *logrus.Logger
 	Repository repository.UserRepository
 	Validate   *validator.Validate
 }
@@ -44,9 +42,8 @@ type AuthUsecase interface {
 	Register(ctx context.Context, req *dto.AuthReq) (bool, error)
 }
 
-func NewAuthUsecase(log *logrus.Logger, repo repository.UserRepository, validator *validator.Validate) AuthUsecase {
+func NewAuthUsecase(repo repository.UserRepository, validator *validator.Validate) AuthUsecase {
 	return &authUsecase{
-		Log:        log,
 		Repository: repo,
 		Validate:   validator,
 	}
