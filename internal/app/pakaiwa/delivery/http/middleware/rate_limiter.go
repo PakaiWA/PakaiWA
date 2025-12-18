@@ -20,6 +20,8 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v3"
+
+	"github.com/PakaiWA/PakaiWA/internal/pkg/utils"
 )
 
 type RateLimiter struct {
@@ -66,17 +68,9 @@ func RateLimitMiddleware(limit int, window time.Duration) fiber.Handler {
 	rl := NewRateLimiter(limit, window)
 
 	return func(c fiber.Ctx) error {
-		ip := c.IP()
-
-		if !rl.isAllowed(ip) {
-			return c.Status(fiber.StatusTooManyRequests).JSON(fiber.Map{
-				"success": false,
-				"error": fiber.Map{
-					"title":  "Too Many Requests",
-					"status": 429,
-					"detail": "Please slow down, you're hitting the rate limit",
-				},
-			})
+		key := "auth_fail:" + c.IP() + ":" + c.Get("User-Agent")
+		if !rl.isAllowed(key) {
+			return utils.TooManyRequests(c)
 		}
 
 		return c.Next()

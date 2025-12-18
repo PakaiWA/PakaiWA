@@ -21,8 +21,10 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"github.com/golang-jwt/jwt/v5"
 
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/model"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/config"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/logger/ctxmeta"
+	"github.com/PakaiWA/PakaiWA/internal/pkg/utils"
 )
 
 func AuthMiddleware(authFailLimiter *RateLimiter) fiber.Handler {
@@ -30,13 +32,11 @@ func AuthMiddleware(authFailLimiter *RateLimiter) fiber.Handler {
 		log := ctxmeta.Logger(c.Context())
 		ip := c.IP()
 
+		key := "auth_fail:" + ip + ":" + c.Get("User-Agent")
 		fail := func(msg string, status int) error {
-			key := "auth_fail:" + ip + ":" + c.Get("User-Agent")
 			if !authFailLimiter.isAllowed(key) {
 				log.WithField("ip", ip).Warn("auth rate limit exceeded")
-				return c.Status(429).JSON(fiber.Map{
-					"error": "too many requests",
-				})
+				return utils.TooManyRequests(c)
 			}
 
 			log.WithField("ip", ip).Warn(msg)
@@ -77,13 +77,29 @@ func AuthMiddleware(authFailLimiter *RateLimiter) fiber.Handler {
 
 		claims := token.Claims.(*Claims)
 
-		c.Locals("auth_user", fiber.Map{
-			"sub":  claims.Subject,
-			"role": claims.Role,
-			"jti":  claims.ID,
+		c.Locals("auth_user", model.AuthUser{
+			Sub:  claims.Subject,
+			Role: claims.Role,
+			JTI:  claims.ID,
 		})
 
-		authFailLimiter.Reset("auth_fail:" + ip)
+		authFailLimiter.Reset(key)
+		return c.Next()
+	}
+}
+
+func RequireAdmin() fiber.Handler {
+	return func(c fiber.Ctx) error {
+
+		user, ok := c.Locals("auth_user").(model.AuthUser)
+		if !ok {
+			return fiber.NewError(fiber.StatusUnauthorized, "unauthorized")
+		}
+
+		if user.Role != "admin" {
+			return fiber.NewError(fiber.StatusForbidden, "admin only")
+		}
+
 		return c.Next()
 	}
 }

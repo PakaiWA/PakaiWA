@@ -37,37 +37,36 @@ type RouteConfig struct {
 }
 
 func (c *RouteConfig) Setup() {
-	c.NoLimitRoute()
-	c.SetupGuestRoute()
-	c.SetupAuthRoute()
+	c.setupPublicRoutes()
+	c.setupGuestRoutes()
+	c.setupAuthRoutes()
 }
 
-func (c *RouteConfig) NoLimitRoute() {
-	c.Fiber.Get("/", middleware.RateLimitMiddleware(3, time.Minute*1), func(ctx fiber.Ctx) error {
-		baseUrl := ctx.BaseURL()
-		res := dto.VersionRes{
-			Message:   baseUrl + " - Unofficial WhatsApp Restful API Gateway",
-			Version:   config.GetAppVersion(),
-			Stability: config.GetAppDesc(),
-		}
-		return ctx.JSON(res)
-	})
+func (c *RouteConfig) setupPublicRoutes() {
+
+	c.Fiber.Get("/",
+		middleware.RateLimitMiddleware(3, time.Minute),
+		func(ctx fiber.Ctx) error {
+			baseUrl := ctx.BaseURL()
+			res := dto.VersionRes{
+				Message:   baseUrl + " - Unofficial WhatsApp Restful API Gateway",
+				Version:   config.GetAppVersion(),
+				Stability: config.GetAppDesc(),
+			}
+			return ctx.JSON(res)
+		},
+	)
 
 	c.Fiber.Get("/metrics",
-		middleware.RateLimitMiddleware(30, time.Minute*1),
+		middleware.RateLimitMiddleware(30, time.Minute),
 		metrics.PrometheusHandler(),
 	)
 }
 
-func (c *RouteConfig) SetupGuestRoute() {
+func (c *RouteConfig) setupGuestRoutes() {
 	c.Fiber.Post("/auth/login",
-		middleware.RateLimitMiddleware(10, time.Minute*1),
+		middleware.RateLimitMiddleware(10, time.Minute),
 		c.AuthHandler.Login,
-	)
-
-	c.Fiber.Post("/logout",
-		middleware.RateLimitMiddleware(3, time.Minute*1),
-		metrics.PrometheusHandler(),
 	)
 }
 
@@ -76,5 +75,31 @@ func (c *RouteConfig) SetupAuthRoute() {
 	c.Fiber.Post("/register", middleware.RateLimitMiddleware(5, time.Minute*1), c.AuthHandler.Register)
 	// Grouped Auth Routes V1
 	v1 := c.Fiber.Group("/v1", middleware.RateLimitMiddleware(9999, time.Minute*1))
+	v1.Post("/messages", c.MessageHandler.SendMsg)
+}
+
+func (c *RouteConfig) setupAuthRoutes() {
+	// =====================
+	// Base authenticated routes
+	// =====================
+	auth := c.Fiber.Group(
+		"/",
+		middleware.RateLimitMiddleware(1000, time.Minute),
+		middleware.AuthMiddleware(middleware.NewRateLimiter(5, time.Minute)),
+	)
+
+	// logout (authenticated user)
+	auth.Post("/logout", middleware.RateLimitMiddleware(5, time.Minute), c.AuthHandler.Register)
+
+	// =====================
+	// Admin-only routes
+	// =====================
+	admin := auth.Group("/", middleware.RequireAdmin())
+	admin.Post("/register", middleware.RateLimitMiddleware(5, time.Minute), c.AuthHandler.Register)
+
+	// =====================
+	// User API v1
+	// =====================
+	v1 := auth.Group("/v1") //  middleware.QuotaMiddleware(c.Redis, 100),
 	v1.Post("/messages", c.MessageHandler.SendMsg)
 }
