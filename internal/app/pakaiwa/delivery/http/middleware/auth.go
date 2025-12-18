@@ -17,13 +17,10 @@ package middleware
 
 import (
 	"strings"
-	"time"
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/sirupsen/logrus"
 
-	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/model"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/config"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/logger/ctxmeta"
 )
@@ -32,96 +29,61 @@ func AuthMiddleware(authFailLimiter *RateLimiter) fiber.Handler {
 	return func(c fiber.Ctx) error {
 		log := ctxmeta.Logger(c.Context())
 		ip := c.IP()
-		authHeader := c.Get("Authorization")
 
-		fail := func(msg string) error {
+		fail := func(msg string, status int) error {
 			key := "auth_fail:" + ip + ":" + c.Get("User-Agent")
-
 			if !authFailLimiter.isAllowed(key) {
-				log.WithField("ip", ip).Warn("auth failure rate limit exceeded")
-
-				return c.Status(fiber.StatusTooManyRequests).JSON(fiber.Map{
-					"error": fiber.Map{
-						"title":  "Too Many Requests",
-						"status": 429,
-						"detail": "Please slow down, you're hitting the rate limit",
-					},
+				log.WithField("ip", ip).Warn("auth rate limit exceeded")
+				return c.Status(429).JSON(fiber.Map{
+					"error": "too many requests",
 				})
 			}
 
 			log.WithField("ip", ip).Warn(msg)
-			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-				"error": msg,
-			})
+			return c.Status(status).JSON(fiber.Map{"error": msg})
 		}
 
+		authHeader := c.Get("Authorization")
 		if authHeader == "" {
-			return fail("missing Authorization header")
+			return fail("missing authorization header", 401)
 		}
 
 		parts := strings.Fields(authHeader)
 		if len(parts) != 2 || strings.ToLower(parts[0]) != "bearer" {
-			return fail("invalid Authorization header format")
+			return fail("invalid authorization format", 401)
 		}
 
 		secretKey := config.GetJWTKey()
 		if secretKey == "" {
-			log.Error("JWT_SECRET is not set")
-			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-				"error": "server misconfiguration",
-			})
+			log.Error("JWT_SECRET not configured")
+			return c.SendStatus(500)
 		}
 
-		token, err := jwt.ParseWithClaims(
-			parts[1],
-			&model.CustomClaims{},
-			func(t *jwt.Token) (any, error) {
-				if t.Method != jwt.SigningMethodHS256 {
-					return nil, fiber.ErrUnauthorized
-				}
-				return []byte(secretKey), nil
-			},
-		)
+		type Claims struct {
+			jwt.RegisteredClaims
+			Role string `json:"role"`
+		}
+
+		token, err := jwt.ParseWithClaims(parts[1], &Claims{}, func(t *jwt.Token) (any, error) {
+			if t.Method != jwt.SigningMethodHS256 {
+				return nil, fiber.ErrUnauthorized
+			}
+			return []byte(secretKey), nil
+		})
 
 		if err != nil || !token.Valid {
-			return fail("invalid or expired token")
+			return fail("invalid or expired token", 401)
 		}
 
-		claims, ok := token.Claims.(jwt.MapClaims)
-		if !ok {
-			return fail("invalid token claims")
-		}
+		claims := token.Claims.(*Claims)
 
-		if jti, ok := claims["jti"].(string); ok {
-			c.Locals("jti", jti)
-		}
+		c.Locals("auth_user", fiber.Map{
+			"sub":  claims.Subject,
+			"role": claims.Role,
+			"jti":  claims.ID,
+		})
 
-		// Optional: exp sudah divalidasi jwt.Parse,
-		// tapi ini defensif dan eksplisit (boleh dipertahankan)
-		if exp, ok := claims["exp"].(float64); ok {
-			if int64(exp) < time.Now().Unix() {
-				return fail("token expired")
-			}
-		}
-
-		// Auth sukses → reset counter (opsional tapi direkomendasikan)
 		authFailLimiter.Reset("auth_fail:" + ip)
-
-		user := model.AuthUser{
-			Sub:  claims["sub"].(string),
-			JTI:  claims["jti"].(string),
-			Role: claims["role"].(string),
-		}
-
-		c.Locals("auth_user", user)
-
-		log.WithFields(logrus.Fields{
-			"sub":  claims["sub"],
-			"role": claims["role"],
-			"path": c.Path(),
-			"ip":   ip,
-		}).Debug("authenticated request")
-
 		return c.Next()
 	}
 }
