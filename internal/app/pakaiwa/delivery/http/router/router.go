@@ -74,7 +74,7 @@ func (c *RouteConfig) SetupGuestRoute() {
 }
 
 func (c *RouteConfig) SetupAuthRoute() {
-	c.Fiber.Use(middleware.AuthMiddleware(c.Log, middleware.NewRateLimiter(5, time.Minute))) // Auth Middleware
+	c.Fiber.Use(middleware.AuthMiddleware(middleware.NewRateLimiter(5, time.Minute))) // Auth Middleware
 	c.Fiber.Post("/register", middleware.RateLimitMiddleware(5, time.Minute*1), c.AuthHandler.Register)
 	// Grouped Auth Routes V1
 	v1 := c.Fiber.Group("/v1", middleware.RateLimitMiddleware(9999, time.Minute*1))

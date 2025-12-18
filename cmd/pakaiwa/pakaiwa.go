@@ -68,7 +68,6 @@ func main() {
 		Producer: producer,
 		Validate: validate,
 	})
-	log.Info("OKE")
 
 	go func() {
 		addr := ":8080"

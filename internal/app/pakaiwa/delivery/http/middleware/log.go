@@ -49,6 +49,7 @@ func FiberLogger(base *logrus.Logger) fiber.Handler {
 		// 3. Inject context SEBELUM c.Next()
 		ctx := c.Context()
 		ctx = ctxmeta.WithTraceID(ctx, traceID)
+		ctx = ctxmeta.WithLogger(ctx, entry)
 		c.SetContext(ctx)
 
 		entry.WithField("event", "request_start").Info("request started")
@@ -76,9 +77,9 @@ func FiberLogger(base *logrus.Logger) fiber.Handler {
 		case err != nil:
 			logEntry.WithField("event", "request_end").Error("request failed")
 		case status >= fiber.StatusInternalServerError:
-			logEntry.Error("server error")
+			logEntry.WithField("event", "request_end").Error("server error")
 		case status >= fiber.StatusBadRequest:
-			logEntry.WithField("event", "request_end").Warn("client error")
+			logEntry.WithField("event", "request_end").WithField("category", "client_error").Info("request handled")
 		default:
 			logEntry.WithField("event", "request_end").Info("request handled")
 		}

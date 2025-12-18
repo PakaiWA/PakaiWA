@@ -66,8 +66,8 @@ func (h *AuthHandler) Register(c fiber.Ctx) error {
 		utils.LogValidationErrors(h.Log, err, "error parsing request body", c.Path())
 		return fiber.ErrBadRequest
 	}
-	traceID := ctxmeta.TraceID(c.Context())
-	h.Log.Infof("Creating user in database => TraceID: %s", traceID)
+	log := ctxmeta.Logger(c.Context())
+	log.Info("Creating user in database")
 
 	isSuccess, err := h.UseCase.Register(c.Context(), request)
 	if err != nil {

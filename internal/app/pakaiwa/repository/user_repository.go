@@ -45,6 +45,7 @@ func (r *userRepository) CreateUser(
 	email string,
 	hashedPassword string,
 ) (*model.User, error) {
+	log := ctxmeta.Logger(ctx)
 
 	const query = `
 		INSERT INTO pakaiwa.users (email, password)
@@ -55,14 +56,13 @@ func (r *userRepository) CreateUser(
 	u := new(model.User)
 
 	err := r.pool.QueryRow(ctx, query, email, hashedPassword).Scan(&u.ID)
-	traceID := ctxmeta.TraceID(ctx)
-	r.log.Infof("Creating user in database => TraceID: %s", traceID)
+	log.Info("Creating user in database")
 
 	if err != nil {
 		return nil, err
 	}
 
-	r.log.Infof("User created with ID: %s", u.ID)
+	log.Infof("User created with ID: %s", u.ID)
 
 	return u, nil
 }
@@ -71,8 +71,8 @@ func (r *userRepository) GetUserByEmail(
 	ctx context.Context,
 	email string,
 ) (*model.User, error) {
-	traceID := ctxmeta.TraceID(ctx)
-	r.log.Infof("GetUserByEmail => TraceID: %s", traceID)
+	log := ctxmeta.Logger(ctx)
+	log.Infof("GetUserByEmail")
 
 	const q = `
 		SELECT id, email, password, logout_at

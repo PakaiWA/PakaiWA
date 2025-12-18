@@ -90,8 +90,8 @@ func (u *authUsecase) Login(ctx context.Context, req *dto.LoginReq, iss string) 
 }
 
 func (u *authUsecase) Register(ctx context.Context, req *dto.AuthReq) (bool, error) {
-	traceID := ctxmeta.TraceID(ctx)
-	u.Log.Infof("Register user in database => TraceID: %s", traceID)
+	log := ctxmeta.Logger(ctx)
+	log.Infof("Register user in database")
 
 	if err := u.Validate.Struct(req); err != nil {
 		return false, err
@@ -104,7 +104,7 @@ func (u *authUsecase) Register(ctx context.Context, req *dto.AuthReq) (bool, err
 
 	user, err := u.Repository.GetUserByEmail(ctx, req.Email)
 	if err != nil {
-		return false, err // error sistem, JANGAN ditelan
+		return false, err
 	}
 
 	if user != nil {

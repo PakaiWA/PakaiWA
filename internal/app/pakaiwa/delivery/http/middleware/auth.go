@@ -23,20 +23,22 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/sirupsen/logrus"
 
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/model"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/config"
+	"github.com/PakaiWA/PakaiWA/internal/pkg/logger/ctxmeta"
 )
 
-func AuthMiddleware(log *logrus.Logger, authFailLimiter *RateLimiter) fiber.Handler {
+func AuthMiddleware(authFailLimiter *RateLimiter) fiber.Handler {
 	return func(c fiber.Ctx) error {
+		log := ctxmeta.Logger(c.Context())
 		ip := c.IP()
 		authHeader := c.Get("Authorization")
 
 		fail := func(msg string) error {
-			key := "auth_fail:" + ip
+			key := "auth_fail:" + ip + ":" + c.Get("User-Agent")
 
 			if !authFailLimiter.isAllowed(key) {
-				log.WithField("ip", ip).
-					Warn("auth failure rate limit exceeded")
+				log.WithField("ip", ip).Warn("auth failure rate limit exceeded")
 
 				return c.Status(fiber.StatusTooManyRequests).JSON(fiber.Map{
 					"error": fiber.Map{
@@ -64,18 +66,22 @@ func AuthMiddleware(log *logrus.Logger, authFailLimiter *RateLimiter) fiber.Hand
 
 		secretKey := config.GetJWTKey()
 		if secretKey == "" {
-			log.Fatal("JWT_SECRET is not set")
+			log.Error("JWT_SECRET is not set")
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 				"error": "server misconfiguration",
 			})
 		}
 
-		token, err := jwt.Parse(parts[1], func(t *jwt.Token) (any, error) {
-			if t.Method.Alg() != jwt.SigningMethodHS256.Alg() {
-				return nil, fiber.ErrUnauthorized
-			}
-			return []byte(secretKey), nil
-		})
+		token, err := jwt.ParseWithClaims(
+			parts[1],
+			&model.CustomClaims{},
+			func(t *jwt.Token) (any, error) {
+				if t.Method != jwt.SigningMethodHS256 {
+					return nil, fiber.ErrUnauthorized
+				}
+				return []byte(secretKey), nil
+			},
+		)
 
 		if err != nil || !token.Valid {
 			return fail("invalid or expired token")
@@ -101,14 +107,20 @@ func AuthMiddleware(log *logrus.Logger, authFailLimiter *RateLimiter) fiber.Hand
 		// Auth sukses → reset counter (opsional tapi direkomendasikan)
 		authFailLimiter.Reset("auth_fail:" + ip)
 
-		c.Locals("user", claims)
+		user := model.AuthUser{
+			Sub:  claims["sub"].(string),
+			JTI:  claims["jti"].(string),
+			Role: claims["role"].(string),
+		}
+
+		c.Locals("auth_user", user)
 
 		log.WithFields(logrus.Fields{
 			"sub":  claims["sub"],
 			"role": claims["role"],
 			"path": c.Path(),
 			"ip":   ip,
-		}).Info("authenticated request")
+		}).Debug("authenticated request")
 
 		return c.Next()
 	}

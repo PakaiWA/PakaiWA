@@ -35,7 +35,6 @@ import (
 )
 
 type PwaContext struct {
-	ctx      context.Context
 	Log      *logrus.Logger
 	Pool     *pgxpool.Pool
 	Producer *confluent.Producer
