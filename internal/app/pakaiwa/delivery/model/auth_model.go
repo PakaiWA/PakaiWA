@@ -21,13 +21,15 @@ type Model struct {
 	ID string
 }
 
+type JWTClaims struct {
+	jwt.RegisteredClaims
+	Role          string `json:"role"`
+	QuotaLimit    int64  `json:"quota_limit"`
+	WindowSeconds int64  `json:"window_seconds"`
+}
+
 type AuthUser struct {
 	Sub  string
 	JTI  string
 	Role string
-}
-
-type CustomClaims struct {
-	jwt.RegisteredClaims
-	Role string `json:"role"`
 }

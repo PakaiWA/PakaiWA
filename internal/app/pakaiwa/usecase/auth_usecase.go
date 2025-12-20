@@ -25,6 +25,7 @@ import (
 
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/apperror"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/dto"
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/model"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/repository"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/config"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/logger/ctxmeta"
@@ -56,23 +57,27 @@ func (u *authUsecase) Login(ctx context.Context, req *dto.LoginReq, iss string) 
 
 	user, err := u.Repository.GetUserByEmail(ctx, req.Email)
 	if err != nil {
-		return "", err // error sistem, JANGAN ditelan
+		return "", err
 	}
 
 	if user == nil || !password.Compare(user.Password, req.Password) {
 		return "", apperror.ErrInvalidCredentials
 	}
 
-	now := time.Now().Unix()
+	quotaLimit, windowSeconds := u.Repository.GetUserQuota(ctx, user.ID)
 
-	claims := jwt.MapClaims{
-		"sub":  user.ID,
-		"iss":  iss,
-		"iat":  now,
-		"nbf":  now,
-		"exp":  time.Now().Add(time.Hour * 24 * 7).Unix(),
-		"jti":  uuid.NewString(),
-		"role": "user",
+	claims := &model.JWTClaims{
+		RegisteredClaims: jwt.RegisteredClaims{
+			Subject:   user.ID,
+			Issuer:    iss,
+			IssuedAt:  jwt.NewNumericDate(time.Now()),
+			NotBefore: jwt.NewNumericDate(time.Now()),
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(7 * 24 * time.Hour)),
+			ID:        uuid.NewString(),
+		},
+		Role:          user.Role,
+		QuotaLimit:    quotaLimit,
+		WindowSeconds: windowSeconds,
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)

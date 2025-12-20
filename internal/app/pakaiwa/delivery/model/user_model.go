@@ -23,6 +23,7 @@ import (
 type User struct {
 	ID        string
 	Email     string
+	Role      string
 	Password  string
 	LogoutAt  time.Time
 	CreatedAt time.Time

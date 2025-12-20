@@ -78,3 +78,8 @@ func GetLogLevel() logrus.Level {
 
 	return lvl
 }
+
+func GetDefaultQuotaLimit() int64 {
+	viper.SetDefault("app.quota.default_limit", 6)
+	return viper.GetInt64("app.quota.default_limit")
+}

@@ -27,7 +27,7 @@ import (
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/model"
 )
 
-func QuotaMiddleware(rdb *redis.Client, limit int) fiber.Handler {
+func QuotaMiddleware(rdb *redis.Client, resource string) fiber.Handler {
 	return func(c fiber.Ctx) error {
 
 		user, ok := c.Locals("auth_user").(*model.AuthUser)
@@ -35,13 +35,22 @@ func QuotaMiddleware(rdb *redis.Client, limit int) fiber.Handler {
 			return fiber.NewError(fiber.StatusUnauthorized)
 		}
 
-		userID := user.Sub
-		now := time.Now()
+		claims, ok := c.Locals("jwt_claims").(*model.JWTClaims)
+		if !ok {
+			return fiber.NewError(fiber.StatusUnauthorized)
+		}
+
+		limit := claims.QuotaLimit            // contoh: 100
+		windowSeconds := claims.WindowSeconds // contoh: 60
+
+		now := time.Now().Unix()
+		bucket := now / int64(windowSeconds)
 
 		key := fmt.Sprintf(
-			"quota:v1:%s:%s",
-			userID,
-			now.Format("200601021504"), // window per menit
+			"quota:%s:%s:%d",
+			resource, // messages
+			user.Sub, // user_id
+			bucket,   // window bucket
 		)
 
 		ctx := c.Context()
@@ -54,16 +63,19 @@ func QuotaMiddleware(rdb *redis.Client, limit int) fiber.Handler {
 			)
 		}
 
-		// TTL > window untuk aman
-		_ = rdb.Expire(ctx, key, 2*time.Minute).Err()
+		// TTL = window_seconds * 2 (aman dari race)
+		ttl := time.Duration(windowSeconds*2) * time.Second
+		_ = rdb.Expire(ctx, key, ttl).Err()
 
-		remaining := limit - int(used)
+		remaining := limit - int64(used)
 		if remaining < 0 {
 			remaining = 0
 		}
 
-		// ⬅⬅⬅ HEADER PENTING
-		c.Set("X-Quota-Remaining", strconv.Itoa(remaining))
+		// Header observability
+		c.Set("X-Quota-Remaining", strconv.Itoa(int(remaining)))
+		c.Set("X-Quota-Limit", strconv.Itoa(int(limit)))
+		c.Set("X-Quota-Window", strconv.Itoa(int(windowSeconds)))
 
 		if used > int64(limit) {
 			return fiber.NewError(

@@ -59,12 +59,7 @@ func AuthMiddleware(authFailLimiter *RateLimiter) fiber.Handler {
 			return c.SendStatus(500)
 		}
 
-		type Claims struct {
-			jwt.RegisteredClaims
-			Role string `json:"role"`
-		}
-
-		token, err := jwt.ParseWithClaims(parts[1], &Claims{}, func(t *jwt.Token) (any, error) {
+		token, err := jwt.ParseWithClaims(parts[1], &model.JWTClaims{}, func(t *jwt.Token) (any, error) {
 			if t.Method != jwt.SigningMethodHS256 {
 				return nil, fiber.ErrUnauthorized
 			}
@@ -75,12 +70,17 @@ func AuthMiddleware(authFailLimiter *RateLimiter) fiber.Handler {
 			return fail("invalid or expired token", 401)
 		}
 
-		claims := token.Claims.(*Claims)
+		claims := token.Claims.(*model.JWTClaims)
 
 		c.Locals("auth_user", model.AuthUser{
 			Sub:  claims.Subject,
 			Role: claims.Role,
 			JTI:  claims.ID,
+		})
+
+		c.Locals("jwt_claims", &model.JWTClaims{
+			QuotaLimit:    claims.QuotaLimit,
+			WindowSeconds: claims.WindowSeconds,
 		})
 
 		authFailLimiter.Reset(key)

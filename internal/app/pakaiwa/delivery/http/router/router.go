@@ -100,6 +100,6 @@ func (c *RouteConfig) setupAuthRoutes() {
 	// =====================
 	// User API v1
 	// =====================
-	v1 := auth.Group("/v1") //  middleware.QuotaMiddleware(c.Redis, 100),
+	v1 := auth.Group("/v1") //, middleware.QuotaMiddleware(c.Redis, 100))
 	v1.Post("/messages", c.MessageHandler.SendMsg)
 }

@@ -22,11 +22,13 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/model"
+	"github.com/PakaiWA/PakaiWA/internal/pkg/config"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/logger/ctxmeta"
 )
 
 type UserRepository interface {
 	CreateUser(ctx context.Context, email, hashedPassword string) (*model.User, error)
+	GetUserQuota(ctx context.Context, userID string) (int64, int64)
 	GetUserByEmail(ctx context.Context, email string) (*model.User, error)
 }
 
@@ -100,7 +102,7 @@ func (r *userRepository) GetUserByEmail(
 	log.Infof("GetUserByEmail")
 
 	const q = `
-		SELECT id, email, password, logout_at
+		SELECT id, email, role, password, logout_at
 		FROM pakaiwa.users
 		WHERE email = $1
 	`
@@ -110,6 +112,7 @@ func (r *userRepository) GetUserByEmail(
 	err := r.pool.QueryRow(ctx, q, email).Scan(
 		&u.ID,
 		&u.Email,
+		&u.Role,
 		&u.Password,
 		&u.LogoutAt,
 	)
@@ -122,4 +125,29 @@ func (r *userRepository) GetUserByEmail(
 	}
 
 	return u, nil
+}
+
+func (r *userRepository) GetUserQuota(ctx context.Context, userID string) (int64, int64) {
+	log := ctxmeta.Logger(ctx)
+	log.Infof("GetUserQuota called for userID: %s", userID)
+
+	const query = `
+		SELECT limit_value, window_seconds
+		FROM pakaiwa.user_quotas
+		WHERE user_id = $1
+	`
+
+	var quotaLimit int64
+	var windowSeconds int64
+	log.Debug(query)
+
+	err := r.pool.QueryRow(ctx, query, userID).Scan(&quotaLimit, &windowSeconds)
+	if err != nil {
+		log.WithError(err).Error("failed to get user quota from database")
+		return config.GetDefaultQuotaLimit(), 60
+	}
+
+	log.Infof("Retrieved quota for userID %s: quotaLimit=%d, windowSeconds=%d", userID, quotaLimit, windowSeconds)
+
+	return quotaLimit, windowSeconds
 }
