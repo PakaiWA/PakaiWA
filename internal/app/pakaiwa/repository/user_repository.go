@@ -45,22 +45,49 @@ func (r *userRepository) CreateUser(
 ) (*model.User, error) {
 	log := ctxmeta.Logger(ctx)
 
-	const query = `
-		INSERT INTO pakaiwa.users (email, password)
-		VALUES ($1, $2)
-		RETURNING id
-	`
+	tx, err := r.pool.Begin(ctx)
+	if err != nil {
+		if log != nil {
+			log.WithError(err).Error("failed to begin transaction")
+		}
+		return nil, err
+	}
+	defer tx.Rollback(ctx)
 
 	u := new(model.User)
 
-	err := r.pool.QueryRow(ctx, query, email, hashedPassword).Scan(&u.ID)
-	log.Info("Creating user in database")
+	err = tx.QueryRow(ctx, `
+		INSERT INTO pakaiwa.users (email, password)
+		VALUES ($1, $2)
+		RETURNING id
+	`, email, hashedPassword).Scan(&u.ID)
 
 	if err != nil {
+		if log != nil {
+			log.WithError(err).Error("failed to insert user")
+		}
 		return nil, err
 	}
 
-	log.Infof("User created with ID: %s", u.ID)
+	_, err = tx.Exec(ctx, `INSERT INTO pakaiwa.user_quotas (user_id) VALUES ($1)`, u.ID)
+
+	if err != nil {
+		if log != nil {
+			log.WithError(err).WithField("user_id", u.ID).Error("failed to insert default user quota")
+		}
+		return nil, err
+	}
+
+	if err := tx.Commit(ctx); err != nil {
+		if log != nil {
+			log.WithError(err).WithField("user_id", u.ID).Error("failed to commit transaction")
+		}
+		return nil, err
+	}
+
+	if log != nil {
+		log.WithField("user_id", u.ID).Info("user created with default quota")
+	}
 
 	return u, nil
 }
