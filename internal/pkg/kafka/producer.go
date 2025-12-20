@@ -21,14 +21,14 @@ import (
 	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
 	"github.com/sirupsen/logrus"
 
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/apperror"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/model"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/config"
-	"github.com/PakaiWA/PakaiWA/internal/pkg/utils"
 )
 
 func NewKafkaProducer(log *logrus.Logger) *kafka.Producer {
 	producer, err := kafka.NewProducer(config.GetProducerConfig())
-	utils.PanicIfError(err)
+	apperror.PanicIfError(err)
 
 	return producer
 }

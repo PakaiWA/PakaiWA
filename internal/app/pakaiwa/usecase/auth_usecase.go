@@ -1,0 +1,126 @@
+/*
+ * Copyright (c) 2025 KAnggara75
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * See <https://www.gnu.org/licenses/gpl-3.0.html>.
+ *
+ * @author KAnggara75 on Tue 18/11/25 06.05
+ * @project PakaiWA usecase
+ * https://github.com/PakaiWA/PakaiWA/tree/main/internal/app/pakaiwa/usecase
+ */
+
+package usecase
+
+import (
+	"context"
+	"time"
+
+	"github.com/go-playground/validator/v10"
+	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
+
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/apperror"
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/dto"
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/model"
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/repository"
+	"github.com/PakaiWA/PakaiWA/internal/pkg/config"
+	"github.com/PakaiWA/PakaiWA/internal/pkg/logger/ctxmeta"
+	"github.com/PakaiWA/PakaiWA/internal/pkg/security/password"
+	"github.com/PakaiWA/PakaiWA/internal/pkg/utils"
+)
+
+type authUsecase struct {
+	Repository repository.UserRepository
+	Validate   *validator.Validate
+}
+
+type AuthUsecase interface {
+	Login(ctx context.Context, req *dto.LoginReq, iss string) (string, error)
+	Register(ctx context.Context, req *dto.AuthReq) (bool, error)
+}
+
+func NewAuthUsecase(repo repository.UserRepository, validator *validator.Validate) AuthUsecase {
+	return &authUsecase{
+		Repository: repo,
+		Validate:   validator,
+	}
+}
+
+func (u *authUsecase) Login(ctx context.Context, req *dto.LoginReq, iss string) (string, error) {
+	if err := u.Validate.Struct(req); err != nil {
+		return "", err
+	}
+
+	user, err := u.Repository.GetUserByEmail(ctx, req.Email)
+	if err != nil {
+		return "", err
+	}
+
+	if user == nil || !password.Compare(user.Password, req.Password) {
+		return "", apperror.ErrInvalidCredentials
+	}
+
+	quotaLimit, windowSeconds := u.Repository.GetUserQuota(ctx, user.ID)
+
+	claims := &model.JWTClaims{
+		RegisteredClaims: jwt.RegisteredClaims{
+			Subject:   user.ID,
+			Issuer:    iss,
+			IssuedAt:  jwt.NewNumericDate(time.Now()),
+			NotBefore: jwt.NewNumericDate(time.Now()),
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(7 * 24 * time.Hour)),
+			ID:        uuid.NewString(),
+		},
+		Role:          user.Role,
+		QuotaLimit:    quotaLimit,
+		WindowSeconds: windowSeconds,
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+	// sign token
+	signedToken, err := token.SignedString([]byte(config.GetJWTKey()))
+	if err != nil {
+		return "", err
+	}
+
+	return signedToken, nil
+}
+
+func (u *authUsecase) Register(ctx context.Context, req *dto.AuthReq) (bool, error) {
+	log := ctxmeta.Logger(ctx)
+	log.Infof("Register user in database")
+
+	if err := u.Validate.Struct(req); err != nil {
+		return false, err
+	}
+
+	err := utils.ValidateStrongPassword(req.Password)
+	if err != nil {
+		return false, err
+	}
+
+	user, err := u.Repository.GetUserByEmail(ctx, req.Email)
+	if err != nil {
+		return false, err
+	}
+
+	if user != nil {
+		return false, apperror.ErrUsernameExists
+	}
+
+	// Hash password
+	hashed, err := password.Hash(req.Password)
+	if err != nil {
+		return false, err
+	}
+
+	// Create user
+	u.Repository.CreateUser(ctx, req.Email, hashed)
+
+	return true, nil
+}

@@ -38,6 +38,14 @@ func GetAppDesc() string {
 	return "Developer Preview"
 }
 
+func GetAppProfile() string {
+	profile := "production"
+	if v := viper.GetString("app.profile"); v != "" {
+		return v
+	}
+	return profile
+}
+
 func GetJWTKey() string { return viper.GetString("app.jwt.sign_key") }
 
 func GetAdminToken() string { return viper.GetString("app.admin.token") }
@@ -69,4 +77,9 @@ func GetLogLevel() logrus.Level {
 	}
 
 	return lvl
+}
+
+func GetDefaultQuotaLimit() int64 {
+	viper.SetDefault("app.quota.default_limit", 6)
+	return viper.GetInt64("app.quota.default_limit")
 }

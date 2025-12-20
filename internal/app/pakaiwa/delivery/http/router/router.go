@@ -19,14 +19,13 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v3"
-	"github.com/golang-jwt/jwt/v5"
+
+	"github.com/redis/go-redis/v9"
 
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/dto"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/metrics"
 
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/middleware"
-	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/model"
-
 	"github.com/PakaiWA/PakaiWA/internal/pkg/config"
 
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/handler"
@@ -34,69 +33,80 @@ import (
 
 type RouteConfig struct {
 	Fiber          *fiber.App
+	Redis          *redis.Client
 	QRHandler      *handler.QRHandler
+	AuthHandler    *handler.AuthHandler
 	MessageHandler *handler.MessageHandler
 }
 
 func (c *RouteConfig) Setup() {
-	c.NoLimitRoute()
-	c.SetupGuestRoute()
-	c.SetupAuthRoute()
+	c.setupPublicRoutes()
+	c.setupGuestRoutes()
+	c.setupAuthRoutes()
 }
 
-func (c *RouteConfig) NoLimitRoute() {
-	c.Fiber.Get("/", middleware.RateLimitMiddleware(3, time.Minute*1), func(ctx fiber.Ctx) error {
-		baseUrl := ctx.BaseURL()
-		res := dto.VersionRes{
-			Message:   baseUrl + " - Unofficial WhatsApp Restful API Gateway",
-			Version:   config.GetAppVersion(),
-			Stability: config.GetAppDesc(),
-		}
-		return ctx.JSON(res)
-	})
+func (c *RouteConfig) setupPublicRoutes() {
+
+	c.Fiber.Get("/",
+		middleware.RateLimitMiddleware(3, time.Minute),
+		func(ctx fiber.Ctx) error {
+			baseUrl := ctx.BaseURL()
+			res := dto.VersionRes{
+				Message:   baseUrl + " - Unofficial WhatsApp Restful API Gateway",
+				Version:   config.GetAppVersion(),
+				Stability: config.GetAppDesc(),
+			}
+			return ctx.JSON(res)
+		},
+	)
 
 	c.Fiber.Get("/metrics",
-		middleware.RateLimitMiddleware(3, time.Minute*1),
+		middleware.RateLimitMiddleware(30, time.Minute),
 		metrics.PrometheusHandler(),
 	)
 }
 
-func (c *RouteConfig) SetupGuestRoute() {
+func (c *RouteConfig) setupGuestRoutes() {
 	c.Fiber.Post("/auth/login",
-		middleware.RateLimitMiddleware(10, time.Minute*1),
-		GenerateJWT(),
-	)
-
-	c.Fiber.Post("/logout",
-		middleware.RateLimitMiddleware(3, time.Minute*1),
-		metrics.PrometheusHandler(),
+		middleware.RateLimitMiddleware(10, time.Minute),
+		c.AuthHandler.Login,
 	)
 }
 
 func (c *RouteConfig) SetupAuthRoute() {
-	//c.Fiber.Use(middleware.AuthMiddleware())
-	//c.Fiber.Use(middleware.AuthMiddleware()) // Quota Middleware
-	auth := c.Fiber.Group("/v1", middleware.RateLimitMiddleware(9999, time.Minute*1))
-	auth.Post("/messages", c.MessageHandler.SendMsg)
+	c.Fiber.Use(middleware.AuthMiddleware(middleware.NewRateLimiter(5, time.Minute))) // Auth Middleware
+	c.Fiber.Post("/register", middleware.RateLimitMiddleware(5, time.Minute*1), c.AuthHandler.Register)
+	// Grouped Auth Routes V1
+	v1 := c.Fiber.Group("/v1", middleware.RateLimitMiddleware(9999, time.Minute*1))
+	v1.Post("/messages", c.MessageHandler.SendMsg)
 }
 
-func GenerateJWT() fiber.Handler {
-	return func(c fiber.Ctx) error {
-		claims := jwt.MapClaims{
-			"sub":  "userID",
-			"role": "role",
-			"exp":  time.Now().Add(1 * time.Hour).Unix(),
-			"iat":  time.Now().Unix(),
-		}
+func (c *RouteConfig) setupAuthRoutes() {
+	// =====================
+	// Base authenticated routes
+	// =====================
+	auth := c.Fiber.Group(
+		"",
+		middleware.RateLimitMiddleware(1000, time.Minute),
+		middleware.AuthMiddleware(middleware.NewRateLimiter(5, time.Minute)),
+	)
 
-		token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	// logout (authenticated user)
+	// auth.Post("/logout", middleware.RateLimitMiddleware(5, time.Minute), c.AuthHandler.Register)
 
-		result, _ := token.SignedString([]byte(config.GetJWTKey()))
+	// =====================
+	// Admin-only routes
+	// =====================
+	auth.Post(
+		"/register",
+		middleware.RequireAdmin(),
+		middleware.RateLimitMiddleware(5, time.Minute),
+		c.AuthHandler.Register,
+	)
 
-		response := model.SendMessageResponse{
-			Message: result,
-		}
-		c.Status(200)
-		return c.JSON(response)
-	}
+	// =====================
+	// User API v1
+	// =====================
+	v1 := auth.Group("/v1", middleware.QuotaMiddleware(c.Redis))
+	v1.Post("/messages", c.MessageHandler.SendMsg)
 }

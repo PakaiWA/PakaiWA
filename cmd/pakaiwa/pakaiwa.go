@@ -22,9 +22,7 @@ import (
 	"github.com/KAnggara75/scc2go"
 	_ "github.com/jackc/pgx/v5/stdlib"
 
-	"github.com/PakaiWA/PakaiWA/ent"
-	"github.com/PakaiWA/PakaiWA/internal/pkg/seed"
-
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/apperror"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/middleware"
 
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/bootstrap"
@@ -32,6 +30,7 @@ import (
 	"github.com/PakaiWA/PakaiWA/internal/pkg/httpserver"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/kafka"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/logger"
+	"github.com/PakaiWA/PakaiWA/internal/pkg/redis"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/utils"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/validator"
 )
@@ -46,17 +45,8 @@ func main() {
 	log := logger.NewLogger()
 	pool := db.NewDatabase(ctx, log)
 
-	entClient := db.NewEntClient(ctx, log)
-	defer func(entClient *ent.Client) {
-		err := entClient.Close()
-		if err != nil {
-			log.Errorf("Failed to close ent client: %v", err)
-		}
-	}(entClient)
-
-	seed.RunSeeders(ctx, entClient, log)
-
 	validate := validator.NewValidator()
+	redis := redis.NewRedisClient()
 
 	// ====== Kafka Producer ======
 	producer := kafka.NewKafkaProducer(log)
@@ -67,7 +57,7 @@ func main() {
 		Pool:     pool,
 		Producer: producer,
 	})
-	utils.PanicIfError(err)
+	apperror.PanicIfError(err)
 
 	// ====== App & Routes (Fiber) ======
 	fiber := httpserver.NewFiber()
@@ -75,6 +65,7 @@ func main() {
 	bootstrap.InitApp(&bootstrap.AppContext{
 		Log:      log,
 		Pool:     pool,
+		Redis:    redis,
 		Fiber:    fiber,
 		PakaiWA:  pwa,
 		Producer: producer,

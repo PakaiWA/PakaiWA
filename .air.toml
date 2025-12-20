@@ -5,7 +5,7 @@ tmp_dir = "tmp"
 [build]
   args_bin = []
   bin = "./tmp/main"
-  cmd = "go build -o ./tmp/main ./cmd/pakaiwa"
+  cmd = "go build -o ./tmp/main ./cmd/pakaiwa && xattr -d com.apple.quarantine ./tmp/main || true"
   delay = 1000
   exclude_dir = ["assets", "tmp", "vendor", "testdata", "cmd", "scripts", "build"]
   exclude_file = []

@@ -20,10 +20,12 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v3"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/redis/go-redis/v9"
 	"github.com/sirupsen/logrus"
 
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/handler"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/router"
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/repository"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/state"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/usecase"
 )
@@ -32,21 +34,29 @@ type AppContext struct {
 	Log      *logrus.Logger
 	Pool     *pgxpool.Pool
 	Fiber    *fiber.App
+	Redis    *redis.Client
 	PakaiWA  *state.AppState
 	Producer *kafka.Producer
 	Validate *validator.Validate
 }
 
 func InitApp(b *AppContext) {
-	qrHandler := handler.NewQRHandler(b.PakaiWA, b.Log)
+	qrHandler := handler.NewQRHandler(b.PakaiWA)
+
+	// Auth
+	userRepo := repository.NewUserRepository(b.Pool)
+	authUsecase := usecase.NewAuthUsecase(userRepo, b.Validate)
+	authHandler := handler.NewAuthHandler(authUsecase)
 
 	// Message
-	msgUsecase := usecase.NewMessageUsecase(b.Log, b.Validate, b.PakaiWA.Client)
-	msgHandler := handler.NewMessageHandler(msgUsecase, b.Log)
+	msgUsecase := usecase.NewMessageUsecase(b.Validate, b.PakaiWA.Client)
+	msgHandler := handler.NewMessageHandler(msgUsecase)
 
 	routeConfig := router.RouteConfig{
+		Redis:          b.Redis,
 		Fiber:          b.Fiber,
 		MessageHandler: msgHandler,
+		AuthHandler:    authHandler,
 		QRHandler:      qrHandler,
 	}
 	routeConfig.Setup()

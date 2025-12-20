@@ -23,15 +23,12 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/sirupsen/logrus"
 
-	"github.com/PakaiWA/PakaiWA/ent"
-
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/apperror"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/config"
-	"github.com/PakaiWA/PakaiWA/internal/pkg/utils"
 )
 
 var (
 	pool   *pgxpool.Pool
-	client *ent.Client
 	onceDB sync.Once
 )
 
@@ -41,7 +38,7 @@ func NewDatabase(ctx context.Context, log *logrus.Logger) *pgxpool.Pool {
 
 	onceDB.Do(func() {
 		cfg, err := pgxpool.ParseConfig(config.GetDBConn())
-		utils.PanicIfError(err)
+		apperror.PanicIfError(err)
 
 		cfg.MinConns = config.GetDBMinConn()
 		cfg.MaxConns = config.GetDBMaxConn()
@@ -51,7 +48,7 @@ func NewDatabase(ctx context.Context, log *logrus.Logger) *pgxpool.Pool {
 
 		start := time.Now()
 		pool, err = pgxpool.NewWithConfig(ctx, cfg)
-		utils.PanicIfError(err)
+		apperror.PanicIfError(err)
 		log.WithField("trace_id", traceID).Debugf("pgxpool took %s", time.Since(start))
 
 		pingCtx, cancel := context.WithTimeout(ctx, 30*time.Second)

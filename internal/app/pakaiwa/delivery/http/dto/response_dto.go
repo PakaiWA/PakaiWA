@@ -16,23 +16,28 @@
 package dto
 
 type BaseResponse struct {
-	Success bool            `json:"success"`
-	Data    interface{}     `json:"data,omitempty"`
+	Success bool            `json:"success,omitempty"`
+	Message string          `json:"message,omitempty"`
+	Data    any             `json:"data,omitempty"`
 	Error   *ProblemDetails `json:"error,omitempty"`
 	Meta    *Meta           `json:"meta,omitempty"`
 }
 
 type Meta struct {
-	Page  int `json:"page"`
-	Limit int `json:"limit"`
-	Total int `json:"total"`
+	Page     int    `json:"page,omitempty"`
+	Limit    int    `json:"limit,omitempty"`
+	Total    int    `json:"total,omitempty"`
+	Location string `json:"location,omitempty"`
 }
 
-// ProblemDetails RFC 7807
-type ProblemDetails struct {
-	Type     string      `json:"type,omitempty"`
-	Title    string      `json:"title"`            // judul error singkat
-	Status   int         `json:"status"`           // HTTP status code
-	Detail   interface{} `json:"detail,omitempty"` // deskripsi error
-	Instance string      `json:"instance"`         // endpoint/resource terkait
+func ToErrorResponse(status int, title string, detail any, instance string) *BaseResponse {
+	return &BaseResponse{
+		Success: false,
+		Error: &ProblemDetails{
+			Title:    title,
+			Status:   status,
+			Detail:   detail,
+			Instance: instance,
+		},
+	}
 }

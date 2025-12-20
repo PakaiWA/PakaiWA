@@ -16,19 +16,15 @@
 package handler
 
 import (
-	"github.com/sirupsen/logrus"
-
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/state"
 )
 
 type QRHandler struct {
 	State *state.AppState
-	Log   *logrus.Logger
 }
 
-func NewQRHandler(state *state.AppState, log *logrus.Logger) *QRHandler {
+func NewQRHandler(state *state.AppState) *QRHandler {
 	return &QRHandler{
-		Log:   log,
 		State: state,
 	}
 }

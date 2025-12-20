@@ -73,7 +73,7 @@ func (f *OrderedJSONFormatter) Format(e *logrus.Entry) ([]byte, error) {
 	levelKey := keyOr(f.LevelKey, "level")
 	traceKey := keyOr(f.TraceIDKey, "trace_id")
 
-	lvl := e.Level.String()
+	lvl := normalizeLevel(e.Level)
 	if n := padTo - len(lvl); n > 0 {
 		lvl = lvl + strings.Repeat(" ", n)
 	}
@@ -158,4 +158,25 @@ func writeJSONString(buf *bytes.Buffer, s string, escapeHTML bool) {
 		out = out[:len(out)-1]
 	}
 	buf.Write(out)
+}
+
+func normalizeLevel(level logrus.Level) string {
+	switch level {
+	case logrus.WarnLevel:
+		return "warn"
+	case logrus.ErrorLevel:
+		return "error"
+	case logrus.FatalLevel:
+		return "fatal"
+	case logrus.PanicLevel:
+		return "panic"
+	case logrus.InfoLevel:
+		return "info"
+	case logrus.DebugLevel:
+		return "debug"
+	case logrus.TraceLevel:
+		return "trace"
+	default:
+		return level.String()
+	}
 }
