@@ -30,6 +30,7 @@ import (
 	"github.com/PakaiWA/PakaiWA/internal/pkg/httpserver"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/kafka"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/logger"
+	"github.com/PakaiWA/PakaiWA/internal/pkg/redis"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/utils"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/validator"
 )
@@ -45,6 +46,7 @@ func main() {
 	pool := db.NewDatabase(ctx, log)
 
 	validate := validator.NewValidator()
+	redis := redis.NewRedisClient()
 
 	// ====== Kafka Producer ======
 	producer := kafka.NewKafkaProducer(log)
@@ -63,6 +65,7 @@ func main() {
 	bootstrap.InitApp(&bootstrap.AppContext{
 		Log:      log,
 		Pool:     pool,
+		Redis:    redis,
 		Fiber:    fiber,
 		PakaiWA:  pwa,
 		Producer: producer,

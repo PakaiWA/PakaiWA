@@ -20,6 +20,8 @@ import (
 
 	"github.com/gofiber/fiber/v3"
 
+	"github.com/redis/go-redis/v9"
+
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/dto"
 	"github.com/PakaiWA/PakaiWA/internal/pkg/metrics"
 
@@ -31,6 +33,7 @@ import (
 
 type RouteConfig struct {
 	Fiber          *fiber.App
+	Redis          *redis.Client
 	QRHandler      *handler.QRHandler
 	AuthHandler    *handler.AuthHandler
 	MessageHandler *handler.MessageHandler
@@ -83,23 +86,27 @@ func (c *RouteConfig) setupAuthRoutes() {
 	// Base authenticated routes
 	// =====================
 	auth := c.Fiber.Group(
-		"/",
+		"",
 		middleware.RateLimitMiddleware(1000, time.Minute),
 		middleware.AuthMiddleware(middleware.NewRateLimiter(5, time.Minute)),
 	)
 
 	// logout (authenticated user)
-	auth.Post("/logout", middleware.RateLimitMiddleware(5, time.Minute), c.AuthHandler.Register)
+	// auth.Post("/logout", middleware.RateLimitMiddleware(5, time.Minute), c.AuthHandler.Register)
 
 	// =====================
 	// Admin-only routes
 	// =====================
-	admin := auth.Group("/", middleware.RequireAdmin())
-	admin.Post("/register", middleware.RateLimitMiddleware(5, time.Minute), c.AuthHandler.Register)
+	auth.Post(
+		"/register",
+		middleware.RequireAdmin(),
+		middleware.RateLimitMiddleware(5, time.Minute),
+		c.AuthHandler.Register,
+	)
 
 	// =====================
 	// User API v1
 	// =====================
-	v1 := auth.Group("/v1") //, middleware.QuotaMiddleware(c.Redis, 100))
+	v1 := auth.Group("/v1", middleware.QuotaMiddleware(c.Redis))
 	v1.Post("/messages", c.MessageHandler.SendMsg)
 }

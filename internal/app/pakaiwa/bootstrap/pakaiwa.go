@@ -20,6 +20,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v3"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/redis/go-redis/v9"
 	"github.com/sirupsen/logrus"
 
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/handler"
@@ -33,6 +34,7 @@ type AppContext struct {
 	Log      *logrus.Logger
 	Pool     *pgxpool.Pool
 	Fiber    *fiber.App
+	Redis    *redis.Client
 	PakaiWA  *state.AppState
 	Producer *kafka.Producer
 	Validate *validator.Validate
@@ -51,6 +53,7 @@ func InitApp(b *AppContext) {
 	msgHandler := handler.NewMessageHandler(msgUsecase)
 
 	routeConfig := router.RouteConfig{
+		Redis:          b.Redis,
 		Fiber:          b.Fiber,
 		MessageHandler: msgHandler,
 		AuthHandler:    authHandler,

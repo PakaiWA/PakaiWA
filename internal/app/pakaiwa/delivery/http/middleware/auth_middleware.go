@@ -72,7 +72,7 @@ func AuthMiddleware(authFailLimiter *RateLimiter) fiber.Handler {
 
 		claims := token.Claims.(*model.JWTClaims)
 
-		c.Locals("auth_user", model.AuthUser{
+		c.Locals("auth_user", &model.AuthUser{
 			Sub:  claims.Subject,
 			Role: claims.Role,
 			JTI:  claims.ID,
@@ -91,7 +91,7 @@ func AuthMiddleware(authFailLimiter *RateLimiter) fiber.Handler {
 func RequireAdmin() fiber.Handler {
 	return func(c fiber.Ctx) error {
 
-		user, ok := c.Locals("auth_user").(model.AuthUser)
+		user, ok := c.Locals("auth_user").(*model.AuthUser)
 		if !ok {
 			return fiber.NewError(fiber.StatusUnauthorized, "unauthorized")
 		}

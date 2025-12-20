@@ -27,9 +27,8 @@ import (
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/model"
 )
 
-func QuotaMiddleware(rdb *redis.Client, resource string) fiber.Handler {
+func QuotaMiddleware(rdb *redis.Client) fiber.Handler {
 	return func(c fiber.Ctx) error {
-
 		user, ok := c.Locals("auth_user").(*model.AuthUser)
 		if !ok {
 			return fiber.NewError(fiber.StatusUnauthorized)
@@ -47,8 +46,7 @@ func QuotaMiddleware(rdb *redis.Client, resource string) fiber.Handler {
 		bucket := now / int64(windowSeconds)
 
 		key := fmt.Sprintf(
-			"quota:%s:%s:%d",
-			resource, // messages
+			"quota:%s:%d",
 			user.Sub, // user_id
 			bucket,   // window bucket
 		)
@@ -67,10 +65,7 @@ func QuotaMiddleware(rdb *redis.Client, resource string) fiber.Handler {
 		ttl := time.Duration(windowSeconds*2) * time.Second
 		_ = rdb.Expire(ctx, key, ttl).Err()
 
-		remaining := limit - int64(used)
-		if remaining < 0 {
-			remaining = 0
-		}
+		remaining := max(limit-int64(used), 0)
 
 		// Header observability
 		c.Set("X-Quota-Remaining", strconv.Itoa(int(remaining)))
