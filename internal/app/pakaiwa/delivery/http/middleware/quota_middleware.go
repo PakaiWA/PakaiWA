@@ -43,12 +43,16 @@ func QuotaMiddleware(rdb *redis.Client) fiber.Handler {
 		windowSeconds := claims.WindowSeconds // contoh: 60
 
 		now := time.Now().Unix()
-		bucket := now / int64(windowSeconds)
+		window := int64(windowSeconds)
+
+		bucket := now / window
+		windowStart := bucket * window
+		windowEnd := windowStart + window
 
 		key := fmt.Sprintf(
-			"quota:%s:%d",
-			user.Sub, // user_id
-			bucket,   // window bucket
+			"quota:messages:%s:%d",
+			user.Sub,
+			bucket,
 		)
 
 		ctx := c.Context()
@@ -61,18 +65,22 @@ func QuotaMiddleware(rdb *redis.Client) fiber.Handler {
 			)
 		}
 
-		// TTL = window_seconds * 2 (aman dari race)
-		ttl := time.Duration(windowSeconds*2) * time.Second
-		_ = rdb.Expire(ctx, key, ttl).Err()
+		if used == 1 {
+			ttl := time.Duration(window*2) * time.Second
+			_ = rdb.Expire(ctx, key, ttl).Err()
+		}
 
-		remaining := max(limit-int64(used), 0)
+		remaining := max(limit-used, 0)
 
-		// Header observability
-		c.Set("X-Quota-Remaining", strconv.Itoa(int(remaining)))
-		c.Set("X-Quota-Limit", strconv.Itoa(int(limit)))
-		c.Set("X-Quota-Window", strconv.Itoa(int(windowSeconds)))
+		c.Set("X-Quota-Limit", strconv.FormatInt(limit, 10))
+		c.Set("X-Quota-Window", strconv.FormatInt(window, 10))
+		c.Set("X-Quota-Remaining", strconv.FormatInt(remaining, 10))
 
-		if used > int64(limit) {
+		if used > limit {
+			retryAfter := max(windowEnd-now, 0)
+			c.Set("Retry-After", strconv.FormatInt(retryAfter, 10))
+			c.Set("X-Quota-Reset", strconv.FormatInt(windowEnd, 10))
+
 			return fiber.NewError(
 				fiber.StatusTooManyRequests,
 				"quota exceeded",
