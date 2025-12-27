@@ -32,7 +32,7 @@ type HandleEvent struct {
 	Log            *logrus.Logger
 }
 
-func (h *HandleEvent) Handle(e interface{}) {
+func (h *HandleEvent) Handle(e any) {
 	switch v := e.(type) {
 	case *events.Receipt:
 		h.DeliveryStatus.ProcessDeliveryStatus(v)
@@ -40,12 +40,13 @@ func (h *HandleEvent) Handle(e interface{}) {
 		h.ReceiveMsgUC.ProcessIncomingMessage(v.Message, v.Info, v.RawMessage)
 	case *events.LoggedOut:
 		reason := v.Reason
-		h.PakaiWA.SetQR("")
-		h.PakaiWA.SetConnected(false)
-		h.Log.Infof("Logged out: %s\n", reason.String())
+		if h.Log != nil {
+			h.Log.Infof("Logged out: %s", reason.String())
+		}
 		if reason >= 400 && reason < 500 {
 			usecase.HandleLogout(h.PakaiWA.Client)
 		}
-
+		h.PakaiWA.SetQR("")
+		h.PakaiWA.SetConnected(false)
 	}
 }
