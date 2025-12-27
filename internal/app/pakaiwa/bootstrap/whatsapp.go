@@ -53,7 +53,7 @@ func InitWhatsapp(b *PwaContext) (*state.AppState, error) {
 	deviceStore, err := container.GetFirstDevice(ctx) // TODO: refactor for multi client
 	apperror.PanicIfError(err)
 
-	clientLog := logger.NewPakaiWALog(log, config.GetAppName())
+	clientLog := logger.NewPakaiWALog(log, "debug", config.GetAppName())
 	client := whatsmeow.NewClient(deviceStore, clientLog)
 
 	appState := &state.AppState{Client: client}
