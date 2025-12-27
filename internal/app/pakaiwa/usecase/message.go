@@ -23,4 +23,5 @@ import (
 
 type MessageUsecase interface {
 	SendMessage(ctx context.Context, req *model.SendMessageReq) (string, error)
+	EditMessage(ctx context.Context, req *model.SendMessageReq, msgId string) error
 }
