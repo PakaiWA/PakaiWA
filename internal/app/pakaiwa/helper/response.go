@@ -16,6 +16,7 @@
 package helper
 
 import (
+	"path"
 	"strings"
 
 	"github.com/gofiber/fiber/v3"
@@ -25,12 +26,13 @@ import (
 
 func RespondPending(c fiber.Ctx, msgId string) error {
 	id := "pwa-" + strings.ToLower(msgId)
+	location := c.BaseURL() + path.Join(c.FullPath(), id)
 	response := model.SendMessageResponse{
 		ID:      id,
 		Status:  "pending",
 		Message: "Message is pending and waiting to be processed.",
 		MessageMeta: model.MessageMeta{
-			Location: "https://api.pakaiwa.my.id/v1/messages/" + id,
+			Location: location,
 		},
 	}
 	return c.JSON(response)
