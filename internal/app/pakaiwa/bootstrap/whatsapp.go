@@ -40,9 +40,7 @@ type PwaContext struct {
 	Producer *confluent.Producer
 }
 
-func InitWhatsapp(b *PwaContext) (*state.AppState, error) {
-	ctx := context.Background()
-
+func InitWhatsapp(ctx context.Context, b *PwaContext) (*state.AppState, error) {
 	log := b.Log
 	pool := b.Pool
 	producer := b.Producer
@@ -66,6 +64,7 @@ func InitWhatsapp(b *PwaContext) (*state.AppState, error) {
 	deliveryUC := usecase.NewDeliveryStatusUsecase(log, deliveryStatusProducer)
 
 	eventHandler := event.HandleEvent{
+		Ctx:            ctx,
 		PakaiWA:        appState,
 		Producer:       producer,
 		ReceiveMsgUC:   receiveMsgUC,

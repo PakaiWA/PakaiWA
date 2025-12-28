@@ -45,6 +45,11 @@ func NewMessageUsecase(validate *validator.Validate, wa *whatsmeow.Client) Messa
 
 func (m *messageUsecase) SendMessage(ctx context.Context, req *model.SendMessageReq) (string, error) {
 	log := ctxmeta.Logger(ctx)
+	if !m.WA.IsConnected() {
+		log.WithError(apperror.ErrWAClientNotConnected).WithField("event", "wa_disconnected").Error("precondition failed")
+		return "", apperror.ErrWAClientNotConnected
+	}
+
 	if err := m.Validate.Struct(req); err != nil {
 		if log != nil {
 			log.WithError(err).WithField("event", "validation_failed").Warn("invalid send message request")

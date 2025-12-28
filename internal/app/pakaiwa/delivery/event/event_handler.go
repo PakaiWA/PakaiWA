@@ -16,6 +16,8 @@
 package event
 
 import (
+	"context"
+
 	"github.com/PakaiWA/whatsmeow/types/events"
 	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
 	"github.com/sirupsen/logrus"
@@ -30,22 +32,17 @@ type HandleEvent struct {
 	ReceiveMsgUC   usecase.ReceiveMessageUsecase
 	DeliveryStatus usecase.DeliveryUsecase
 	Log            *logrus.Logger
+	Ctx            context.Context
 }
 
 func (h *HandleEvent) Handle(e any) {
 	switch v := e.(type) {
 	case *events.Receipt:
-		h.DeliveryStatus.ProcessDeliveryStatus(v)
+		h.DeliveryStatus.ProcessDeliveryStatus(h.Ctx, v)
 	case *events.Message:
-		h.ReceiveMsgUC.ProcessIncomingMessage(v.Message, v.Info, v.RawMessage)
+		h.ReceiveMsgUC.ProcessIncomingMessage(h.Ctx, v.Message, v.Info, v.RawMessage)
 	case *events.LoggedOut:
-		reason := v.Reason
-		if h.Log != nil {
-			h.Log.Infof("Logged out: %s", reason.String())
-		}
-		if reason >= 400 && reason < 500 {
-			usecase.HandleLogout(h.PakaiWA.Client)
-		}
+		usecase.HandleLogout(h.PakaiWA.Client)
 		h.PakaiWA.SetQR("")
 		h.PakaiWA.SetConnected(false)
 	}

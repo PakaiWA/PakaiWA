@@ -28,7 +28,9 @@ func PanicIfError(err error) {
 	}
 }
 
-var ErrUsernameExists = errors.New("username already exists")
-var ErrInvalidCredentials = errors.New("invalid email or password")
-var ErrPasswordWeak = errors.New("password does not meet complexity requirements")
 var ErrInvalidMessage = errors.New("message is invalid")
+var ErrUsernameExists = errors.New("username already exists")
+var ErrKafkaQueueFull = errors.New("kafka producer queue full")
+var ErrInvalidCredentials = errors.New("invalid email or password")
+var ErrWAClientNotConnected = errors.New("whatsapp client is not connected")
+var ErrPasswordWeak = errors.New("password does not meet complexity requirements")
