@@ -18,16 +18,16 @@ package event
 import (
 	"context"
 
+	"github.com/PakaiWA/whatsmeow"
 	"github.com/PakaiWA/whatsmeow/types/events"
 	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
 	"github.com/sirupsen/logrus"
 
-	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/state"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/usecase"
 )
 
 type HandleEvent struct {
-	PakaiWA        *state.AppState
+	WA             *whatsmeow.Client
 	Producer       *kafka.Producer
 	ReceiveMsgUC   usecase.ReceiveMessageUsecase
 	DeliveryStatus usecase.DeliveryUsecase
@@ -42,8 +42,6 @@ func (h *HandleEvent) Handle(e any) {
 	case *events.Message:
 		h.ReceiveMsgUC.ProcessIncomingMessage(h.Ctx, v.Message, v.Info, v.RawMessage)
 	case *events.LoggedOut:
-		usecase.HandleLogout(h.PakaiWA.Client)
-		h.PakaiWA.SetQR("")
-		h.PakaiWA.SetConnected(false)
+		usecase.HandleLogout(h.WA)
 	}
 }

@@ -65,7 +65,7 @@ func InitWhatsapp(ctx context.Context, b *PwaContext) (*state.AppState, error) {
 
 	eventHandler := event.HandleEvent{
 		Ctx:            ctx,
-		PakaiWA:        appState,
+		WA:             appState.Client,
 		Producer:       producer,
 		ReceiveMsgUC:   receiveMsgUC,
 		DeliveryStatus: deliveryUC,
