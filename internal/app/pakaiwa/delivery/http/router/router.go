@@ -109,4 +109,5 @@ func (c *RouteConfig) setupAuthRoutes() {
 	// =====================
 	v1 := auth.Group("/v1", middleware.QuotaMiddleware(c.Redis))
 	v1.Post("/messages", c.MessageHandler.SendMsg)
+	v1.Patch("/messages/:msgId", c.MessageHandler.EditMsg)
 }

@@ -16,10 +16,38 @@
 package usecase
 
 import (
+	"context"
+
 	"github.com/PakaiWA/whatsmeow/proto/waE2E"
 	"github.com/PakaiWA/whatsmeow/types"
+	"github.com/sirupsen/logrus"
+
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/model"
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/gateway/kafka"
 )
 
 type ReceiveMessageUsecase interface {
-	ProcessIncomingMessage(msg *waE2E.Message, info types.MessageInfo, rawMsg *waE2E.Message)
+	ProcessIncomingMessage(ctx context.Context, msg *waE2E.Message, info types.MessageInfo, rawMsg *waE2E.Message)
+}
+
+type receiveMessageUsecase struct {
+	Log      *logrus.Logger
+	Producer *kafka.IncomingMessageProducer
+}
+
+func NewReceiveMessageUsecase(log *logrus.Logger, producer *kafka.IncomingMessageProducer) ReceiveMessageUsecase {
+	return &receiveMessageUsecase{Log: log, Producer: producer}
+}
+
+func (uc *receiveMessageUsecase) ProcessIncomingMessage(ctx context.Context, msg *waE2E.Message, info types.MessageInfo, rawMsg *waE2E.Message) {
+
+	incomingMsgModel, err := model.ToIncomingMessageModel(msg, info, rawMsg)
+	if err != nil {
+		uc.Log.Error(err)
+	}
+
+	err = uc.Producer.Send(ctx, incomingMsgModel)
+	if err != nil {
+		uc.Log.Error(err)
+	}
 }

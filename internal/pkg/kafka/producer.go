@@ -16,7 +16,9 @@
 package kafka
 
 import (
+	"context"
 	"encoding/json"
+	"time"
 
 	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
 	"github.com/sirupsen/logrus"
@@ -39,31 +41,85 @@ type Producer[T model.Event] struct {
 	Log      *logrus.Logger
 }
 
-func (p *Producer[T]) GetTopic() *string {
-	return &p.Topic
-}
-
-func (p *Producer[T]) Send(event T) error {
+func (p *Producer[T]) Send(ctx context.Context, event T) error {
 	value, err := json.Marshal(event)
 	if err != nil {
 		p.Log.WithError(err).Error("failed to marshal event")
 		return err
 	}
 
-	message := &kafka.Message{
+	msg := &kafka.Message{
 		TopicPartition: kafka.TopicPartition{
-			Topic:     p.GetTopic(),
+			Topic:     &p.Topic,
 			Partition: kafka.PartitionAny,
 		},
-		Value: value,
 		Key:   []byte(event.GetId()),
+		Value: value,
 	}
 
-	err = p.Producer.Produce(message, nil)
-	if err != nil {
-		p.Log.WithError(err).Error("failed to produce message")
+	for {
+		err = p.Producer.Produce(msg, nil)
+		if err == nil {
+			return nil
+		}
+
+		// Queue penuh → tunggu sebentar
+		if err.(kafka.Error).Code() == kafka.ErrQueueFull {
+			select {
+			case <-time.After(50 * time.Millisecond):
+				continue
+			case <-ctx.Done():
+				return ctx.Err()
+			}
+		}
+
+		p.Log.WithError(err).Error("failed to produce kafka message")
 		return err
 	}
+}
 
-	return nil
+func StartProducerPollLoop(
+	ctx context.Context,
+	producer *kafka.Producer,
+	log *logrus.Logger,
+) {
+	go func() {
+		log.Info("Kafka producer poll loop started")
+
+		for {
+			select {
+			case <-ctx.Done():
+				log.Info("Kafka producer poll loop stopping")
+				return
+
+			case ev := <-producer.Events():
+				switch e := ev.(type) {
+
+				case *kafka.Message:
+					if e.TopicPartition.Error != nil {
+						log.WithFields(logrus.Fields{
+							"topic":     *e.TopicPartition.Topic,
+							"partition": e.TopicPartition.Partition,
+							"offset":    e.TopicPartition.Offset,
+							"module":    "Kafka",
+						}).WithError(e.TopicPartition.Error).
+							Error("Kafka delivery failed")
+					} else {
+						log.WithFields(logrus.Fields{
+							"topic":     *e.TopicPartition.Topic,
+							"partition": e.TopicPartition.Partition,
+							"offset":    e.TopicPartition.Offset,
+							"module":    "Kafka",
+						}).Debug("Kafka message delivered")
+					}
+
+				case kafka.Error:
+					log.WithError(e).Error("Kafka error")
+
+				default:
+					// abaikan event lain
+				}
+			}
+		}
+	}()
 }

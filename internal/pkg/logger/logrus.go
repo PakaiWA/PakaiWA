@@ -28,6 +28,8 @@ import (
 	"github.com/PakaiWA/PakaiWA/internal/pkg/config"
 )
 
+const moduleKey = "module"
+
 type OrderedJSONFormatter struct {
 	PadLevelTo      int
 	TimestampFormat string // default RFC3339Nano
@@ -96,11 +98,16 @@ func (f *OrderedJSONFormatter) Format(e *logrus.Entry) ([]byte, error) {
 
 	if len(e.Data) > 0 {
 		keys := make([]string, 0, len(e.Data))
-		for k := range e.Data {
-			if k == traceKey {
+		var moduleValue any
+		for k, v := range e.Data {
+			switch k {
+			case traceKey:
 				continue
+			case moduleKey:
+				moduleValue = v
+			default:
+				keys = append(keys, k)
 			}
-			keys = append(keys, k)
 		}
 		sort.Strings(keys)
 		for _, k := range keys {
@@ -114,8 +121,25 @@ func (f *OrderedJSONFormatter) Format(e *logrus.Entry) ([]byte, error) {
 			enc.SetEscapeHTML(f.EscapeHTML)
 			_ = enc.Encode(e.Data[k])
 			val := vb.Bytes()
-			if n := len(val); n > 0 && val[n-1] == '\n' {
-				val = val[:n-1]
+			if len(val) > 0 && val[len(val)-1] == '\n' {
+				val = val[:len(val)-1]
+			}
+			buf.Write(val)
+		}
+
+		if moduleValue != nil {
+			buf.WriteByte(',')
+			writeKey(buf, moduleKey, f.EscapeHTML)
+			buf.WriteByte(':')
+
+			var vb bytes.Buffer
+			enc := json.NewEncoder(&vb)
+			enc.SetEscapeHTML(f.EscapeHTML)
+			_ = enc.Encode(moduleValue)
+
+			val := vb.Bytes()
+			if len(val) > 0 && val[len(val)-1] == '\n' {
+				val = val[:len(val)-1]
 			}
 			buf.Write(val)
 		}

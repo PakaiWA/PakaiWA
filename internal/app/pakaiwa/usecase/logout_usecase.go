@@ -22,6 +22,11 @@ import (
 )
 
 func HandleLogout(client *whatsmeow.Client) {
-	client.Disconnect()
-	_ = client.Store.Delete(context.Background())
+	if client == nil {
+		return
+	}
+
+	if client.Store != nil {
+		_ = client.Store.Delete(context.Background())
+	}
 }

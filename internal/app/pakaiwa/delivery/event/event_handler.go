@@ -16,36 +16,32 @@
 package event
 
 import (
+	"context"
+
+	"github.com/PakaiWA/whatsmeow"
 	"github.com/PakaiWA/whatsmeow/types/events"
 	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
 	"github.com/sirupsen/logrus"
 
-	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/state"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/usecase"
 )
 
 type HandleEvent struct {
-	PakaiWA        *state.AppState
+	WA             *whatsmeow.Client
 	Producer       *kafka.Producer
 	ReceiveMsgUC   usecase.ReceiveMessageUsecase
 	DeliveryStatus usecase.DeliveryUsecase
 	Log            *logrus.Logger
+	Ctx            context.Context
 }
 
-func (h *HandleEvent) Handle(e interface{}) {
+func (h *HandleEvent) Handle(e any) {
 	switch v := e.(type) {
 	case *events.Receipt:
-		h.DeliveryStatus.ProcessDeliveryStatus(v)
+		h.DeliveryStatus.ProcessDeliveryStatus(h.Ctx, v)
 	case *events.Message:
-		h.ReceiveMsgUC.ProcessIncomingMessage(v.Message, v.Info, v.RawMessage)
+		h.ReceiveMsgUC.ProcessIncomingMessage(h.Ctx, v.Message, v.Info, v.RawMessage)
 	case *events.LoggedOut:
-		reason := v.Reason
-		h.PakaiWA.SetQR("")
-		h.PakaiWA.SetConnected(false)
-		h.Log.Infof("Logged out: %s\n", reason.String())
-		if reason >= 400 && reason < 500 {
-			usecase.HandleLogout(h.PakaiWA.Client)
-		}
-
+		usecase.HandleLogout(h.WA)
 	}
 }

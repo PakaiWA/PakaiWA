@@ -45,6 +45,11 @@ func NewMessageUsecase(validate *validator.Validate, wa *whatsmeow.Client) Messa
 
 func (m *messageUsecase) SendMessage(ctx context.Context, req *model.SendMessageReq) (string, error) {
 	log := ctxmeta.Logger(ctx)
+	if !m.WA.IsConnected() {
+		log.WithError(apperror.ErrWAClientNotConnected).WithField("event", "wa_disconnected").Error("precondition failed")
+		return "", apperror.ErrWAClientNotConnected
+	}
+
 	if err := m.Validate.Struct(req); err != nil {
 		if log != nil {
 			log.WithError(err).WithField("event", "validation_failed").Warn("invalid send message request")
@@ -83,4 +88,40 @@ func (m *messageUsecase) SendMessage(ctx context.Context, req *model.SendMessage
 	}(ctx, id)
 
 	return id, nil
+}
+
+func (m *messageUsecase) EditMessage(ctx context.Context, req *model.SendMessageReq, msgId string) error {
+	phoneNumber := strings.TrimSpace(req.Phone)
+	jid, err := helper.NormalizeJID(phoneNumber)
+	if err != nil {
+		return apperror.ErrInvalidMessage
+	}
+
+	id := strings.ToUpper(msgId)
+	if strings.TrimSpace(req.Text) == "" {
+		return apperror.ErrInvalidMessage
+	}
+
+	m.WA.Log.Infof(req.Text)
+
+	go func(parent context.Context, msgID string) {
+		ctxSend, cancel := context.WithTimeout(parent, 15*time.Second)
+		defer cancel()
+
+		_, err := m.WA.SendMessage(ctxSend, jid, m.WA.BuildEdit(jid, msgID, &waE2E.Message{
+			Conversation: utils.ProtoString(req.Text),
+		}))
+
+		if err != nil {
+			if l := ctxmeta.Logger(ctxSend); l != nil {
+				l.
+					WithError(err).
+					WithField("event", "send_message_failed").
+					WithField("message_id", msgID).
+					Error("failed to send whatsapp message")
+			}
+		}
+	}(ctx, id)
+
+	return nil
 }

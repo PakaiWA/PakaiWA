@@ -16,9 +16,69 @@
 package usecase
 
 import (
+	"context"
+	"strings"
+	"time"
+
+	"github.com/PakaiWA/whatsmeow/types"
 	"github.com/PakaiWA/whatsmeow/types/events"
+	"github.com/sirupsen/logrus"
+
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/model"
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/entity"
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/gateway/kafka"
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/helper"
 )
 
 type DeliveryUsecase interface {
-	ProcessDeliveryStatus(evt *events.Receipt)
+	ProcessDeliveryStatus(ctx context.Context, evt *events.Receipt)
+}
+
+type deliveryStatusUsecase struct {
+	Log      *logrus.Logger
+	Producer *kafka.DeliveryStatusProducer
+}
+
+func NewDeliveryStatusUsecase(log *logrus.Logger, producer *kafka.DeliveryStatusProducer) DeliveryUsecase {
+	return &deliveryStatusUsecase{
+		Log:      log,
+		Producer: producer,
+	}
+}
+
+func (d *deliveryStatusUsecase) ProcessDeliveryStatus(ctx context.Context, event *events.Receipt) {
+	status := entity.DeliveryFailed
+
+	switch event.Type {
+	case types.ReceiptTypeDelivered:
+		status = entity.DeliveryDelivered
+	case types.ReceiptTypeSender:
+		status = entity.DeliverySent
+	case types.ReceiptTypeRead:
+		status = entity.DeliveryRead
+	}
+
+	for _, msgID := range event.MessageIDs {
+		msgPayload := entity.DeliveryStatusPayload{
+			Message:     "",
+			PhoneNumber: helper.NormalizeNumber(event.Sender.String()),
+			MessageType: "",
+			DeviceId:    "",
+		}
+
+		deliveryPayload := entity.WebhookEntity{
+			ID:          strings.ToLower(msgID),
+			Status:      status,
+			WebhookType: msgPayload.GetType(),
+			Payload:     msgPayload,
+			CreatedTime: event.Timestamp,
+			ServerTime:  time.Now(),
+		}
+
+		deliveryModel := model.ToDeliveryModel(deliveryPayload)
+		err := d.Producer.Send(ctx, deliveryModel)
+		if err != nil {
+			d.Log.Error("failed to send delivery status to kafka: ", err)
+		}
+	}
 }

@@ -16,6 +16,9 @@
 package handler
 
 import (
+	"errors"
+	"strings"
+
 	"github.com/gofiber/fiber/v3"
 
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/model"
@@ -47,5 +50,28 @@ func (h *MessageHandler) SendMsg(c fiber.Ctx) error {
 		return err
 	}
 
-	return helper.RespondPending(c, id)
+	return helper.RespondPending(c, "Message is pending and waiting to be processed.", id)
+}
+
+func (h *MessageHandler) EditMsg(c fiber.Ctx) error {
+	request := new(model.SendMessageReq)
+	if err := c.Bind().Body(request); err != nil {
+		utils.LogValidationErrors(c.Context(), err, "error parsing request body", c.Path())
+		return fiber.ErrBadRequest
+	}
+
+	msgId := strings.TrimPrefix(c.Params("msgId"), "pwa-")
+	if msgId == "" {
+		utils.LogValidationErrors(c.Context(), errors.New("msgId is required"), "validation failed in EditMsg", c.Path())
+		return fiber.ErrBadRequest
+	}
+
+	if err := h.UseCase.EditMessage(c.Context(), request, msgId); err != nil {
+		utils.LogValidationErrors(c.Context(), err, "validation failed in EditMessage", c.Path())
+		return fiber.ErrBadRequest
+	}
+
+	message := "Request accepted. Edit processing is asynchronous. Updates are applied only if the request is evaluated within the 15-minute edit window."
+
+	return helper.RespondPending(c, message, msgId)
 }

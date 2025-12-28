@@ -16,6 +16,8 @@
 package logger
 
 import (
+	"strings"
+
 	waLog "github.com/PakaiWA/whatsmeow/util/log"
 	"github.com/sirupsen/logrus"
 )
@@ -26,21 +28,26 @@ type LogrusAdapter struct {
 	entry *logrus.Entry
 }
 
-func NewPakaiWALog(l *logrus.Logger, pkgName string) waLog.Logger {
-	return &LogrusAdapter{
-		entry: logrus.NewEntry(l).WithField("pkg", pkgName),
+func NewPakaiWALog(l *logrus.Logger, level, pkgName string) waLog.Logger {
+	lvl, err := logrus.ParseLevel(strings.ToLower(level))
+	if err != nil {
+		lvl = logrus.InfoLevel
 	}
+
+	l.SetLevel(lvl)
+
+	return &LogrusAdapter{entry: logrus.NewEntry(l).WithField("module", pkgName)}
 }
 
 func (l *LogrusAdapter) Sub(module string) waLog.Logger {
 	return &LogrusAdapter{entry: l.entry.WithField("module", module)}
 }
 
-func (l *LogrusAdapter) Infof(msg string, args ...interface{})  { l.entry.Infof(msg, args...) }
-func (l *LogrusAdapter) Warnf(msg string, args ...interface{})  { l.entry.Warnf(msg, args...) }
-func (l *LogrusAdapter) Errorf(msg string, args ...interface{}) { l.entry.Errorf(msg, args...) }
+func (l *LogrusAdapter) Infof(msg string, args ...any)  { l.entry.Infof(msg, args...) }
+func (l *LogrusAdapter) Warnf(msg string, args ...any)  { l.entry.Warnf(msg, args...) }
+func (l *LogrusAdapter) Errorf(msg string, args ...any) { l.entry.Errorf(msg, args...) }
 
-func (l *LogrusAdapter) Debugf(msg string, args ...interface{}) {
+func (l *LogrusAdapter) Debugf(msg string, args ...any) {
 	if module, ok := l.entry.Data["module"].(string); ok {
 		if module == "Recv" || module == "Send" {
 			return

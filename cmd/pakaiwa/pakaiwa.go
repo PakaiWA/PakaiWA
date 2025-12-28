@@ -40,19 +40,24 @@ func init() {
 }
 
 func main() {
-	ctx := context.Background()
+	appCtx, cancel := context.WithCancel(context.Background())
+	defer cancel()
 
 	log := logger.NewLogger()
-	pool := db.NewDatabase(ctx, log)
+	pool := db.NewDatabase(appCtx, log)
 
 	validate := validator.NewValidator()
 	redis := redis.NewRedisClient()
+	if err := redis.Ping(appCtx).Err(); err != nil {
+		log.Fatal("redis unavailable")
+	}
 
 	// ====== Kafka Producer ======
 	producer := kafka.NewKafkaProducer(log)
+	kafka.StartProducerPollLoop(appCtx, producer, log)
 
 	// ====== WhatsApp Client ======
-	pwa, err := bootstrap.InitWhatsapp(&bootstrap.PwaContext{
+	pwa, err := bootstrap.InitWhatsapp(appCtx, &bootstrap.PwaContext{
 		Log:      log,
 		Pool:     pool,
 		Producer: producer,
@@ -83,6 +88,11 @@ func main() {
 	utils.WaitForSignal()
 	log.Println("Shutting down...")
 	_ = fiber.Shutdown()
+	pool.Close()
+	cancel()
+
+	// Tunggu delivery terakhir
+	producer.Flush(10_000)
 	producer.Close()
 	pwa.Client.Disconnect()
 	log.Println("Bye!")

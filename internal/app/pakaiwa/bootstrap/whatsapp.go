@@ -40,9 +40,7 @@ type PwaContext struct {
 	Producer *confluent.Producer
 }
 
-func InitWhatsapp(b *PwaContext) (*state.AppState, error) {
-	ctx := context.Background()
-
+func InitWhatsapp(ctx context.Context, b *PwaContext) (*state.AppState, error) {
 	log := b.Log
 	pool := b.Pool
 	producer := b.Producer
@@ -53,7 +51,7 @@ func InitWhatsapp(b *PwaContext) (*state.AppState, error) {
 	deviceStore, err := container.GetFirstDevice(ctx) // TODO: refactor for multi client
 	apperror.PanicIfError(err)
 
-	clientLog := logger.NewPakaiWALog(log, config.GetAppName())
+	clientLog := logger.NewPakaiWALog(log, "debug", config.GetAppName())
 	client := whatsmeow.NewClient(deviceStore, clientLog)
 
 	appState := &state.AppState{Client: client}
@@ -66,7 +64,8 @@ func InitWhatsapp(b *PwaContext) (*state.AppState, error) {
 	deliveryUC := usecase.NewDeliveryStatusUsecase(log, deliveryStatusProducer)
 
 	eventHandler := event.HandleEvent{
-		PakaiWA:        appState,
+		Ctx:            ctx,
+		WA:             appState.Client,
 		Producer:       producer,
 		ReceiveMsgUC:   receiveMsgUC,
 		DeliveryStatus: deliveryUC,

@@ -28,7 +28,7 @@ import (
 
 func InitStoreWithPool(ctx context.Context, pool *pgxpool.Pool, log *logrus.Logger) *sqlstore.Container {
 	db := stdlib.OpenDBFromPool(pool)
-	dbLog := logger.NewPakaiWALog(log, "PakaiWA_DB")
+	dbLog := logger.NewPakaiWALog(log, "debug", "PakaiWA_DB")
 	container := sqlstore.NewWithDB(db, "postgres", dbLog)
 
 	if err := container.Upgrade(ctx); err != nil {
