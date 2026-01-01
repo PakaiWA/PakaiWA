@@ -10,7 +10,6 @@
  *
  * @author KAnggara on Sunday 14/12/2025 21.53
  * @project PakaiWA
- * ~/work/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/dto
  * https://github.com/PakaiWA/PakaiWA/tree/main/internal/app/pakaiwa/delivery/http/dto
  */
 

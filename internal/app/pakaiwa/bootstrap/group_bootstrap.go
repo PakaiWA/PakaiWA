@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 KAnggara75
+ * Copyright (c) 2026 KAnggara
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -8,15 +8,9 @@
  *
  * See <https://www.gnu.org/licenses/gpl-3.0.html>.
  *
- * @author KAnggara75 on Sun 07/09/25 15.25
- * @project PakaiWA usecase
- * https://github.com/PakaiWA/PakaiWA/tree/main/internal/app/pakaiwa/usecase
+ * @author KAnggara on Thursday 01/01/2026 21.15
+ * @project PakaiWA
+ * https://github.com/PakaiWA/PakaiWA/tree/main/internal/app/pakaiwa/bootstrap
  */
 
-package usecase
-
-import "context"
-
-type SendMessageUsecase interface {
-	Send(ctx context.Context) (string, error)
-}
+package bootstrap

@@ -10,7 +10,6 @@
  *
  * @author KAnggara on Thursday 18/12/2025 19.20
  * @project PakaiWA
- * ~/work/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/middleware
  * https://github.com/PakaiWA/PakaiWA/tree/main/internal/app/pakaiwa/delivery/http/middleware
  */
 

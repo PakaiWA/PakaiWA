@@ -75,3 +75,21 @@ func (h *MessageHandler) EditMsg(c fiber.Ctx) error {
 
 	return helper.RespondPending(c, message, msgId)
 }
+
+func (h *MessageHandler) DeleteMsg(c fiber.Ctx) error {
+	msgId := strings.TrimPrefix(c.Params("msgId"), "pwa-")
+	if msgId == "" {
+		utils.LogValidationErrors(c.Context(), errors.New("msgId is required"), "validation failed in DeleteMsg", c.Path())
+		return fiber.ErrBadRequest
+	}
+
+	chatId := c.Query("chatId")
+	if err := h.UseCase.DeleteMessage(c.Context(), chatId, msgId); err != nil {
+		utils.LogValidationErrors(c.Context(), err, "validation failed in DeleteMessage", c.Path())
+		return fiber.ErrBadRequest
+	}
+
+	message := "Request accepted. Deletion processing is asynchronous. The message will be deleted shortly."
+
+	return helper.RespondPending(c, message, msgId)
+}
