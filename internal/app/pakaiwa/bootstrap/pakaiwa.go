@@ -23,11 +23,8 @@ import (
 	"github.com/redis/go-redis/v9"
 	"github.com/sirupsen/logrus"
 
-	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/handler"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/router"
-	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/repository"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/state"
-	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/usecase"
 )
 
 type AppContext struct {
@@ -41,23 +38,9 @@ type AppContext struct {
 }
 
 func InitApp(b *AppContext) {
-	qrHandler := handler.NewQRHandler(b.PakaiWA)
+	router.RegisterPublicRoutes(b.Fiber)
 
-	// Auth
-	userRepo := repository.NewUserRepository(b.Pool)
-	authUsecase := usecase.NewAuthUsecase(userRepo, b.Validate)
-	authHandler := handler.NewAuthHandler(authUsecase)
-
-	// Message
-	msgUsecase := usecase.NewMessageUsecase(b.Validate, b.PakaiWA.Client)
-	msgHandler := handler.NewMessageHandler(msgUsecase)
-
-	routeConfig := router.RouteConfig{
-		Redis:          b.Redis,
-		Fiber:          b.Fiber,
-		MessageHandler: msgHandler,
-		AuthHandler:    authHandler,
-		QRHandler:      qrHandler,
-	}
-	routeConfig.Setup()
+	initAuthModule(b)
+	initMessageModule(b)
+	initQRModule(b)
 }

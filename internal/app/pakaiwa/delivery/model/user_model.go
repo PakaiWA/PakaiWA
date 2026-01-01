@@ -10,7 +10,6 @@
  *
  * @author KAnggara on Saturday 13/12/2025 12.20
  * @project PakaiWA
- * ~/work/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/model
  * https://github.com/PakaiWA/PakaiWA/tree/main/internal/app/pakaiwa/delivery/model
  */
 

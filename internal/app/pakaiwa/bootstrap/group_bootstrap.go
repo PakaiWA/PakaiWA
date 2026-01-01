@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 KAnggara
+ * Copyright (c) 2026 KAnggara
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -8,13 +8,9 @@
  *
  * See <https://www.gnu.org/licenses/gpl-3.0.html>.
  *
- * @author KAnggara on Sunday 14/12/2025 21.53
+ * @author KAnggara on Thursday 01/01/2026 21.15
  * @project PakaiWA
- * https://github.com/PakaiWA/PakaiWA/tree/main/internal/app/pakaiwa/delivery/http/dto
+ * https://github.com/PakaiWA/PakaiWA/tree/main/internal/app/pakaiwa/bootstrap
  */
 
-package dto
-
-type RegisterUserData struct {
-	Email string `json:"email"`
-}
+package bootstrap

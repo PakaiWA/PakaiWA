@@ -16,8 +16,9 @@
 package model
 
 type SendMessageReq struct {
-	Phone string `json:"phone_number" validate:"required,startsnotwith=+,numeric"`
-	Text  string `json:"message" validate:"required"`
+	Phone          string `json:"phone_number" validate:"required,startsnotwith=+,numeric"`
+	Text           string `json:"message" validate:"required"`
+	IsGroupMessage bool   `json:"is_group_message" validate:"required"`
 }
 
 type SendMessageResponse struct {

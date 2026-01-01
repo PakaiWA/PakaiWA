@@ -10,7 +10,6 @@
  *
  * @author KAnggara on Sunday 14/12/2025 23.03
  * @project PakaiWA
- * ~/work/PakaiWA/PakaiWA/internal/app/pakaiwa/error
  * https://github.com/PakaiWA/PakaiWA/tree/main/internal/app/pakaiwa/error
  */
 
