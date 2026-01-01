@@ -22,6 +22,7 @@ import (
 
 	"github.com/PakaiWA/whatsmeow"
 	"github.com/PakaiWA/whatsmeow/proto/waE2E"
+	"github.com/PakaiWA/whatsmeow/types"
 	"github.com/go-playground/validator/v10"
 
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/apperror"
@@ -34,6 +35,7 @@ import (
 type MessageUsecase interface {
 	SendMessage(ctx context.Context, req *model.SendMessageReq) (string, error)
 	EditMessage(ctx context.Context, req *model.SendMessageReq, msgId string) error
+	DeleteMessage(ctx context.Context, chatId, msgId string) error
 }
 
 type messageUsecase struct {
@@ -107,8 +109,6 @@ func (m *messageUsecase) EditMessage(ctx context.Context, req *model.SendMessage
 		return apperror.ErrInvalidMessage
 	}
 
-	m.WA.Log.Infof(req.Text)
-
 	go func(parent context.Context, msgID string) {
 		ctxSend, cancel := context.WithTimeout(parent, 15*time.Second)
 		defer cancel()
@@ -116,6 +116,35 @@ func (m *messageUsecase) EditMessage(ctx context.Context, req *model.SendMessage
 		_, err := m.WA.SendMessage(ctxSend, jid, m.WA.BuildEdit(jid, msgID, &waE2E.Message{
 			Conversation: utils.ProtoString(req.Text),
 		}))
+
+		if err != nil {
+			if l := ctxmeta.Logger(ctxSend); l != nil {
+				l.
+					WithError(err).
+					WithField("event", "send_message_failed").
+					WithField("message_id", msgID).
+					Error("failed to send whatsapp message")
+			}
+		}
+	}(ctx, id)
+
+	return nil
+}
+
+func (m *messageUsecase) DeleteMessage(ctx context.Context, chatId, msgId string) error {
+	phoneNumber := strings.TrimSpace(chatId)
+	jid, err := helper.NormalizeJID(phoneNumber)
+	if err != nil {
+		return apperror.ErrInvalidMessage
+	}
+
+	id := strings.ToUpper(msgId)
+
+	go func(parent context.Context, msgID string) {
+		ctxSend, cancel := context.WithTimeout(parent, 15*time.Second)
+		defer cancel()
+
+		_, err := m.WA.SendMessage(ctxSend, jid, m.WA.BuildRevoke(jid, types.EmptyJID, msgID))
 
 		if err != nil {
 			if l := ctxmeta.Logger(ctxSend); l != nil {
