@@ -5,7 +5,7 @@ go 1.25.5
 require (
 	github.com/KAnggara75/scc2go v0.1.6
 	github.com/PakaiWA/whatsmeow v0.25.12-261638
-	github.com/confluentinc/confluent-kafka-go/v2 v2.12.0
+	github.com/confluentinc/confluent-kafka-go/v2 v2.13.0
 	github.com/go-playground/validator/v10 v10.30.1
 	github.com/gofiber/fiber/v3 v3.0.0-rc.3
 	github.com/golang-jwt/jwt/v5 v5.3.0
