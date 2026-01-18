@@ -17,10 +17,12 @@ package handler
 
 import (
 	"errors"
+	"strconv"
 	"strings"
 
 	"github.com/gofiber/fiber/v3"
 
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/apperror"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/model"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/helper"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/usecase"
@@ -57,18 +59,18 @@ func (h *MessageHandler) EditMsg(c fiber.Ctx) error {
 	request := new(model.SendMessageReq)
 	if err := c.Bind().Body(request); err != nil {
 		utils.LogValidationErrors(c.Context(), err, "error parsing request body", c.Path())
-		return fiber.ErrBadRequest
+		return apperror.BadRequest(c, err.Error())
 	}
 
 	msgId := strings.TrimPrefix(c.Params("msgId"), "pwa-")
 	if msgId == "" {
 		utils.LogValidationErrors(c.Context(), errors.New("msgId is required"), "validation failed in EditMsg", c.Path())
-		return fiber.ErrBadRequest
+		return apperror.BadRequest(c, "msgId is required")
 	}
 
 	if err := h.UseCase.EditMessage(c.Context(), request, msgId); err != nil {
 		utils.LogValidationErrors(c.Context(), err, "validation failed in EditMessage", c.Path())
-		return fiber.ErrBadRequest
+		return apperror.BadRequest(c, err.Error())
 	}
 
 	message := "Request accepted. Edit processing is asynchronous. Updates are applied only if the request is evaluated within the 15-minute edit window."
@@ -77,19 +79,57 @@ func (h *MessageHandler) EditMsg(c fiber.Ctx) error {
 }
 
 func (h *MessageHandler) DeleteMsg(c fiber.Ctx) error {
-	msgId := strings.TrimPrefix(c.Params("msgId"), "pwa-")
-	if msgId == "" {
-		utils.LogValidationErrors(c.Context(), errors.New("msgId is required"), "validation failed in DeleteMsg", c.Path())
-		return fiber.ErrBadRequest
+	ctx := c.Context()
+
+	// =====================
+	// Validate msgId
+	// =====================
+	rawMsgId := c.Params("msgId")
+	if rawMsgId == "" {
+		utils.LogValidationErrors(ctx, errors.New("msgId is required"), "DeleteMsg", c.Path())
+		return apperror.BadRequest(c, "msgId is required")
 	}
 
+	if !strings.HasPrefix(rawMsgId, "pwa-") {
+		utils.LogValidationErrors(ctx, errors.New("invalid msgId format"), "DeleteMsg", c.Path())
+		return apperror.BadRequest(c, "invalid msgId format")
+	}
+
+	msgId := strings.TrimPrefix(rawMsgId, "pwa-")
+
+	// =====================
+	// Validate chatId
+	// =====================
 	chatId := c.Query("chatId")
-	if err := h.UseCase.DeleteMessage(c.Context(), chatId, msgId); err != nil {
-		utils.LogValidationErrors(c.Context(), err, "validation failed in DeleteMessage", c.Path())
-		return fiber.ErrBadRequest
+	if chatId == "" {
+		utils.LogValidationErrors(ctx, errors.New("chatId is required"), "DeleteMsg", c.Path())
+		return apperror.BadRequest(c, "chatId is required")
 	}
 
-	message := "Request accepted. Deletion processing is asynchronous. The message will be deleted shortly."
+	// =====================
+	// Parse isGroup (STRICT)
+	// =====================
+	isGroupStr := c.Query("isGroup", "false")
+	isGroup, err := strconv.ParseBool(isGroupStr)
+	if err != nil {
+		utils.LogValidationErrors(ctx, errors.New("isGroup must be boolean"), "DeleteMsg", c.Path())
+		return apperror.BadRequest(c, "isGroup must be boolean")
+	}
 
-	return helper.RespondPending(c, message, msgId)
+	// =====================
+	// Call use case
+	// =====================
+	if err := h.UseCase.DeleteMessage(ctx, chatId, msgId, isGroup); err != nil {
+		// utils.LogDomainError(ctx, err, "DeleteMessage failed", c.Path())
+		return apperror.Internal(c, err.Error())
+	}
+
+	// =====================
+	// Async accepted response
+	// =====================
+	return helper.RespondPending(
+		c,
+		"Request accepted. Deletion processing is asynchronous.",
+		msgId,
+	)
 }

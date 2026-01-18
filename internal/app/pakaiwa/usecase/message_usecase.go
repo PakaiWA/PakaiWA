@@ -35,7 +35,7 @@ import (
 type MessageUsecase interface {
 	SendMessage(ctx context.Context, req *model.SendMessageReq) (string, error)
 	EditMessage(ctx context.Context, req *model.SendMessageReq, msgId string) error
-	DeleteMessage(ctx context.Context, chatId, msgId string) error
+	DeleteMessage(ctx context.Context, chatId, msgId string, isGroup bool) error
 }
 
 type messageUsecase struct {
@@ -116,9 +116,9 @@ func (m *messageUsecase) EditMessage(ctx context.Context, req *model.SendMessage
 	return nil
 }
 
-func (m *messageUsecase) DeleteMessage(ctx context.Context, chatId, msgId string) error {
+func (m *messageUsecase) DeleteMessage(ctx context.Context, chatId, msgId string, isGroup bool) error {
 	phoneNumber := strings.TrimSpace(chatId)
-	jid, err := helper.NormalizeJID(phoneNumber, false)
+	jid, err := helper.NormalizeJID(phoneNumber, isGroup)
 	if err != nil {
 		return apperror.ErrInvalidMessage
 	}
