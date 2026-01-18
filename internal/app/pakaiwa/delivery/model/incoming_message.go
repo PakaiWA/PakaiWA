@@ -17,6 +17,7 @@ package model
 
 import (
 	"encoding/json"
+	"strings"
 	"time"
 
 	"github.com/PakaiWA/whatsmeow/proto/waE2E"
@@ -25,6 +26,7 @@ import (
 )
 
 type IncomingMessageModel struct {
+	Id        string            `json:"id"`
 	Message   map[string]any    `json:"message"`
 	Info      types.MessageInfo `json:"info"`
 	Raw       map[string]any    `json:"raw"`
@@ -32,7 +34,7 @@ type IncomingMessageModel struct {
 }
 
 func (a *IncomingMessageModel) GetId() string {
-	return ""
+	return a.Id
 }
 
 func ToIncomingMessageModel(msg *waE2E.Message, info types.MessageInfo, raw *waE2E.Message) (*IncomingMessageModel, error) {
@@ -59,6 +61,7 @@ func ToIncomingMessageModel(msg *waE2E.Message, info types.MessageInfo, raw *waE
 	_ = json.Unmarshal(rawJSON, &rawMap)
 
 	return &IncomingMessageModel{
+		Id:        strings.ToLower(info.ID),
 		Message:   msgMap,
 		Info:      info,
 		Raw:       rawMap,
