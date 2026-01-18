@@ -37,5 +37,4 @@ func initMessageModule(b *AppContext) {
 	v1.Post("/messages", msgHandler.SendMsg)
 	v1.Patch("/messages/:msgId", msgHandler.EditMsg)
 	v1.Delete("/messages/:msgId", msgHandler.DeleteMsg)
-	v1.Get("/groups", msgHandler.SendMsg)
 }

@@ -43,4 +43,5 @@ func InitApp(b *AppContext) {
 	initAuthModule(b)
 	initMessageModule(b)
 	initQRModule(b)
+	initGroupModule(b)
 }
