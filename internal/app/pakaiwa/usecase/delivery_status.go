@@ -27,7 +27,6 @@ import (
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/model"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/entity"
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/gateway/kafka"
-	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/helper"
 )
 
 type DeliveryUsecase interface {
@@ -59,18 +58,10 @@ func (d *deliveryStatusUsecase) ProcessDeliveryStatus(ctx context.Context, event
 	}
 
 	for _, msgID := range event.MessageIDs {
-		msgPayload := entity.DeliveryStatusPayload{
-			Message:     "",
-			PhoneNumber: helper.NormalizeNumber(event.Sender.String()),
-			MessageType: "",
-			DeviceId:    "",
-		}
-
 		deliveryPayload := entity.WebhookEntity{
 			ID:          strings.ToLower(msgID),
 			Status:      status,
-			WebhookType: msgPayload.GetType(),
-			Payload:     msgPayload,
+			WebhookType: "delivery_status",
 			CreatedTime: event.Timestamp,
 			ServerTime:  time.Now(),
 		}

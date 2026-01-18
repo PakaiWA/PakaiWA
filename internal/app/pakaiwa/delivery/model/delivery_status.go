@@ -25,8 +25,7 @@ type DeliveryModel struct {
 	Id          string                `json:"id"`
 	WebhookType string                `json:"webhook_type"`
 	Status      entity.DeliveryStatus `json:"status"`
-	Message     string                `json:"message"`
-	Payload     DeliveryPayload       `json:"payload"`
+	Message     any                   `json:"message"`
 	CreatedAt   time.Time             `json:"created_at"`
 	ServerTime  time.Time             `json:"server_time"`
 }
@@ -35,32 +34,13 @@ func (a *DeliveryModel) GetId() string {
 	return a.Id
 }
 
-type DeliveryPayload struct {
-	Message     string `json:"message"`
-	PhoneNumber string `json:"phone_number"`
-	DeviceId    string `json:"device_id"`
-	MessageType string `json:"message_type"`
-}
-
 func ToDeliveryModel(ent entity.WebhookEntity) *DeliveryModel {
-	var payload DeliveryPayload
-	if p, ok := ent.Payload.(entity.DeliveryStatusPayload); ok {
-		payload = DeliveryPayload{
-			Message:     p.Message,
-			PhoneNumber: p.PhoneNumber,
-			DeviceId:    p.DeviceId,
-			MessageType: p.MessageType,
-		}
-	}
-
 	return &DeliveryModel{
 		Id:          ent.ID,
 		WebhookType: ent.WebhookType,
 		Status:      ent.Status,
 		Message:     "Message has been processed",
-		Payload:     payload,
 		CreatedAt:   ent.CreatedTime,
 		ServerTime:  ent.ServerTime,
 	}
-
 }
