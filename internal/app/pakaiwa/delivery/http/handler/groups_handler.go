@@ -15,7 +15,12 @@
 
 package handler
 
-import "github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/usecase"
+import (
+	"github.com/gofiber/fiber/v3"
+
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/helper"
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/usecase"
+)
 
 type GroupHandler struct {
 	UseCase usecase.GroupUsecase
@@ -25,4 +30,15 @@ func NewGroupHandler(useCase usecase.GroupUsecase) *GroupHandler {
 	return &GroupHandler{
 		UseCase: useCase,
 	}
+}
+
+func (h *GroupHandler) GetGroups(c fiber.Ctx) error {
+	groups, err := h.UseCase.GetGroups(c.Context())
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": err.Error(),
+		})
+	}
+
+	return helper.ResponseGroupList(c, groups)
 }

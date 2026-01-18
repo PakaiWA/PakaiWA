@@ -21,6 +21,8 @@ import (
 
 	"github.com/gofiber/fiber/v3"
 
+	"github.com/PakaiWA/whatsmeow/types"
+
 	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/model"
 )
 
@@ -36,4 +38,11 @@ func RespondPending(c fiber.Ctx, msg, msgId string) error {
 		},
 	}
 	return c.JSON(response)
+}
+
+func ResponseGroupList(c fiber.Ctx, groups []*types.GroupInfo) error {
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"message": "Groups retrieved successfully",
+		"data":    groups,
+	})
 }

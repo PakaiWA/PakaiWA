@@ -16,11 +16,18 @@
 package usecase
 
 import (
+	"context"
+
 	"github.com/PakaiWA/whatsmeow"
+	"github.com/PakaiWA/whatsmeow/types"
 	"github.com/go-playground/validator/v10"
+
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/apperror"
+	"github.com/PakaiWA/PakaiWA/internal/pkg/logger/ctxmeta"
 )
 
 type GroupUsecase interface {
+	GetGroups(ctx context.Context) ([]*types.GroupInfo, error)
 }
 
 type groupUsecase struct {
@@ -33,4 +40,21 @@ func NewGroupUsecase(validate *validator.Validate, wa *whatsmeow.Client) GroupUs
 		WA:       wa,
 		Validate: validate,
 	}
+}
+
+// GetGroups implements [GroupUsecase].
+func (g *groupUsecase) GetGroups(ctx context.Context) ([]*types.GroupInfo, error) {
+	log := ctxmeta.Logger(ctx)
+	if !g.WA.IsConnected() {
+		log.WithError(apperror.ErrWAClientNotConnected).WithField("event", "wa_disconnected").Error("precondition failed")
+		return nil, apperror.ErrWAClientNotConnected
+	}
+
+	chats, err := g.WA.GetJoinedGroups(ctx)
+	if err != nil {
+		log.WithError(err).Error("failed to get chats from WA client")
+		return nil, apperror.ErrFailedToGetGroups
+	}
+
+	return chats, nil
 }

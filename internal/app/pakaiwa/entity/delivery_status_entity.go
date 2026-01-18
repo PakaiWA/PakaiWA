@@ -23,16 +23,3 @@ const (
 	DeliveryRead      DeliveryStatus = "read"
 	DeliveryFailed    DeliveryStatus = "failed"
 )
-
-type DeliveryStatusPayload struct {
-	ID          string
-	Status      DeliveryStatus
-	Message     string
-	PhoneNumber string
-	DeviceId    string
-	MessageType string
-}
-
-func (p DeliveryStatusPayload) GetType() string {
-	return "delivery_status"
-}

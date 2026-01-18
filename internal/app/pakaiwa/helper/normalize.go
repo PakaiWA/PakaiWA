@@ -22,19 +22,26 @@ import (
 	"github.com/PakaiWA/whatsmeow/types"
 )
 
-func NormalizeJID(s string) (types.JID, error) {
-	s = strings.TrimSpace(s)
+func NormalizeJID(input string, isGroup bool) (types.JID, error) {
+	s := strings.TrimSpace(input)
+	if s == "" {
+		return types.JID{}, fmt.Errorf("jid is empty")
+	}
+
 	if strings.Contains(s, "@") {
-		j, err := types.ParseJID(s)
-		if err != nil {
-			return types.JID{}, err
-		}
-		return j, nil
+		return types.ParseJID(s)
 	}
-	if isAllDigits(s) {
-		return types.JID{User: s, Server: types.DefaultUserServer}, nil
+
+	if !isAllDigits(s) {
+		return types.JID{}, fmt.Errorf("invalid jid value: %s", s)
 	}
-	return types.JID{}, fmt.Errorf("invalid phone_number %s", s)
+
+	server := types.DefaultUserServer
+	if isGroup {
+		server = types.GroupServer
+	}
+
+	return types.JID{User: s, Server: server}, nil
 }
 
 func isAllDigits(s string) bool {

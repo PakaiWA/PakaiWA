@@ -14,3 +14,21 @@
  */
 
 package bootstrap
+
+import (
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/handler"
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/middleware"
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/delivery/http/router"
+	"github.com/PakaiWA/PakaiWA/internal/app/pakaiwa/usecase"
+)
+
+func initGroupModule(b *AppContext) {
+	usecase := usecase.NewGroupUsecase(b.Validate, b.PakaiWA.Client)
+	handler := handler.NewGroupHandler(usecase)
+
+	auth := router.RegisterAuthGroup(b.Fiber)
+
+	v1 := auth.Group("/v1", middleware.QuotaMiddleware(b.Redis))
+	v1.Get("/groups", handler.GetGroups)
+
+}

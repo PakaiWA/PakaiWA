@@ -119,7 +119,14 @@ func (f *OrderedJSONFormatter) Format(e *logrus.Entry) ([]byte, error) {
 			var vb bytes.Buffer
 			enc := json.NewEncoder(&vb)
 			enc.SetEscapeHTML(f.EscapeHTML)
-			_ = enc.Encode(e.Data[k])
+			v := e.Data[k]
+
+			// SPECIAL CASE: error
+			if err, ok := v.(error); ok {
+				_ = enc.Encode(err.Error())
+			} else {
+				_ = enc.Encode(v)
+			}
 			val := vb.Bytes()
 			if len(val) > 0 && val[len(val)-1] == '\n' {
 				val = val[:len(val)-1]

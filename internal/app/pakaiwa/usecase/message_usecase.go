@@ -35,7 +35,7 @@ import (
 type MessageUsecase interface {
 	SendMessage(ctx context.Context, req *model.SendMessageReq) (string, error)
 	EditMessage(ctx context.Context, req *model.SendMessageReq, msgId string) error
-	DeleteMessage(ctx context.Context, chatId, msgId string) error
+	DeleteMessage(ctx context.Context, chatId, msgId string, isGroup bool) error
 }
 
 type messageUsecase struct {
@@ -70,7 +70,7 @@ func (m *messageUsecase) SendMessage(ctx context.Context, req *model.SendMessage
 	}
 
 	phoneNumber := strings.TrimSpace(req.Phone)
-	jid, err := helper.NormalizeJID(phoneNumber)
+	jid, err := helper.NormalizeJID(phoneNumber, req.IsGroupMessage)
 	if err != nil {
 		return id, apperror.ErrInvalidMessage
 	}
@@ -83,15 +83,8 @@ func (m *messageUsecase) SendMessage(ctx context.Context, req *model.SendMessage
 
 		_, err := m.WA.SendMessage(ctxSend, jid, msg, whatsmeow.SendRequestExtra{ID: msgID})
 
-		if err != nil {
-			if l := ctxmeta.Logger(ctxSend); l != nil {
-				l.
-					WithError(err).
-					WithField("event", "send_message_failed").
-					WithField("message_id", msgID).
-					Error("failed to send whatsapp message")
-			}
-		}
+		_ = helper.IsMessageError(err, ctxSend, msgID)
+
 	}(ctx, id)
 
 	return id, nil
@@ -99,7 +92,7 @@ func (m *messageUsecase) SendMessage(ctx context.Context, req *model.SendMessage
 
 func (m *messageUsecase) EditMessage(ctx context.Context, req *model.SendMessageReq, msgId string) error {
 	phoneNumber := strings.TrimSpace(req.Phone)
-	jid, err := helper.NormalizeJID(phoneNumber)
+	jid, err := helper.NormalizeJID(phoneNumber, req.IsGroupMessage)
 	if err != nil {
 		return apperror.ErrInvalidMessage
 	}
@@ -117,23 +110,15 @@ func (m *messageUsecase) EditMessage(ctx context.Context, req *model.SendMessage
 			Conversation: utils.ProtoString(req.Text),
 		}))
 
-		if err != nil {
-			if l := ctxmeta.Logger(ctxSend); l != nil {
-				l.
-					WithError(err).
-					WithField("event", "send_message_failed").
-					WithField("message_id", msgID).
-					Error("failed to send whatsapp message")
-			}
-		}
+		_ = helper.IsMessageError(err, ctxSend, msgID)
 	}(ctx, id)
 
 	return nil
 }
 
-func (m *messageUsecase) DeleteMessage(ctx context.Context, chatId, msgId string) error {
+func (m *messageUsecase) DeleteMessage(ctx context.Context, chatId, msgId string, isGroup bool) error {
 	phoneNumber := strings.TrimSpace(chatId)
-	jid, err := helper.NormalizeJID(phoneNumber)
+	jid, err := helper.NormalizeJID(phoneNumber, isGroup)
 	if err != nil {
 		return apperror.ErrInvalidMessage
 	}
@@ -146,15 +131,8 @@ func (m *messageUsecase) DeleteMessage(ctx context.Context, chatId, msgId string
 
 		_, err := m.WA.SendMessage(ctxSend, jid, m.WA.BuildRevoke(jid, types.EmptyJID, msgID))
 
-		if err != nil {
-			if l := ctxmeta.Logger(ctxSend); l != nil {
-				l.
-					WithError(err).
-					WithField("event", "send_message_failed").
-					WithField("message_id", msgID).
-					Error("failed to send whatsapp message")
-			}
-		}
+		_ = helper.IsMessageError(err, ctxSend, msgID)
+
 	}(ctx, id)
 
 	return nil
