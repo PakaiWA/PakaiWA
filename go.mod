@@ -21,8 +21,6 @@ require (
 	google.golang.org/protobuf v1.36.11
 )
 
-replace github.com/PakaiWA/whatsmeow => ../whatsmeow
-
 require (
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/andybalholm/brotli v1.2.0 // indirect
